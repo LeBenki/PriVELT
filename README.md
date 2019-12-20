@@ -13,7 +13,7 @@ You can also:
   
 ### Installation
 
-Install the dependency with gradle inside your Main Application
+Install the dependency with Gradle inside your Main Application
 
     dependencies {
         implementation project(":app")
@@ -38,7 +38,7 @@ Here's what you need to implement, to have an automated LoginService
 
 ### Create an automated LoginService
 
-We are here created a LoginService instance, creating thus an automated login for a specified website
+We have here created a LoginService instance, creating thus an automated login for a specified website.
 
     public class MyTestService extends LoginService {
 
@@ -130,7 +130,7 @@ We are here created a LoginService instance, creating thus an automated login fo
 
 ### How to inject JavaScript code
 
-We are here creating a WebView and injecting our own JavaScript inside
+We are here creating a WebView and injecting our JavaScript inside.
 
     // We are instantiating our main WebViewCreator Wrapper with our default settings
     WebViewCreator webViewCreator = new WebViewCreator(this, new HashMap<Settings, Boolean>(){{
@@ -153,7 +153,7 @@ We are here creating a WebView and injecting our own JavaScript inside
         }
     });
     
-You can also inject JavaScript inside a running webview, but we recommand to use our WebViewCreator
+You can also inject JavaScript inside a running webview, but we recommend to use our WebViewCreator
 
     WebInjector webInjector = new WebInjector(null, "https://google.com");
 
@@ -167,7 +167,7 @@ You can also inject JavaScript inside a running webview, but we recommand to use
 Contributors
 ----
 - [Jordan Bonaldi (Back End API Solution)](http://github.com/jordanbonaldi/)
-- [Lucas Benkemoun (Front End Soluton)](https://github.com/LeBenki)
+- [Lucas Benkemoun (Front End Solution)](https://github.com/LeBenki)
 
 License
 ----
