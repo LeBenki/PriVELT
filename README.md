@@ -164,6 +164,11 @@ You can also inject JavaScript inside a running webview, but we recommand to use
         }
     });
 
+Contributors
+----
+- [Jordan Bonaldi (Back End API Solution)](http://github.com/jordanbonaldi/)
+- [Lucas Benkemoun (Front End Soluton)](https://github.com/LeBenki)
+
 License
 ----
 
