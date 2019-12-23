@@ -56,5 +56,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
-    implementation 'com.kent.university:webviewautologin:v0.1.0.1-alpha'
+    implementation 'com.kent.university:webviewautologin:v0.1.0.2-alpha'
 }

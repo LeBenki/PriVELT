@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -44,6 +45,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private final static String[] titles = {"GOOGLE", "HOTELS.COM", "STRAVA"};
     LoginService loginService = null;
+    AlertDialog alertDialog = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,15 +66,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         title.setText(titles[service]);
 
         debug.setOnClickListener(view -> {
-            if (loginService == null) {
-                Toast.makeText(LoginActivity.this, "login service is not instancied yet", Toast.LENGTH_LONG).show();
-                return;
-            }
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
-            dialogBuilder.setView(loginService.getWebView());
-            AlertDialog alertDialog = dialogBuilder.create();
-            alertDialog.setCanceledOnTouchOutside(true);
-            alertDialog.show();
+            showAlertDebug();
         });
     }
 
@@ -113,6 +107,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.d("TIFFANY", "Notre response Enum: " + responseEnum.getName());
                 if (responseEnum != ResponseEnum.SUCCESS) {
                     button.setEnabled(true);
+
+                    showAlertDebug();
+
                     Toast.makeText(LoginActivity.this, responseEnum.getName(), Toast.LENGTH_LONG).show();
 
                 } else {
@@ -127,5 +124,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 progressBar.setVisibility(View.GONE);
             }
         });
+    }
+
+    private void showAlertDebug() {
+
+        if (loginService == null) {
+            Toast.makeText(LoginActivity.this, "Login service is not instancied yet", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        if (loginService.getWebView().getParent() != null) {
+            ((ViewGroup)loginService.getWebView().getParent()).removeView(loginService.getWebView());
+        }
+
+        if (alertDialog == null || ! alertDialog.isShowing()) {
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+            dialogBuilder.setView(loginService.getWebView());
+            alertDialog = dialogBuilder.create();
+            alertDialog.setCanceledOnTouchOutside(true);
+            alertDialog.show();
+        }
+
     }
 }
