@@ -1,5 +1,20 @@
 apply plugin: 'com.android.application'
 
+def githubProperties = new Properties()
+githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+
+repositories {
+    maven {
+        name = "GitHubPackages"
+
+        url = uri("https://maven.pkg.github.com/jordanbonaldi/WebviewAutoLogin")
+        credentials {
+            username = githubProperties['gpr.usr']
+            password = githubProperties['gpr.key']
+        }
+    }
+}
+
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.2"
@@ -41,5 +56,5 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.jakewharton:butterknife:10.2.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.1'
-    implementation project(path: ':web-auto-login')
+    implementation 'com.kent.university:webviewautologin:v0.1-alpha'
 }
