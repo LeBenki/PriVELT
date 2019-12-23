@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+    <item
+        android:id="@+id/nav_google"
+        android:icon="@drawable/ic_google_map"
+        android:title="@string/menu_google" />
+    <item
+        android:id="@+id/nav_hotels"
+        android:icon="@drawable/hotels"
+        android:title="@string/menu_hotels" />
+
+    <item
+        android:id="@+id/nav_strava"
+        android:icon="@drawable/hotels"
+        android:title="@string/menu_strava" />
+
+    <item
+        android:id="@+id/nav_settings"
+        android:icon="@drawable/ic_menu_manage"
+        android:title="@string/menu_settings" />
+</menu>

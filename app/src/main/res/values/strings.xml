@@ -1,3 +1,14 @@
 <resources>
-    <string name="app_name">PriVELT</string>
+    <string name="app_name">AutoLoginDemo</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">PriVELT</string>
+    <string name="nav_header_subtitle">Keep your data safe</string>
+    <string name="nav_header_desc">Navigation header</string>
+
+    <string name="menu_google">Google</string>
+    <string name="menu_hotels">Hotels.com</string>
+    <string name="menu_strava">Strava</string>
+    <string name="menu_settings">Settings</string>
 </resources>
