@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
+
     <item
         android:id="@+id/nav_google"
         android:icon="@drawable/ic_google_map"
@@ -13,7 +14,7 @@
 
     <item
         android:id="@+id/nav_strava"
-        android:icon="@drawable/hotels"
+        android:icon="@drawable/strava"
         android:title="@string/menu_strava" />
 
     <item
