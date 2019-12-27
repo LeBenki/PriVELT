@@ -1,4 +1,4 @@
-package com.kent.university.privelt;
+package com.kent.university.privelt.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,6 +11,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kent.university.privelt.R;
+import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.webviewautologin.response.ResponseCallback;
 import com.kent.university.webviewautologin.response.ResponseEnum;
 import com.kent.university.webviewautologin.services.GoogleService;
@@ -20,11 +22,10 @@ import com.kent.university.webviewautologin.services.StravaService;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
     public static final String KEY_WELCOME = "KEY_WELCOME";
@@ -65,9 +66,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         title.setText(titles[service]);
 
-        debug.setOnClickListener(view -> {
-            showAlertDebug();
-        });
+        debug.setOnClickListener(view -> showAlertDebug());
     }
 
     @Override

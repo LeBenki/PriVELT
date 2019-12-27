@@ -1,10 +1,11 @@
-package com.kent.university.privelt;
+package com.kent.university.privelt.ui;
 
 import android.os.Bundle;
 
 import com.google.android.material.navigation.NavigationView;
+import com.kent.university.privelt.R;
+import com.kent.university.privelt.base.BaseActivity;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.navigation.NavController;
@@ -12,7 +13,7 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
 
