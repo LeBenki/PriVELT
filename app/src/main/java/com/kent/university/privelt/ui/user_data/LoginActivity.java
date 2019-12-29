@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui;
+package com.kent.university.privelt.ui.user_data;
 
 import android.content.Intent;
 import android.os.Bundle;

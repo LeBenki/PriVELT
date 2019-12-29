@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui;
+package com.kent.university.privelt.ui.user_data;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +18,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
-import static com.kent.university.privelt.ui.LoginActivity.KEY_WELCOME;
-import static com.kent.university.privelt.ui.LoginActivity.PARAM_SERVICE;
+import static com.kent.university.privelt.ui.user_data.LoginActivity.KEY_WELCOME;
+import static com.kent.university.privelt.ui.user_data.LoginActivity.PARAM_SERVICE;
 
 public class ServiceFragment extends Fragment {
 

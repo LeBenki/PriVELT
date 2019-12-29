@@ -6,7 +6,7 @@ public class IdentityManager {
 
     private final static String KEY_SALT = "KEY_SALT";
     public final static String SHARED_PREFERENCES_KEY = "SHARED_PREFERENCES_KEY";
-    private String masterPassword;
+
     private SharedPreferences sharedPreferences;
 
     private boolean isConnectedToGoogle;
@@ -15,12 +15,14 @@ public class IdentityManager {
 
     private boolean isConnectedToHotelsCom;
 
+    private long mpIndex;
+
     public IdentityManager(SharedPreferences sharedPreferences) {
         this.isConnectedToGoogle = false;
         this.isConnectedToHotelsCom = false;
         this.isConnectedToStrava = false;
-        this.masterPassword = "";
         this.sharedPreferences = sharedPreferences;
+        mpIndex = -1;
     }
 
     public boolean isConnectedToGoogle() {
@@ -47,15 +49,15 @@ public class IdentityManager {
         isConnectedToStrava = connectedToStrava;
     }
 
-    public String getMasterPassword() {
-        return masterPassword;
-    }
-
-    public void setMasterPassword(String masterPassword) {
-        this.masterPassword = masterPassword;
-    }
-
     public boolean areDataAlreadyPresent() {
         return this.sharedPreferences.contains(KEY_SALT);
+    }
+
+    public long getMpIndex() {
+        return mpIndex;
+    }
+
+    public void setMpIndex(long mpIndex) {
+        this.mpIndex = mpIndex;
     }
 }

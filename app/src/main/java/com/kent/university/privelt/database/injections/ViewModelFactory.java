@@ -2,7 +2,7 @@ package com.kent.university.privelt.database.injections;
 
 import com.kent.university.privelt.repositories.CredentialsDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
-import com.kent.university.privelt.ui.CredentialsViewModel;
+import com.kent.university.privelt.ui.master_password.CredentialsViewModel;
 
 import java.util.concurrent.Executor;
 
