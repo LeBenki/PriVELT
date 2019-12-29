@@ -2,8 +2,8 @@ package com.kent.university.privelt.database.injections;
 
 import com.kent.university.privelt.repositories.CredentialsDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
-import com.kent.university.privelt.ui.master_password.CredentialsViewModel;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Executor;
 
 import androidx.annotation.NonNull;
@@ -24,9 +24,13 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass.isAssignableFrom(CredentialsViewModel.class)) {
-            return (T) new CredentialsViewModel(mProjectDataSource, mTaskDataSource, mExecutor);
+        try {
+            return modelClass.getConstructor(CredentialsDataRepository.class,
+                    UserDataRepository.class,
+                    Executor.class)
+                    .newInstance(mProjectDataSource, mTaskDataSource, mExecutor);
+        } catch (IllegalAccessException | InstantiationException | InvocationTargetException | NoSuchMethodException e) {
+            throw new IllegalArgumentException("Unknown ViewModel class");
         }
-        throw new IllegalArgumentException("Unknown ViewModel class");
     }
 }

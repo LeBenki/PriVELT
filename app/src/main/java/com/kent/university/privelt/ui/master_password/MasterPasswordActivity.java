@@ -3,7 +3,6 @@ package com.kent.university.privelt.ui.master_password;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -42,7 +41,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     private static final String KEY_MASTER_PASSWORD_ALREADY_GIVEN = "KEY_MASTER_PASSWORD_ALREADY_GIVEN";
     private static final String KEY_SP = "KEY_SP";
     private Zxcvbn zxcvbn;
-    private Strength strength;
 
     private boolean changePassword;
 
