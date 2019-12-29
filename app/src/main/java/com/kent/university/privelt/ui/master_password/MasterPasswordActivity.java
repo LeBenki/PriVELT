@@ -187,7 +187,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         mCredentialsViewModel = ViewModelProviders.of(this, viewModelFactory).get(CredentialsViewModel.class);
-        mCredentialsViewModel.setChangePassword(changePassword);
     }
 
     private void populateDb() {
