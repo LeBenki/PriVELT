@@ -23,6 +23,7 @@ import com.kent.university.privelt.utils.SimpleHash;
 
 import java.util.UUID;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
@@ -63,7 +64,13 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
 
         start.setOnClickListener(this);
 
-        changePassword = getIntent().getBooleanExtra(ARG_CHANGE_PASSWORD, false);
+        if (getIntent() != null) {
+            changePassword = getIntent().getBooleanExtra(ARG_CHANGE_PASSWORD, false);
+        }
+        else if (savedInstanceState != null) {
+            changePassword = savedInstanceState.getBoolean(ARG_CHANGE_PASSWORD, false);
+        }
+
         if (changePassword) {
             reset.setVisibility(View.GONE);
             start.setText("Change master password");
@@ -75,6 +82,12 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         masterPasswordAlreadyGiven = mSharedPreferences.getBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false);
 
         resetMasterPassword();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(ARG_CHANGE_PASSWORD, changePassword);
     }
 
     private void resetMasterPassword() {
