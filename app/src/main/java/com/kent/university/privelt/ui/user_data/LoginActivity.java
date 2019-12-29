@@ -2,9 +2,11 @@ package com.kent.university.privelt.ui.user_data;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.ValueCallback;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -19,6 +21,7 @@ import com.kent.university.webviewautologin.services.GoogleService;
 import com.kent.university.webviewautologin.services.HotelsComService;
 import com.kent.university.webviewautologin.services.LoginService;
 import com.kent.university.webviewautologin.services.StravaService;
+import com.university.kent.dataextractor.DataExtractor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -100,6 +103,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 throw new IllegalStateException("Unexpected value: " + service);
         }
 
+        DataExtractor extractor = new DataExtractor(loginService);
+
         loginService.autoLogin(email.getText().toString(), password.getText().toString(), new ResponseCallback() {
             @Override
             public void getResponse(ResponseEnum responseEnum, String data) {
@@ -115,6 +120,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     Intent intent = new Intent();
                     if (data.equals("{}"))
                         data = "Successfully connected";
+                    extractor.injectScriptByName("labeled", s -> Log.d("TIFFANY", s));
                     intent.putExtra(KEY_WELCOME, data);
                     setResult(RESULT_OK, intent);
                     finish();

@@ -3,8 +3,11 @@ package com.kent.university.privelt.ui.master_password;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
@@ -20,6 +23,8 @@ import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.ui.MainActivity;
 import com.kent.university.privelt.utils.SimpleHash;
+import com.nulabinc.zxcvbn.Strength;
+import com.nulabinc.zxcvbn.Zxcvbn;
 
 import java.util.UUID;
 
@@ -32,10 +37,12 @@ import butterknife.ButterKnife;
 import static com.kent.university.privelt.database.PriVELTDatabase.DB_SIZE;
 import static com.kent.university.privelt.ui.settings.SettingsFragment.ARG_CHANGE_PASSWORD;
 
-public class MasterPasswordActivity extends BaseActivity implements View.OnClickListener {
+public class MasterPasswordActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
 
     private static final String KEY_MASTER_PASSWORD_ALREADY_GIVEN = "KEY_MASTER_PASSWORD_ALREADY_GIVEN";
     private static final String KEY_SP = "KEY_SP";
+    private Zxcvbn zxcvbn;
+    private Strength strength;
 
     private boolean changePassword;
 
@@ -51,6 +58,12 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @BindView(R.id.progress_circular)
     ProgressBar progressBar;
 
+    @BindView(R.id.progress_password)
+    ProgressBar progressPassword;
+
+    @BindView(R.id.password_strength)
+    TextView strengthView;
+
     private CredentialsViewModel mCredentialsViewModel;
     private SharedPreferences mSharedPreferences;
     private boolean masterPasswordAlreadyGiven;
@@ -63,6 +76,9 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         ButterKnife.bind(this);
 
         start.setOnClickListener(this);
+        password.addTextChangedListener(this);
+
+        zxcvbn = new Zxcvbn();
 
         if (getIntent() != null) {
             changePassword = getIntent().getBooleanExtra(ARG_CHANGE_PASSWORD, false);
@@ -123,6 +139,10 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onClick(View view) {
+        if (!strengthView.getText().equals(getString(R.string.very_strong))) {
+            Toast.makeText(MasterPasswordActivity.this, "Your password is not strong enough", Toast.LENGTH_LONG).show();
+            return;
+        }
         start.setEnabled(false);
         reset.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
@@ -193,5 +213,39 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         for (int i = 0; i < DB_SIZE; i++) {
             mCredentialsViewModel.updateCredentials(new Credentials(i, "email" + i, SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString())));
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        updatePasswordStrengthView(editable.toString());
+    }
+
+    private void updatePasswordStrengthView(String password) {
+        if (TextView.VISIBLE != strengthView.getVisibility())
+            return;
+
+        if (password.isEmpty()) {
+            strengthView.setText("");
+            progressPassword.setProgress(0);
+            return;
+        }
+
+        Strength strength = zxcvbn.measure(password);
+
+        PasswordStrength ps = PasswordStrength.values()[strength.getScore()];
+        progressPassword.setProgress(ps.getProgress());
+        strengthView.setText(ps.getResId());
+        strengthView.setTextColor(ps.getColor());
+        progressPassword.getProgressDrawable().setColorFilter(ps.getColor(), android.graphics.PorterDuff.Mode.SRC_IN);
     }
 }
