@@ -6,11 +6,15 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Pair;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +25,7 @@ import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.ui.MainActivity;
+import com.kent.university.privelt.utils.PasswordChecker;
 import com.kent.university.privelt.utils.SimpleHash;
 import com.nulabinc.zxcvbn.Strength;
 import com.nulabinc.zxcvbn.Zxcvbn;
@@ -50,8 +55,14 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @BindView(R.id.password)
     EditText password;
 
+    @BindView(R.id.confirm_password)
+    EditText confirmPassword;
+
     @BindView(R.id.reset)
     TextView reset;
+
+    @BindView(R.id.hint)
+    TextView hint;
 
     @BindView(R.id.progress_circular)
     ProgressBar progressBar;
@@ -61,6 +72,15 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
 
     @BindView(R.id.password_strength)
     TextView strengthView;
+
+    @BindView(R.id.password_meter)
+    LinearLayout passwordMeter;
+
+    @BindView(R.id.eye_password)
+    ImageView eye;
+
+    @BindView(R.id.eye_confirm_password)
+    ImageView eyeConfirm;
 
     private CredentialsViewModel mCredentialsViewModel;
     private SharedPreferences mSharedPreferences;
@@ -77,6 +97,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         password.addTextChangedListener(this);
 
         zxcvbn = new Zxcvbn();
+
 
         if (getIntent() != null) {
             changePassword = getIntent().getBooleanExtra(ARG_CHANGE_PASSWORD, false);
@@ -95,7 +116,18 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         mSharedPreferences = getSharedPreferences(KEY_SP, MODE_PRIVATE);
         masterPasswordAlreadyGiven = mSharedPreferences.getBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false);
 
+        if (!(changePassword || !masterPasswordAlreadyGiven)) {
+            passwordMeter.setVisibility(View.GONE);
+            hint.setVisibility(View.GONE);
+            confirmPassword.setVisibility(View.GONE);
+            eyeConfirm.setVisibility(View.GONE);
+        }
+        else {
+            reset.setVisibility(View.GONE);
+        }
         resetMasterPassword();
+
+        configureEye();
     }
 
     @Override
@@ -127,6 +159,13 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                         progressBar.setVisibility(View.GONE);
                         reset.setEnabled(true);
                         start.setEnabled(true);
+
+                        passwordMeter.setVisibility(View.VISIBLE);
+                        hint.setVisibility(View.VISIBLE);
+                        confirmPassword.setVisibility(View.VISIBLE);
+                        reset.setVisibility(View.GONE);
+                        eyeConfirm.setVisibility(View.VISIBLE);
+
                         Toast.makeText(MasterPasswordActivity.this, "All your data has been deleted please enter a new master password", Toast.LENGTH_LONG).show();
                     }
                 }.execute();
@@ -137,8 +176,13 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onClick(View view) {
-        if (!strengthView.getText().equals(getString(R.string.very_strong))) {
-            Toast.makeText(MasterPasswordActivity.this, "Your password is not strong enough", Toast.LENGTH_LONG).show();
+        if (confirmPassword.getVisibility() == View.VISIBLE && !password.getText().toString().equals(confirmPassword.getText().toString())) {
+            Toast.makeText(MasterPasswordActivity.this, "Passwords are not the same", Toast.LENGTH_LONG).show();
+            return;
+        }
+        if (!PasswordChecker.checkPassword(zxcvbn, password.getText().toString())) {
+            String errMessage = changePassword || !masterPasswordAlreadyGiven ? "You did not respect the password policy" : "Wrong password, you can reset all your data to enter a new password";
+            Toast.makeText(MasterPasswordActivity.this, errMessage, Toast.LENGTH_LONG).show();
             return;
         }
         start.setEnabled(false);
@@ -245,5 +289,23 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         strengthView.setText(ps.getResId());
         strengthView.setTextColor(ps.getColor());
         progressPassword.getProgressDrawable().setColorFilter(ps.getColor(), android.graphics.PorterDuff.Mode.SRC_IN);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private void configureEye() {
+        eye.setOnTouchListener((v, event) -> showEye(v, event, password));
+        eyeConfirm.setOnTouchListener((v, event) -> showEye(v, event, confirmPassword));
+    }
+
+    private boolean showEye(View view, MotionEvent event, EditText editText) {
+        switch (event.getAction() ) {
+            case MotionEvent.ACTION_DOWN:
+                editText.setInputType(InputType.TYPE_CLASS_TEXT);
+                break;
+            case MotionEvent.ACTION_UP:
+                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                break;
+        }
+        return true;
     }
 }

@@ -35,7 +35,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public static final String PARAM_SERVICE = "PARAM_SERVICE";
 
     @BindView(R.id.best_poc) Button button;
-    //@BindView(R.id.result) TextView result;
     @BindView(R.id.email) EditText email;
     @BindView(R.id.password) EditText password;
     @BindView(R.id.progress_circular) ProgressBar progressBar;
@@ -54,6 +53,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("TIFFANY", "test");
 
         setContentView(R.layout.activity_login);
 
@@ -124,7 +124,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     intent.putExtra(KEY_WELCOME, data);
                     setResult(RESULT_OK, intent);
                     finish();
-                    //result.setText(data);
                 }
                 progressBar.setVisibility(View.GONE);
             }
