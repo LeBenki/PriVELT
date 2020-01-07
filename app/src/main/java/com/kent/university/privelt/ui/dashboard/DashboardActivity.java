@@ -103,6 +103,7 @@ public class DashboardActivity extends BaseActivity {
 
             final Spinner sp = new Spinner(DashboardActivity.this);
             sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            sp.setPadding(50, 50, 50, 50);
             sp.setAdapter(adp);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
@@ -194,7 +195,7 @@ public class DashboardActivity extends BaseActivity {
         super.onStop();
         EventBus.getDefault().unregister(this);
     }
-    
+
     @Subscribe
     public void onEditCredentials(UpdateCredentialsEvent event) {
         editCredentials(event.service);
