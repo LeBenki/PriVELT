@@ -12,7 +12,6 @@ import static androidx.room.ForeignKey.CASCADE;
         parentColumns = "id",
         childColumns = "credentials_id",
         onDelete = CASCADE))
-
 public class Service {
 
     @ColumnInfo(name = "res_id")

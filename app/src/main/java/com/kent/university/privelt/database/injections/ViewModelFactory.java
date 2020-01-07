@@ -15,13 +15,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
     private final CredentialsDataRepository mProjectDataSource;
-    private final UserDataRepository mTaskDataSource;
+    private final UserDataRepository mUserDataSource;
     private final ServiceDataRepository mServiceDataSource;
     private final Executor mExecutor;
 
     ViewModelFactory(CredentialsDataRepository credentialsDataSource, UserDataRepository userDataSource, ServiceDataRepository serviceSource, Executor executor) {
         mProjectDataSource = credentialsDataSource;
-        mTaskDataSource = userDataSource;
+        mUserDataSource = userDataSource;
         mServiceDataSource = serviceSource;
         mExecutor = executor;
     }

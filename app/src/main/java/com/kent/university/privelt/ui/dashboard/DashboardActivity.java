@@ -15,7 +15,11 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,13 +109,16 @@ public class DashboardActivity extends BaseActivity {
             builder.setTitle("Choose the service you want to subscribe to");
             builder.setView(sp);
             builder.setPositiveButton("Choose", (dialogInterface, i) -> {
-                Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
-                currentChoice = sp.getSelectedItemPosition();
-                intent.putExtra(PARAM_SERVICE, currentChoice);
-                startActivityForResult(intent, REQUEST_LOGIN);
+                editCredentials(sp.getSelectedItemPosition());
             });
             builder.create().show();
         });
+    }
+
+    private void editCredentials(int service) {
+        Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
+        intent.putExtra(PARAM_SERVICE, service);
+        startActivityForResult(intent, REQUEST_LOGIN);
     }
 
     private void setUpRecyclerView() {
@@ -174,5 +181,22 @@ public class DashboardActivity extends BaseActivity {
             dashboardAdapter.notifyItemInserted(subscribedServices.size() - 1);
             noService.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+    
+    @Subscribe
+    public void onEditCredentials(UpdateCredentialsEvent event) {
+        editCredentials(event.service);
     }
 }

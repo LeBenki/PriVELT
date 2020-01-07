@@ -16,7 +16,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardViewHolder> 
 
     private List<Service> services;
 
-    public DashboardAdapter(List<Service> services) {
+    DashboardAdapter(List<Service> services) {
         this.services = services;
     }
 
@@ -30,10 +30,10 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardViewHolder> 
 
     @Override
     public void onBindViewHolder(@NonNull DashboardViewHolder holder, int position) {
-
+        holder.bind(services.get(position));
     }
 
-    public void updateServices(List<Service> services) {
+    void updateServices(List<Service> services) {
         this.services = services;
     }
 
