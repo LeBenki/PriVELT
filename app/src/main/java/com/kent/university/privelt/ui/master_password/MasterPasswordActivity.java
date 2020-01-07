@@ -24,7 +24,7 @@ import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Credentials;
-import com.kent.university.privelt.ui.MainActivity;
+import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.utils.PasswordChecker;
 import com.kent.university.privelt.utils.SimpleHash;
 import com.nulabinc.zxcvbn.Strength;
@@ -233,7 +233,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                         finish();
                     }
                     else {
-                        startActivity(new Intent(MasterPasswordActivity.this, MainActivity.class));
+                        startActivity(new Intent(MasterPasswordActivity.this, DashboardActivity.class));
                         MasterPasswordActivity.this.getIdentityManager().setMpIndex(pair.second);
                         finish();
                     }
@@ -293,11 +293,11 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
 
     @SuppressLint("ClickableViewAccessibility")
     private void configureEye() {
-        eye.setOnTouchListener((v, event) -> showEye(v, event, password));
-        eyeConfirm.setOnTouchListener((v, event) -> showEye(v, event, confirmPassword));
+        eye.setOnTouchListener((v, event) -> showEye(event, password));
+        eyeConfirm.setOnTouchListener((v, event) -> showEye(event, confirmPassword));
     }
 
-    private boolean showEye(View view, MotionEvent event, EditText editText) {
+    private boolean showEye(MotionEvent event, EditText editText) {
         switch (event.getAction() ) {
             case MotionEvent.ACTION_DOWN:
                 editText.setInputType(InputType.TYPE_CLASS_TEXT);

@@ -16,4 +16,8 @@
     <string name="good">Good</string>
     <string name="strong">Strong</string>
     <string name="very_strong">Very strong</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_home">Identity Manager</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Settings</string>
 </resources>

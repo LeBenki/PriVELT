@@ -4,9 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 
 import com.kent.university.privelt.database.dao.CredentialsDao;
+import com.kent.university.privelt.database.dao.ServiceDao;
 import com.kent.university.privelt.database.dao.UserDataDao;
 import com.kent.university.privelt.model.Credentials;
+import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
+import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.utils.SimpleHash;
 
 import java.util.UUID;
@@ -18,7 +21,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Credentials.class, UserData.class}, version = 1, exportSchema = false)
+@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 1, exportSchema = false)
 public abstract class PriVELTDatabase extends RoomDatabase {
     private static volatile PriVELTDatabase INSTANCE;
     public final static int DB_SIZE = 1024;
@@ -52,6 +55,16 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                     contentValues.put("password", SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString()));
                     db.insert("credentials", OnConflictStrategy.IGNORE, contentValues);
                 }
+
+                for (int i = 0; i < 3; i++) {
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("id", i);
+                    contentValues.put("name", DashboardActivity.s[i]);
+                    contentValues.put("res_id", DashboardActivity.i[i]);
+                    contentValues.put("subscribed", false);
+                    contentValues.put("credentials_id", i);
+                    db.insert("service", OnConflictStrategy.IGNORE, contentValues);
+                }
             }
         };
     }
@@ -59,5 +72,7 @@ public abstract class PriVELTDatabase extends RoomDatabase {
     public abstract CredentialsDao credentialsDao();
 
     public abstract UserDataDao userDataDao();
+
+    public abstract ServiceDao serviceDao();
 }
 

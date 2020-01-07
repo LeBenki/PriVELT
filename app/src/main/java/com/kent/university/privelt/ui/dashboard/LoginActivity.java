@@ -1,12 +1,9 @@
-package com.kent.university.privelt.ui.user_data;
+package com.kent.university.privelt.ui.dashboard;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.ValueCallback;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -53,7 +50,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("TIFFANY", "test");
 
         setContentView(R.layout.activity_login);
 
@@ -117,13 +113,21 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     Toast.makeText(LoginActivity.this, responseEnum.getName(), Toast.LENGTH_LONG).show();
 
                 } else {
-                    Intent intent = new Intent();
-                    if (data.equals("{}"))
-                        data = "Successfully connected";
-                    extractor.injectScriptByName("labeled", s -> Log.d("TIFFANY", s));
-                    intent.putExtra(KEY_WELCOME, data);
-                    setResult(RESULT_OK, intent);
+                    setResult(RESULT_OK);
                     finish();
+                    /*
+                    Intent intent = new Intent();
+                    try {
+                        extractor.injectScriptByName("savedplace", s -> {
+                                    Log.d("TIFFANY", s);
+                                    intent.putExtra(KEY_WELCOME, s);
+                                    setResult(RESULT_OK, intent);
+                                    finish();
+                                }
+                        );
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }*/
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -133,7 +137,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void showAlertDebug() {
 
         if (loginService == null) {
-            Toast.makeText(LoginActivity.this, "Login service is not instancied yet", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, "Login service is not instanced yet", Toast.LENGTH_LONG).show();
             return;
         }
 

@@ -15,30 +15,30 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name="com.kent.university.privelt.ui.MainActivity"
-            android:label="@string/title_activity_main"
+            android:name=".ui.dashboard.DashboardActivity"
+            android:label="@string/title_dashboard"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
-            android:name="com.kent.university.privelt.ui.user_data.LoginActivity"
-            android:label=""
-            android:parentActivityName="com.kent.university.privelt.ui.MainActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTrans">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kent.university.privelt.ui.MainActivity" />
-        </activity>
-        <activity
-            android:name=".ui.master_password.MasterPasswordActivity"
-            android:screenOrientation="portrait"
-            android:label=""
-            android:theme="@style/AppTrans">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.dashboard.LoginActivity"
+            android:label=""
+            android:parentActivityName=".ui.dashboard.DashboardActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTrans">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".ui.master_password.MasterPasswordActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTrans" />
     </application>
 
 </manifest>

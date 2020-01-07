@@ -107,7 +107,7 @@ public class SimpleHash {
 
         char[] chars = new char[password.length()];
         password.getChars(0, password.length(), chars, 0);
-        byte[] salt = "salt_on_client_is_funny".getBytes(); // In security terms, this is worthess. However, it's required.
+        byte[] salt = "salt_on_client_is_funny".getBytes();
 
         byte[] hashedPassBytes = new byte[0];
         try {
