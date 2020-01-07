@@ -38,7 +38,14 @@
             android:name=".ui.master_password.MasterPasswordActivity"
             android:label=""
             android:screenOrientation="portrait"
+            android:parentActivityName=".ui.dashboard.DashboardActivity"
             android:theme="@style/AppTrans" />
+        <activity android:name=".ui.settings.SettingsActivity"
+            android:screenOrientation="portrait"
+            android:label="Settings">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
+        </activity>
     </application>
-
 </manifest>

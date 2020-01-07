@@ -39,7 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.database.PriVELTDatabase.DB_SIZE;
-import static com.kent.university.privelt.ui.settings.SettingsFragment.ARG_CHANGE_PASSWORD;
+import static com.kent.university.privelt.ui.settings.SettingsActivity.ARG_CHANGE_PASSWORD;
 
 public class MasterPasswordActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
 

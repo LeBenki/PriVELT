@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
@@ -17,6 +20,7 @@ import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
+import com.kent.university.privelt.ui.settings.SettingsActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -82,9 +86,13 @@ public class DashboardActivity extends BaseActivity {
         boolean shouldRefresh = subscribedServices.size() == 0;
         subscribedServices.clear();
 
-        for (Service service : services)
+        int j = 0;
+        for (Service service : services) {
+            //TODO: REMOVE RESID EN DUR DANS LA BDD
+            service.setResId(i[j++]);
             if (service.isSubscribed())
                 subscribedServices.add(service);
+        }
 
         if (subscribedServices.size() > 0)
             noService.setVisibility(View.GONE);
@@ -199,5 +207,24 @@ public class DashboardActivity extends BaseActivity {
     @Subscribe
     public void onEditCredentials(UpdateCredentialsEvent event) {
         editCredentials(event.service);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.dashboard_menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
