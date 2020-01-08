@@ -20,7 +20,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 3, exportSchema = false)
+@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 4, exportSchema = false)
 public abstract class PriVELTDatabase extends RoomDatabase {
     private static volatile PriVELTDatabase INSTANCE;
     public final static int DB_SIZE = 1024;

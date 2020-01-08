@@ -16,12 +16,22 @@
         <item name="android:windowNoTitle">true</item>
     </style>
 
+    <style name="AlertTheme" >
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowMinWidthMajor">@android:dimen/dialog_min_width_major</item>
+        <item name="android:windowMinWidthMinor">@android:dimen/dialog_min_width_minor</item>
+    </style>
+
     <style name="AppTrans" parent="Theme.AppCompat.Light">
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">#ffffff</item>
         <item name="colorPrimary">@android:color/transparent</item>
         <item name="windowActionBarOverlay">true</item>
+        <item name="android:alertDialogTheme">@style/AlertTheme</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

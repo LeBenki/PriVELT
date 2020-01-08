@@ -9,8 +9,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.app.AlertDialog;
 
-import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.webviewautologin.response.ResponseCallback;
@@ -18,7 +18,6 @@ import com.kent.university.webviewautologin.response.ResponseEnum;
 import com.kent.university.webviewautologin.services.LoginService;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,12 +31,23 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public static final String PARAM_SERVICE = "PARAM_SERVICE";
     private String service;
 
-    @BindView(R.id.best_poc) Button button;
-    @BindView(R.id.email) EditText email;
-    @BindView(R.id.password) EditText password;
-    @BindView(R.id.progress_circular) ProgressBar progressBar;
-    @BindView(R.id.title) TextView title;
-    @BindView(R.id.debug) Button debug;
+    @BindView(R.id.best_poc)
+    Button button;
+
+    @BindView(R.id.email)
+    EditText email;
+
+    @BindView(R.id.password)
+    EditText password;
+
+    @BindView(R.id.progress_circular)
+    ProgressBar progressBar;
+
+    @BindView(R.id.title)
+    TextView title;
+
+    @BindView(R.id.debug)
+    Button debug;
 
     LoginService loginService = null;
     AlertDialog alertDialog = null;
@@ -111,9 +121,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
 
-        new android.app.AlertDialog.Builder(LoginActivity.this)
-                .setTitle("Unsubscribe")
-                .setMessage("Are you sure you want to unsubscribe to this service?")
+        new AlertDialog.Builder(LoginActivity.this)
+                .setTitle("Store password")
+                .setMessage("Do you authorize the application to store the password?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     processLogin(true);
                 })
