@@ -51,10 +51,12 @@ public class IdentityManager {
     }
 
     public AesCbcWithIntegrity.SecretKeys getKey() {
+        return getKey(getPassword());
+    }
+
+    public AesCbcWithIntegrity.SecretKeys getKey(String password) {
         try {
-            String test = getPassword();
-            String test2 = getSalt();
-            return SimpleCrypto.generateKey(getPassword(), getSalt());
+            return SimpleCrypto.generateKey(password, getSalt());
         } catch (GeneralSecurityException e) {
             e.printStackTrace();
         }

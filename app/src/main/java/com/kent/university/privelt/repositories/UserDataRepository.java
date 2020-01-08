@@ -17,4 +17,8 @@ public class UserDataRepository {
     public LiveData<List<UserData>> getUserDatas() {
         return mUserDataDao.getUserDatas();
     }
+
+    public void deleteAllUserDatas() {
+        mUserDataDao.deleteAllUserDatas();
+    }
 }

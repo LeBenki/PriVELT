@@ -24,12 +24,17 @@ import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Credentials;
+import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.utils.PasswordChecker;
+import com.kent.university.privelt.utils.SimpleCrypto;
 import com.kent.university.privelt.utils.SimpleHash;
 import com.nulabinc.zxcvbn.Strength;
 import com.nulabinc.zxcvbn.Zxcvbn;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
+import java.util.List;
 import java.util.UUID;
 
 import androidx.annotation.NonNull;
@@ -149,7 +154,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     protected Void doInBackground(Void... voids) {
                         mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false).apply();
                         masterPasswordAlreadyGiven = false;
-                        //TODO: Should also delete services and userdata
+                        mCredentialsViewModel.deleteAllDatabase();
                         populateDb();
                         return null;
                     }
@@ -203,7 +208,8 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                         if (c.getPassword().equals(hashedPassword)) {
                             return new Pair<>(false, password);
                         }
-                        //TODO: Should encrypt credentials with new master password
+                        //Encrypt credentials with new master password
+                        changeAllPasswords(password);
                         //remove old password
                         mCredentialsViewModel.updateCredentials(new Credentials(oldIndex, "email" + oldIndex, SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString())));
                     }
@@ -244,6 +250,20 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                 }
             }
         }.execute();
+    }
+
+    private void changeAllPasswords(String newPassword) {
+        List<Service> services = mCredentialsViewModel.getAllServices();
+        for (Service service : services) {
+            Credentials credentials = mCredentialsViewModel.getCredentialsWithId(SimpleHash.calculateIndexOfHash(service.getName()));
+            try {
+                String oldServicePassword = SimpleCrypto.decrypt(credentials.getPassword(), getIdentityManager().getKey());
+                credentials.setPassword(SimpleCrypto.encrypt(oldServicePassword, getIdentityManager().getKey(newPassword)));
+                mCredentialsViewModel.updateCredentials(credentials);
+            } catch (UnsupportedEncodingException | GeneralSecurityException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void configureViewModel() {

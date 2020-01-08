@@ -1,8 +1,12 @@
 package com.kent.university.privelt.ui.master_password;
 
 import com.kent.university.privelt.model.Credentials;
+import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.repositories.CredentialsDataRepository;
+import com.kent.university.privelt.repositories.ServiceDataRepository;
+import com.kent.university.privelt.repositories.UserDataRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executor;
 
@@ -12,10 +16,14 @@ import androidx.lifecycle.ViewModel;
 
 public class CredentialsViewModel extends ViewModel {
     private final CredentialsDataRepository mCredentialsDataSource;
+    private final UserDataRepository mUserDataSource;
+    private final ServiceDataRepository mServiceDataSource;
     private final Executor mExecutor;
 
-    public CredentialsViewModel(CredentialsDataRepository mCredentialsDataSource, Executor mExecutor) {
+    public CredentialsViewModel(CredentialsDataRepository mCredentialsDataSource, UserDataRepository mUserDataSource, ServiceDataRepository mServiceDataSource, Executor mExecutor) {
         this.mCredentialsDataSource = mCredentialsDataSource;
+        this.mUserDataSource = mUserDataSource;
+        this.mServiceDataSource = mServiceDataSource;
         this.mExecutor = mExecutor;
     }
 
@@ -30,5 +38,19 @@ public class CredentialsViewModel extends ViewModel {
 
     public void updateCredentials(Credentials... credentials) {
         mCredentialsDataSource.updateCredentials(credentials);
+    }
+
+    public void deleteAllDatabase() {
+        mCredentialsDataSource.deleteAllCredentials();
+        mUserDataSource.deleteAllUserDatas();
+        mServiceDataSource.deleteAllServices();
+    }
+
+    public List<Service> getAllServices() {
+        return mServiceDataSource.getAllServices();
+    }
+
+    public void updateServices(Service... services) {
+        mServiceDataSource.updateServices(services);
     }
 }

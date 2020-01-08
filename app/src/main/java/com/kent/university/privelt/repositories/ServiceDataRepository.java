@@ -18,6 +18,10 @@ public class ServiceDataRepository {
         return mServiceDao.getServices();
     }
 
+    public List<Service> getAllServices() {
+        return mServiceDao.getAllServices();
+    }
+
     public void deleteServices(Service... credentials) {
         mServiceDao.deleteServices(credentials);
     }
@@ -28,5 +32,9 @@ public class ServiceDataRepository {
 
     public void updateServices(Service... credentials) {
         mServiceDao.updateServices(credentials);
+    }
+
+    public void deleteAllServices() {
+        mServiceDao.deleteAllServices();
     }
 }

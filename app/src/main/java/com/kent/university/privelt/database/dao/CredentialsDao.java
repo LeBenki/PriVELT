@@ -20,4 +20,7 @@ public interface CredentialsDao {
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void updateCredentials(Credentials... credentials);
+
+    @Query("DELETE FROM credentials")
+    void deleteAllCredentials();
 }

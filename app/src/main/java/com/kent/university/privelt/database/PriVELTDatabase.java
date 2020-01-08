@@ -34,6 +34,7 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                             PriVELTDatabase.class,
                             "PriVELTDatabase.db")
                             .addCallback(prepopulateDatabase())
+                            .fallbackToDestructiveMigration()
                             .addMigrations(MIGRATION_1_4)
                             .build();
                 }
@@ -42,16 +43,10 @@ public abstract class PriVELTDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    static final Migration MIGRATION_1_4 = new Migration(1, 4) {
+    private static final Migration MIGRATION_1_4 = new Migration(1, 4) {
         @Override
-        public void migrate(SupportSQLiteDatabase database) {
-            for (int i = 0; i < DB_SIZE; i++) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put("id", i);
-                contentValues.put("email", "name" + i);
-                contentValues.put("password", SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString()));
-                database.insert("credentials", OnConflictStrategy.IGNORE, contentValues);
-            }
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            fillDbWithDummyPassword(database);
         }
     };
 
@@ -62,15 +57,19 @@ public abstract class PriVELTDatabase extends RoomDatabase {
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
 
-                for (int i = 0; i < DB_SIZE; i++) {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("id", i);
-                    contentValues.put("email", "name" + i);
-                    contentValues.put("password", SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString()));
-                    db.insert("credentials", OnConflictStrategy.IGNORE, contentValues);
-                }
+                fillDbWithDummyPassword(db);
             }
         };
+    }
+
+    static private void fillDbWithDummyPassword(@NonNull SupportSQLiteDatabase db) {
+        for (int i = 0; i < DB_SIZE; i++) {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put("id", i);
+            contentValues.put("email", "name" + i);
+            contentValues.put("password", SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString()));
+            db.insert("credentials", OnConflictStrategy.IGNORE, contentValues);
+        }
     }
 
     public abstract CredentialsDao credentialsDao();

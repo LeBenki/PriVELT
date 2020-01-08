@@ -25,4 +25,8 @@ public class CredentialsDataRepository {
     public void updateCredentials(Credentials... credentials) {
         mCredentialsDao.updateCredentials(credentials);
     }
+
+    public void deleteAllCredentials() {
+        mCredentialsDao.deleteAllCredentials();
+    }
 }

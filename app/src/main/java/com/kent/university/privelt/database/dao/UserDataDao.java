@@ -12,4 +12,7 @@ import androidx.room.Query;
 public interface UserDataDao {
     @Query("SELECT * FROM user_data")
     LiveData<List<UserData>> getUserDatas();
+
+    @Query("DELETE FROM user_data")
+    void deleteAllUserDatas();
 }

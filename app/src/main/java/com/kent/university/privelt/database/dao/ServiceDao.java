@@ -16,6 +16,9 @@ public interface ServiceDao {
     @Query("SELECT * FROM service")
     LiveData<List<Service>> getServices();
 
+    @Query("SELECT * FROM service")
+    List<Service> getAllServices();
+
     @Insert
     void insertServices(Service... service);
 
@@ -24,4 +27,7 @@ public interface ServiceDao {
 
     @Update
     void updateServices(Service... services);
+
+    @Query("DELETE FROM service")
+    void deleteAllServices();
 }
