@@ -55,16 +55,6 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                     contentValues.put("password", SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString()));
                     db.insert("credentials", OnConflictStrategy.IGNORE, contentValues);
                 }
-
-/*                for (int i = 0; i < 3; i++) {
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("id", i);
-//                    contentValues.put("name", serviceManager.get(i).get);
-//                    contentValues.put("res_id", DashboardActivity.i[i]);
-                    contentValues.put("subscribed", false);
-                    contentValues.put("credentials_id", i);
-                    db.insert("service", OnConflictStrategy.IGNORE, contentValues);
-                }*/
             }
         };
     }

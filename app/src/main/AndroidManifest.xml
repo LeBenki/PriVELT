@@ -40,7 +40,8 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".ui.dashboard.DashboardActivity"
             android:theme="@style/AppTrans" />
-        <activity android:name=".ui.settings.SettingsActivity"
+        <activity
+            android:name=".ui.settings.SettingsActivity"
             android:screenOrientation="portrait"
             android:label="Settings">
             <meta-data

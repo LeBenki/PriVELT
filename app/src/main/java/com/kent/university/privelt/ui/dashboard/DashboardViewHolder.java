@@ -36,6 +36,6 @@ class DashboardViewHolder extends RecyclerView.ViewHolder {
         title.setText(service.getName());
         PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
         imageService.setImageResource(priVELT.getServiceHelper().getResIdWithName(service.getName()));
-        //settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent((int) service.getId())));
+        settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent(service.getName())));
     }
 }

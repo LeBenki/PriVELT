@@ -24,9 +24,20 @@ public class Service {
     @ColumnInfo(name = "credentials_id", index = true)
     private long credentialsId;
 
-    public Service(String name) {
+    private boolean isPasswordSaved;
+
+    public Service(String name, boolean isPasswordSaved) {
         this.name = name;
         this.credentialsId = SimpleHash.calulateIndexOfHash(name);
+        this.isPasswordSaved = isPasswordSaved;
+    }
+
+    public boolean isPasswordSaved() {
+        return isPasswordSaved;
+    }
+
+    public void setPasswordSaved(boolean passwordSaved) {
+        isPasswordSaved = passwordSaved;
     }
 
     public String getName() {

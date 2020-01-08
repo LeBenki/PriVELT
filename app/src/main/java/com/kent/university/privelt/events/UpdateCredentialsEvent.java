@@ -1,12 +1,10 @@
 package com.kent.university.privelt.events;
 
-import com.kent.university.privelt.model.Service;
-
 public class UpdateCredentialsEvent {
 
-    public Service service;
+    public String service;
 
-    public UpdateCredentialsEvent(Service service) {
+    public UpdateCredentialsEvent(String service) {
         this.service = service;
     }
 }

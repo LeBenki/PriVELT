@@ -14,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
@@ -38,11 +37,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_PASSWORD;
 import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_SERVICE;
+import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_SHOULD_STORE;
+import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_USER;
 
 public class DashboardActivity extends BaseActivity {
 
     private static final int REQUEST_LOGIN = 765;
+    private static final int REQUEST_EDIT_LOGIN = 7654;
 
     private DashboardViewModel dashboardViewModel;
 
@@ -59,8 +62,6 @@ public class DashboardActivity extends BaseActivity {
 
     private DashboardAdapter dashboardAdapter;
 
-    private int currentChoice = -1;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +71,7 @@ public class DashboardActivity extends BaseActivity {
 
         setUpRecyclerView();
         setUpSwipe();
-        setUpButton();
+        setupAddButton();
 
         configureViewModel();
         getServices();
@@ -93,11 +94,11 @@ public class DashboardActivity extends BaseActivity {
         dashboardAdapter.notifyDataSetChanged();
     }
 
-    private void setUpButton() {
+    private void setupAddButton() {
         addService.setOnClickListener(view -> {
 
             final ArrayAdapter<String> adp = new ArrayAdapter<>(DashboardActivity.this,
-                    android.R.layout.simple_spinner_item, ((PriVELT) getApplication()).getServiceHelper().getServiceNames());
+                    android.R.layout.simple_spinner_item, getServiceHelper().getServiceNames());
 
             final Spinner sp = new Spinner(DashboardActivity.this);
             sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -108,17 +109,16 @@ public class DashboardActivity extends BaseActivity {
             builder.setTitle("Choose the service you want to subscribe to");
             builder.setView(sp);
             builder.setPositiveButton("Choose", (dialogInterface, i) -> {
-                currentChoice = sp.getSelectedItemPosition();
-                editCredentials(currentChoice);
+                editCredentials(sp.getSelectedItem().toString(), REQUEST_LOGIN);
             });
             builder.create().show();
         });
     }
 
-    private void editCredentials(int service) {
+    private void editCredentials(String service, int requestCode) {
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         intent.putExtra(PARAM_SERVICE, service);
-        startActivityForResult(intent, REQUEST_LOGIN);
+        startActivityForResult(intent, requestCode);
     }
 
     private void setUpRecyclerView() {
@@ -164,11 +164,29 @@ public class DashboardActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK) {
+        if ((requestCode == REQUEST_LOGIN || requestCode == REQUEST_EDIT_LOGIN) && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                boolean shouldStorePassword = data.getBooleanExtra(PARAM_SHOULD_STORE, false);
+                String serviceName = data.getStringExtra(PARAM_SERVICE);
 
-            Service service = new Service(((PriVELT)getApplication()).getServiceHelper().getServiceNames().get(currentChoice));
+                if (shouldStorePassword) {
+                    String user = data.getStringExtra(PARAM_USER);
+                    String password = data.getStringExtra(PARAM_PASSWORD);
+                }
 
-            dashboardViewModel.insertService(service);
+                if (requestCode == REQUEST_LOGIN) {
+                    Service service = new Service(serviceName, shouldStorePassword);
+                    dashboardViewModel.insertService(service);
+                }
+                else {
+                    for (Service service : subscribedServices) {
+                        if (service.getName().equals(serviceName)) {
+                            service.setPasswordSaved(shouldStorePassword);
+                            dashboardViewModel.updateService(service);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -186,7 +204,7 @@ public class DashboardActivity extends BaseActivity {
 
     @Subscribe
     public void onEditCredentials(UpdateCredentialsEvent event) {
-        //dashboardViewModel.updateService(event.service);
+        editCredentials(event.service, REQUEST_EDIT_LOGIN);
     }
 
     @Override

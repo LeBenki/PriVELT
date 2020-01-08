@@ -45,4 +45,12 @@ public class ServiceHelper {
         }
         return -1;
     }
+
+    public LoginService getServiceWithName(String name) {
+        for (int i = 0; i < serviceNames.size(); i++){
+            if (serviceNames.get(i).equals(name))
+                return serviceManager.getServiceList().get(i);
+        }
+        return null;
+    }
 }

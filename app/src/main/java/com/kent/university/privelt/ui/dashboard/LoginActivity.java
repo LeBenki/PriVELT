@@ -1,7 +1,7 @@
 package com.kent.university.privelt.ui.dashboard;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -10,15 +10,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.webviewautologin.response.ResponseCallback;
 import com.kent.university.webviewautologin.response.ResponseEnum;
-import com.kent.university.webviewautologin.services.GoogleService;
-import com.kent.university.webviewautologin.services.HotelsComService;
 import com.kent.university.webviewautologin.services.LoginService;
-import com.kent.university.webviewautologin.services.StravaService;
-import com.university.kent.dataextractor.DataExtractor;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
@@ -28,8 +25,12 @@ import butterknife.ButterKnife;
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     private static final String TAG = LoginActivity.class.getSimpleName();
-    public static final String KEY_WELCOME = "KEY_WELCOME";
+    public static final String PARAM_SHOULD_STORE = "PARAM_SHOULD_STORE";
+    public static final String PARAM_USER = "PARAM_USER";
+    public static final String PARAM_PASSWORD = "PARAM_PASSWORD";
+
     public static final String PARAM_SERVICE = "PARAM_SERVICE";
+    private String service;
 
     @BindView(R.id.best_poc) Button button;
     @BindView(R.id.email) EditText email;
@@ -38,12 +39,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.title) TextView title;
     @BindView(R.id.debug) Button debug;
 
-    private int service = -1;
-    private final static int GOOGLE = 0;
-    private final static int HOTELS = 1;
-    private final static int STRAVA = 2;
-
-    private final static String[] titles = {"GOOGLE", "HOTELS.COM", "STRAVA"};
     LoginService loginService = null;
     AlertDialog alertDialog = null;
 
@@ -57,13 +52,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         button.setOnClickListener(this);
 
         if (getIntent() != null) {
-            service = getIntent().getIntExtra(PARAM_SERVICE, service);
+            service = getIntent().getStringExtra(PARAM_SERVICE);
         }
         else if (savedInstanceState != null) {
-            service = savedInstanceState.getInt(PARAM_SERVICE);
+            service = savedInstanceState.getString(PARAM_SERVICE);
         }
 
-        title.setText(titles[service]);
+        title.setText(service);
 
         debug.setOnClickListener(view -> showAlertDebug());
     }
@@ -71,7 +66,41 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(PARAM_SERVICE, service);
+        outState.putString(PARAM_SERVICE, service);
+    }
+
+    public void processLogin(boolean shouldStorePassword) {
+
+        progressBar.setVisibility(View.VISIBLE);
+        button.setEnabled(false);
+
+        loginService = getServiceHelper().getServiceWithName(service);
+
+        String user = email.getText().toString();
+        String pass = password.getText().toString();
+
+        loginService.autoLogin(email.getText().toString(), password.getText().toString(), new ResponseCallback() {
+            @Override
+            public void getResponse(ResponseEnum responseEnum, String data) {
+                if (responseEnum != ResponseEnum.SUCCESS) {
+                    button.setEnabled(true);
+
+                    showAlertDebug();
+
+                    Toast.makeText(LoginActivity.this, responseEnum.getName(), Toast.LENGTH_LONG).show();
+
+                } else {
+                    Intent intent = new Intent();
+                    intent.putExtra(PARAM_SHOULD_STORE, shouldStorePassword);
+                    intent.putExtra(PARAM_USER, user);
+                    intent.putExtra(PARAM_PASSWORD, pass);
+                    intent.putExtra(PARAM_SERVICE, service);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+                progressBar.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
@@ -82,56 +111,14 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
 
-        progressBar.setVisibility(View.VISIBLE);
-        button.setEnabled(false);
-
-        switch (service) {
-            case GOOGLE:
-                loginService = new GoogleService(LoginActivity.this);
-                break;
-            case HOTELS:
-                loginService = new HotelsComService(LoginActivity.this);
-                break;
-            case STRAVA:
-                loginService = new StravaService(LoginActivity.this);
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + service);
-        }
-
-        DataExtractor extractor = new DataExtractor(loginService);
-
-        loginService.autoLogin(email.getText().toString(), password.getText().toString(), new ResponseCallback() {
-            @Override
-            public void getResponse(ResponseEnum responseEnum, String data) {
-                Log.d("TIFFANY", "Notre response Enum: " + responseEnum.getName());
-                if (responseEnum != ResponseEnum.SUCCESS) {
-                    button.setEnabled(true);
-
-                    showAlertDebug();
-
-                    Toast.makeText(LoginActivity.this, responseEnum.getName(), Toast.LENGTH_LONG).show();
-
-                } else {
-                    setResult(RESULT_OK);
-                    finish();
-                    /*
-                    Intent intent = new Intent();
-                    try {
-                        extractor.injectScriptByName("savedplace", s -> {
-                                    Log.d("TIFFANY", s);
-                                    intent.putExtra(KEY_WELCOME, s);
-                                    setResult(RESULT_OK, intent);
-                                    finish();
-                                }
-                        );
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }*/
-                }
-                progressBar.setVisibility(View.GONE);
-            }
-        });
+        new android.app.AlertDialog.Builder(LoginActivity.this)
+                .setTitle("Unsubscribe")
+                .setMessage("Are you sure you want to unsubscribe to this service?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    processLogin(true);
+                })
+                .setNegativeButton("No", (dialogInterface, i) -> processLogin(false))
+                .show();
     }
 
     private void showAlertDebug() {
@@ -152,6 +139,5 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             alertDialog.setCanceledOnTouchOutside(true);
             alertDialog.show();
         }
-
     }
 }
