@@ -9,10 +9,20 @@ public class IdentityManager {
     private SharedPreferences sharedPreferences;
 
     private long mpIndex;
+    private String hashedPassword;
 
     public IdentityManager(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
         mpIndex = -1;
+        hashedPassword = "";
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
     }
 
     public long getMpIndex() {

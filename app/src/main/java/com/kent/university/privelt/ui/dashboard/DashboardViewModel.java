@@ -1,6 +1,8 @@
 package com.kent.university.privelt.ui.dashboard;
 
+import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
+import com.kent.university.privelt.repositories.CredentialsDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 
 import java.util.List;
@@ -12,13 +14,15 @@ import androidx.lifecycle.ViewModel;
 
 public class DashboardViewModel extends ViewModel {
     private final ServiceDataRepository mServiceDataSource;
+    private final CredentialsDataRepository mCredentialsDataSource;
     private final Executor mExecutor;
 
     @Nullable
     private LiveData<List<Service>> mServices;
 
-    public DashboardViewModel(ServiceDataRepository serviceDataRepository, Executor executor) {
+    public DashboardViewModel(ServiceDataRepository serviceDataRepository, CredentialsDataRepository credentialsDataRepository, Executor executor) {
         mServiceDataSource = serviceDataRepository;
+        mCredentialsDataSource = credentialsDataRepository;
         mExecutor = executor;
     }
 
@@ -42,5 +46,9 @@ public class DashboardViewModel extends ViewModel {
 
     public void updateService(Service... services) {
         mExecutor.execute(() -> mServiceDataSource.updateServices(services));
+    }
+
+    public void updateCredentials(Credentials credentials) {
+        mExecutor.execute(() -> mCredentialsDataSource.updateCredentials(credentials));
     }
 }

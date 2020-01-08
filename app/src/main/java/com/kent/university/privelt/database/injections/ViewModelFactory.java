@@ -14,13 +14,13 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
-    private final CredentialsDataRepository mProjectDataSource;
+    private final CredentialsDataRepository mCredentialsDataSource;
     private final UserDataRepository mUserDataSource;
     private final ServiceDataRepository mServiceDataSource;
     private final Executor mExecutor;
 
     ViewModelFactory(CredentialsDataRepository credentialsDataSource, UserDataRepository userDataSource, ServiceDataRepository serviceSource, Executor executor) {
-        mProjectDataSource = credentialsDataSource;
+        mCredentialsDataSource = credentialsDataSource;
         mUserDataSource = userDataSource;
         mServiceDataSource = serviceSource;
         mExecutor = executor;
@@ -33,12 +33,13 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             if (CredentialsViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(CredentialsDataRepository.class,
                         Executor.class)
-                        .newInstance(mProjectDataSource, mExecutor);
+                        .newInstance(mCredentialsDataSource, mExecutor);
             }
             else if (DashboardViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(ServiceDataRepository.class,
+                        CredentialsDataRepository.class,
                         Executor.class)
-                        .newInstance(mServiceDataSource, mExecutor);
+                        .newInstance(mServiceDataSource, mCredentialsDataSource, mExecutor);
             }
             else
                 throw new IllegalArgumentException("Unknown ViewModel class");

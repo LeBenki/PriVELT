@@ -149,6 +149,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     protected Void doInBackground(Void... voids) {
                         mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false).apply();
                         masterPasswordAlreadyGiven = false;
+                        //TODO: Should also delete services and userdata
                         populateDb();
                         return null;
                     }
@@ -190,9 +191,9 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         progressBar.setVisibility(View.VISIBLE);
         String password = this.password.getText().toString();
         String hashedPassword = SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, password);
-        new AsyncTask<Void, Void, Pair<Boolean, Long>>() {
+        new AsyncTask<Void, Void, Pair<Boolean, String>>() {
             @Override
-            protected Pair<Boolean, Long> doInBackground(Void... v) {
+            protected Pair<Boolean, String> doInBackground(Void... v) {
 
                 if (changePassword || !masterPasswordAlreadyGiven) {
                     if (changePassword) {
@@ -200,43 +201,42 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                         long oldIndex = MasterPasswordActivity.this.getIdentityManager().getMpIndex();
                         Credentials c = mCredentialsViewModel.getCredentialsWithId(oldIndex);
                         if (c.getPassword().equals(hashedPassword)) {
-                            return new Pair<>(false, oldIndex);
+                            return new Pair<>(false, "");
                         }
+                        //TODO: Should encrypt credentials with new master password
                         //remove old password
                         mCredentialsViewModel.updateCredentials(new Credentials(oldIndex, "email" + oldIndex, SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString())));
                     }
-                    long index = SimpleHash.calulateIndexOfHash(hashedPassword);
+                    long index = SimpleHash.calculateIndexOfHash(hashedPassword);
                     Credentials credentials = new Credentials(index, "email" + index, hashedPassword);
                     mCredentialsViewModel.updateCredentials(credentials);
                     if (!masterPasswordAlreadyGiven)
                         mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, true).apply();
                     masterPasswordAlreadyGiven = true;
-                    return new Pair<>(true, index);
+                    return new Pair<>(true, hashedPassword);
                 }
                 else {
-                    long index = SimpleHash.calulateIndexOfHash(hashedPassword);
+                    long index = SimpleHash.calculateIndexOfHash(hashedPassword);
                     Credentials credentials = mCredentialsViewModel.getCredentialsWithId(index);
 
                     String oldHash = credentials.getPassword();
-                    return new Pair<>(oldHash.equals(hashedPassword), index);
+                    return new Pair<>(oldHash.equals(hashedPassword), oldHash);
                 }
             }
 
             @Override
-            protected void onPostExecute(Pair<Boolean, Long> pair) {
+            protected void onPostExecute(Pair<Boolean, String> pair) {
                 super.onPostExecute(pair);
                 start.setEnabled(true);
                 reset.setEnabled(true);
                 progressBar.setVisibility(View.GONE);
                 if (pair.first) {
-                    if (changePassword) {
-                        finish();
-                    }
-                    else {
+                    if (!changePassword) {
                         startActivity(new Intent(MasterPasswordActivity.this, DashboardActivity.class));
-                        MasterPasswordActivity.this.getIdentityManager().setMpIndex(pair.second);
-                        finish();
                     }
+                    MasterPasswordActivity.this.getIdentityManager().setMpIndex(SimpleHash.calculateIndexOfHash(pair.second));
+                    MasterPasswordActivity.this.getIdentityManager().setHashedPassword(pair.second);
+                    finish();
                 }
                 else {
                     String errMessage = changePassword ? "The password is the same as before" : "Wrong password, you can reset all your data to enter a new password";

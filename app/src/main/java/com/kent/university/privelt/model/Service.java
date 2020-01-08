@@ -28,7 +28,7 @@ public class Service {
 
     public Service(String name, boolean isPasswordSaved) {
         this.name = name;
-        this.credentialsId = SimpleHash.calulateIndexOfHash(name);
+        this.credentialsId = SimpleHash.calculateIndexOfHash(name);
         this.isPasswordSaved = isPasswordSaved;
     }
 

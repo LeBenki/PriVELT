@@ -19,8 +19,11 @@ import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
+import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
+import com.kent.university.privelt.utils.SimpleCrypto;
+import com.kent.university.privelt.utils.SimpleHash;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -172,6 +175,9 @@ public class DashboardActivity extends BaseActivity {
                 if (shouldStorePassword) {
                     String user = data.getStringExtra(PARAM_USER);
                     String password = data.getStringExtra(PARAM_PASSWORD);
+
+//                    SimpleCrypto.generateKey(SimpleHash.getHashedPassword())
+//                    dashboardViewModel.updateCredentials(new Credentials(SimpleHash.calculateIndexOfHash(serviceName), user, SimpleCrypto.encrypt(password)));
                 }
 
                 if (requestCode == REQUEST_LOGIN) {
