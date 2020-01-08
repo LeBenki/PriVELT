@@ -141,13 +141,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
 
-        if (loginService.getWebView().getParent() != null) {
-            ((ViewGroup)loginService.getWebView().getParent()).removeView(loginService.getWebView());
+        if (loginService.getWebview().getParent() != null) {
+            ((ViewGroup)loginService.getWebview().getParent()).removeView(loginService.getWebview());
         }
 
         if (alertDialog == null || ! alertDialog.isShowing()) {
             AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
-            dialogBuilder.setView(loginService.getWebView());
+            dialogBuilder.setView(loginService.getWebview());
             alertDialog = dialogBuilder.create();
             alertDialog.setCanceledOnTouchOutside(true);
             alertDialog.show();

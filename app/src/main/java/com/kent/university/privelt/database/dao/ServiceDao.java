@@ -6,7 +6,8 @@ import java.util.List;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
-import androidx.room.OnConflictStrategy;
+import androidx.room.Delete;
+import androidx.room.Insert;
 import androidx.room.Query;
 import androidx.room.Update;
 
@@ -15,6 +16,12 @@ public interface ServiceDao {
     @Query("SELECT * FROM service")
     LiveData<List<Service>> getServices();
 
-    @Update(onConflict = OnConflictStrategy.REPLACE)
-    void updateServices(Service... service);
+    @Insert
+    void insertServices(Service... service);
+
+    @Delete
+    void deleteServices(Service... service);
+
+    @Update
+    void updateServices(Service... services);
 }

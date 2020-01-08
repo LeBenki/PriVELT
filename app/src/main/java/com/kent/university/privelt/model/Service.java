@@ -1,5 +1,7 @@
 package com.kent.university.privelt.model;
 
+import com.kent.university.privelt.utils.SimpleHash;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -14,33 +16,17 @@ import static androidx.room.ForeignKey.CASCADE;
         onDelete = CASCADE))
 public class Service {
 
-    @ColumnInfo(name = "res_id")
-    private int resId;
-
     private String name;
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     @ColumnInfo(name = "credentials_id", index = true)
     private long credentialsId;
 
-    private boolean subscribed;
-
-    public Service(long id, int resId, String name, long credentialsId, boolean subscribed) {
-        this.id = id;
-        this.resId = resId;
+    public Service(String name) {
         this.name = name;
-        this.credentialsId = credentialsId;
-        this.subscribed = subscribed;
-    }
-
-    public int getResId() {
-        return resId;
-    }
-
-    public void setResId(int resId) {
-        this.resId = resId;
+        this.credentialsId = SimpleHash.calulateIndexOfHash(name);
     }
 
     public String getName() {
@@ -49,6 +35,10 @@ public class Service {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getId() {
@@ -61,13 +51,5 @@ public class Service {
 
     public void setCredentialsId(long credentialsId) {
         this.credentialsId = credentialsId;
-    }
-
-    public boolean isSubscribed() {
-        return subscribed;
-    }
-
-    public void setSubscribed(boolean subscribed) {
-        this.subscribed = subscribed;
     }
 }

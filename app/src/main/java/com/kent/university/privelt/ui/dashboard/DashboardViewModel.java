@@ -32,6 +32,14 @@ public class DashboardViewModel extends ViewModel {
         return mServices;
     }
 
+    public void insertService(Service... services) {
+        mExecutor.execute(() -> mServiceDataSource.insertServices(services));
+    }
+
+    public void deleteService(Service... services) {
+        mExecutor.execute(() -> mServiceDataSource.deleteServices(services));
+    }
+
     public void updateService(Service... services) {
         mExecutor.execute(() -> mServiceDataSource.updateServices(services));
     }

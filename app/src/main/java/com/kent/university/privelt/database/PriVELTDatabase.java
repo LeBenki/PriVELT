@@ -9,7 +9,6 @@ import com.kent.university.privelt.database.dao.UserDataDao;
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
-import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.utils.SimpleHash;
 
 import java.util.UUID;
@@ -21,7 +20,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 1, exportSchema = false)
+@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 3, exportSchema = false)
 public abstract class PriVELTDatabase extends RoomDatabase {
     private static volatile PriVELTDatabase INSTANCE;
     public final static int DB_SIZE = 1024;
@@ -34,6 +33,7 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                             PriVELTDatabase.class,
                             "PriVELTDatabase.db")
                             .addCallback(prepopulateDatabase())
+                            .fallbackToDestructiveMigration()
                             .build();
                 }
             }
@@ -56,15 +56,15 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                     db.insert("credentials", OnConflictStrategy.IGNORE, contentValues);
                 }
 
-                for (int i = 0; i < 3; i++) {
+/*                for (int i = 0; i < 3; i++) {
                     ContentValues contentValues = new ContentValues();
                     contentValues.put("id", i);
-                    contentValues.put("name", DashboardActivity.s[i]);
-                    contentValues.put("res_id", DashboardActivity.i[i]);
+//                    contentValues.put("name", serviceManager.get(i).get);
+//                    contentValues.put("res_id", DashboardActivity.i[i]);
                     contentValues.put("subscribed", false);
                     contentValues.put("credentials_id", i);
                     db.insert("service", OnConflictStrategy.IGNORE, contentValues);
-                }
+                }*/
             }
         };
     }

@@ -4,6 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
@@ -33,7 +34,8 @@ class DashboardViewHolder extends RecyclerView.ViewHolder {
 
     void bind(Service service) {
         title.setText(service.getName());
-        imageService.setImageResource(service.getResId());
-        settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent((int) service.getId())));
+        PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
+        imageService.setImageResource(priVELT.getServiceHelper().getResIdWithName(service.getName()));
+        //settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent((int) service.getId())));
     }
 }

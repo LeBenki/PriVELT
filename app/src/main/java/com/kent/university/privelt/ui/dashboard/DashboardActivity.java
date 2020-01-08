@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
@@ -58,9 +59,6 @@ public class DashboardActivity extends BaseActivity {
 
     private DashboardAdapter dashboardAdapter;
 
-    public static final String[] s = { "Google ", "Hotels.com", "Strava" };
-    public static final int[] i = { R.drawable.ic_google_map, R.drawable.hotels, R.drawable.strava };
-
     private int currentChoice = -1;
 
     @Override
@@ -83,31 +81,23 @@ public class DashboardActivity extends BaseActivity {
     }
 
     private void updateServices(List<Service> services) {
-        boolean shouldRefresh = subscribedServices.size() == 0;
-        subscribedServices.clear();
 
-        int j = 0;
-        for (Service service : services) {
-            //TODO: REMOVE RESID EN DUR DANS LA BDD
-            service.setResId(i[j++]);
-            if (service.isSubscribed())
-                subscribedServices.add(service);
-        }
+        subscribedServices = new ArrayList<>(services);
 
         if (subscribedServices.size() > 0)
             noService.setVisibility(View.GONE);
+        else
+            noService.setVisibility(View.VISIBLE);
 
-        if (shouldRefresh) {
-            dashboardAdapter.updateServices(subscribedServices);
-            dashboardAdapter.notifyDataSetChanged();
-        }
+        dashboardAdapter.updateServices(subscribedServices);
+        dashboardAdapter.notifyDataSetChanged();
     }
 
     private void setUpButton() {
         addService.setOnClickListener(view -> {
 
             final ArrayAdapter<String> adp = new ArrayAdapter<>(DashboardActivity.this,
-                    android.R.layout.simple_spinner_item, s);
+                    android.R.layout.simple_spinner_item, ((PriVELT) getApplication()).getServiceHelper().getServiceNames());
 
             final Spinner sp = new Spinner(DashboardActivity.this);
             sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -118,7 +108,8 @@ public class DashboardActivity extends BaseActivity {
             builder.setTitle("Choose the service you want to subscribe to");
             builder.setView(sp);
             builder.setPositiveButton("Choose", (dialogInterface, i) -> {
-                editCredentials(sp.getSelectedItemPosition());
+                currentChoice = sp.getSelectedItemPosition();
+                editCredentials(currentChoice);
             });
             builder.create().show();
         });
@@ -154,12 +145,7 @@ public class DashboardActivity extends BaseActivity {
                         .setMessage("Are you sure you want to unsubscribe to this service?")
                         .setPositiveButton("Yes", (dialog, which) -> {
                             int position = viewHolder.getAdapterPosition();
-
-                            subscribedServices.get(position).setSubscribed(false);
-                            dashboardViewModel.updateService(subscribedServices.get(position));
-
-                            subscribedServices.remove(position);
-                            dashboardAdapter.notifyItemRemoved(position);
+                            dashboardViewModel.deleteService(subscribedServices.get(position));
                         })
                         .setNegativeButton("No", (dialogInterface, i) -> dashboardAdapter.notifyDataSetChanged())
                         .show();
@@ -180,15 +166,9 @@ public class DashboardActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_LOGIN && resultCode == Activity.RESULT_OK) {
 
-            Service service = dashboardViewModel.getServices().getValue().get(currentChoice);
-            service.setSubscribed(true);
+            Service service = new Service(((PriVELT)getApplication()).getServiceHelper().getServiceNames().get(currentChoice));
 
-            dashboardViewModel.updateService(service);
-
-            subscribedServices.add(service);
-
-            dashboardAdapter.notifyItemInserted(subscribedServices.size() - 1);
-            noService.setVisibility(View.GONE);
+            dashboardViewModel.insertService(service);
         }
     }
 
@@ -206,7 +186,7 @@ public class DashboardActivity extends BaseActivity {
 
     @Subscribe
     public void onEditCredentials(UpdateCredentialsEvent event) {
-        editCredentials(event.service);
+        //dashboardViewModel.updateService(event.service);
     }
 
     @Override
