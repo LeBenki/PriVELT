@@ -19,10 +19,6 @@
             android:label="@string/title_dashboard"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.dashboard.LoginActivity"
@@ -39,7 +35,12 @@
             android:label=""
             android:screenOrientation="portrait"
             android:parentActivityName=".ui.dashboard.DashboardActivity"
-            android:theme="@style/AppTrans" />
+            android:theme="@style/AppTrans">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.settings.SettingsActivity"
             android:screenOrientation="portrait"

@@ -28,6 +28,8 @@ import com.kent.university.privelt.utils.SimpleHash;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.UnsupportedEncodingException;
+import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -176,8 +178,11 @@ public class DashboardActivity extends BaseActivity {
                     String user = data.getStringExtra(PARAM_USER);
                     String password = data.getStringExtra(PARAM_PASSWORD);
 
-//                    SimpleCrypto.generateKey(SimpleHash.getHashedPassword())
-//                    dashboardViewModel.updateCredentials(new Credentials(SimpleHash.calculateIndexOfHash(serviceName), user, SimpleCrypto.encrypt(password)));
+                    try {
+                        dashboardViewModel.updateCredentials(new Credentials(SimpleHash.calculateIndexOfHash(serviceName), user, SimpleCrypto.encrypt(password, getIdentityManager().getKey())));
+                    } catch (UnsupportedEncodingException | GeneralSecurityException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 if (requestCode == REQUEST_LOGIN) {

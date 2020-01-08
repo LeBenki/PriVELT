@@ -201,7 +201,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                         long oldIndex = MasterPasswordActivity.this.getIdentityManager().getMpIndex();
                         Credentials c = mCredentialsViewModel.getCredentialsWithId(oldIndex);
                         if (c.getPassword().equals(hashedPassword)) {
-                            return new Pair<>(false, "");
+                            return new Pair<>(false, password);
                         }
                         //TODO: Should encrypt credentials with new master password
                         //remove old password
@@ -213,14 +213,14 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     if (!masterPasswordAlreadyGiven)
                         mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, true).apply();
                     masterPasswordAlreadyGiven = true;
-                    return new Pair<>(true, hashedPassword);
+                    return new Pair<>(true, password);
                 }
                 else {
                     long index = SimpleHash.calculateIndexOfHash(hashedPassword);
                     Credentials credentials = mCredentialsViewModel.getCredentialsWithId(index);
 
                     String oldHash = credentials.getPassword();
-                    return new Pair<>(oldHash.equals(hashedPassword), oldHash);
+                    return new Pair<>(oldHash.equals(password), oldHash);
                 }
             }
 
@@ -235,7 +235,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                         startActivity(new Intent(MasterPasswordActivity.this, DashboardActivity.class));
                     }
                     MasterPasswordActivity.this.getIdentityManager().setMpIndex(SimpleHash.calculateIndexOfHash(pair.second));
-                    MasterPasswordActivity.this.getIdentityManager().setHashedPassword(pair.second);
+                    MasterPasswordActivity.this.getIdentityManager().setPassword(pair.second);
                     finish();
                 }
                 else {
