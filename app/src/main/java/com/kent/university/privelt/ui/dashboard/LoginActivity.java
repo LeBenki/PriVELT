@@ -1,25 +1,22 @@
 package com.kent.university.privelt.ui.dashboard;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.app.AlertDialog;
-
+import android.widget.*;
+import androidx.annotation.NonNull;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.webviewautologin.response.ResponseCallback;
 import com.kent.university.webviewautologin.response.ResponseEnum;
 import com.kent.university.webviewautologin.services.LoginService;
 
-import androidx.annotation.NonNull;
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
@@ -49,6 +46,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.debug)
     Button debug;
 
+    @BindView(R.id.eye_password)
+    ImageView eye;
+
     LoginService loginService = null;
     AlertDialog alertDialog = null;
 
@@ -71,6 +71,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         title.setText(service);
 
         debug.setOnClickListener(view -> showAlertDebug());
+
+        configureEye(
+                new Pair<>(eye, password)
+        );
     }
 
     @Override

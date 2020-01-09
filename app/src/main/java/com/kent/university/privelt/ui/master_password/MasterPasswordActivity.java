@@ -26,6 +26,7 @@ import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.ui.dashboard.DashboardActivity;
+import com.kent.university.privelt.utils.EyePassword;
 import com.kent.university.privelt.utils.PasswordChecker;
 import com.kent.university.privelt.utils.SimpleCrypto;
 import com.kent.university.privelt.utils.SimpleHash;
@@ -45,6 +46,7 @@ import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.database.PriVELTDatabase.DB_SIZE;
 import static com.kent.university.privelt.ui.settings.SettingsActivity.ARG_CHANGE_PASSWORD;
+import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
 public class MasterPasswordActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
 
@@ -132,7 +134,10 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         }
         resetMasterPassword();
 
-        configureEye();
+        configureEye(
+                new Pair<>(eye, password),
+                new Pair<>(eyeConfirm, confirmPassword)
+        );
     }
 
     @Override
@@ -309,23 +314,5 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         strengthView.setText(ps.getResId());
         strengthView.setTextColor(ps.getColor());
         progressPassword.getProgressDrawable().setColorFilter(ps.getColor(), android.graphics.PorterDuff.Mode.SRC_IN);
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void configureEye() {
-        eye.setOnTouchListener((v, event) -> showEye(event, password));
-        eyeConfirm.setOnTouchListener((v, event) -> showEye(event, confirmPassword));
-    }
-
-    private boolean showEye(MotionEvent event, EditText editText) {
-        switch (event.getAction() ) {
-            case MotionEvent.ACTION_DOWN:
-                editText.setInputType(InputType.TYPE_CLASS_TEXT);
-                break;
-            case MotionEvent.ACTION_UP:
-                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                break;
-        }
-        return true;
     }
 }
