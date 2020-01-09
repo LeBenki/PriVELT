@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
@@ -54,6 +56,18 @@ public class DataActivity extends BaseActivity {
 
     @BindView(R.id.recycler_view_userdata)
     RecyclerView recyclerView;
+
+    @BindView(R.id.progress_layout)
+    LinearLayout progressLayout;
+
+    @BindView(R.id.progress_script)
+    ProgressBar progressScript;
+
+    @BindView(R.id.script_name)
+    TextView script;
+
+    @BindView(R.id.percent)
+    TextView percent;
 
     private DataViewModel dataViewModel;
 
@@ -115,7 +129,7 @@ public class DataActivity extends BaseActivity {
         dataAdapter.setUserData(userData);
         dataAdapter.notifyDataSetChanged();
 
-        progressBar.setVisibility(userData.size() == 0 ? View.VISIBLE : View.GONE);
+        progressLayout.setVisibility(userData.size() == 0 ? View.VISIBLE : View.GONE);
     }
 
     private void configureLoginService() {
@@ -129,15 +143,21 @@ public class DataActivity extends BaseActivity {
             public void getResponse(ResponseEnum responseEnum, String data) {
                 Log.d("LUCAS", responseEnum.toString());
                 if (responseEnum != ResponseEnum.SUCCESS) {
-
+                    script.setText(responseEnum.getName());
                 } else {
+                    script.setText("Logged");
                     dataExtractor.injectAll(DataActivity.this, (jsonArray, status) -> {
+                        int totalData = (int) ((float)((status.getFailedData() + status.getSucceedData())) / (float)(status.getAmountOfData()) * 100);
+                        Log.d("LUCAS", String.valueOf(totalData));
+                        percent.setText(String.valueOf(totalData).concat("%"));
+                        progressScript.setProgress(totalData);
+                        script.setText(new String("Extracting: ").concat(status.getTaskName()));
                         if (status.isDone()) {
                             Log.d("LUCAS", "LOGIN SERVICE:" + String.valueOf(allUserData.size()));
                             dataViewModel.replaceUserDatas(allUserData);
                         }
                         Log.d("LUCAS", status.toString());
-                        if (status.isFailed())
+                        if (status.isFailed() || jsonArray == null)
                             return;
                         allUserData.addAll(parseJSON(jsonArray));
                         Log.d("LUCAS", jsonArray.toString());
