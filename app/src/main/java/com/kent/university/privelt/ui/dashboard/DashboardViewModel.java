@@ -51,4 +51,8 @@ public class DashboardViewModel extends ViewModel {
     public void updateCredentials(Credentials credentials) {
         mExecutor.execute(() -> mCredentialsDataSource.updateCredentials(credentials));
     }
+
+    public Credentials getCredentialsWithId(long id) {
+        return mCredentialsDataSource.getCredentialsWithId(id);
+    }
 }

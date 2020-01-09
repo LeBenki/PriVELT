@@ -1,9 +1,12 @@
 package com.kent.university.privelt.ui.dashboard;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -55,6 +58,8 @@ public class DashboardActivity extends BaseActivity {
 
     private static final int REQUEST_LOGIN = 765;
     private static final int REQUEST_EDIT_LOGIN = 7654;
+    public static final String PARAM_SERVICE_EMAIL = "PARAM_SERVICE_EMAIL";
+    public static final String PARAM_SERVICE_PASSWORD = "PARAM_SERVICE_PASSWORD";
 
     private DashboardViewModel dashboardViewModel;
 
@@ -220,6 +225,7 @@ public class DashboardActivity extends BaseActivity {
         editCredentials(event.service, REQUEST_EDIT_LOGIN);
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Subscribe
     public void onLaunchData(LaunchDataEvent event) {
 
@@ -234,10 +240,33 @@ public class DashboardActivity extends BaseActivity {
             return;
         }
 
-        Intent intent = new Intent(this, DataActivity.class);
-        intent.putExtra(PARAM_SERVICE, event.service);
-        intent.putExtra(PARAM_SERVICE_ID, event.serviceId);
-        startActivity(intent);
+        Service finalS = s;
+        new AsyncTask<Void, Void, Pair<String, String>>() {
+
+            @Override
+            protected Pair<String, String> doInBackground(Void... voids) {
+                Credentials credentials = dashboardViewModel.getCredentialsWithId(finalS.getCredentialsId());
+                String email = credentials.getEmail();
+                String password = "";
+                try {
+                    password = SimpleCrypto.decrypt(credentials.getPassword(), getIdentityManager().getKey());
+                } catch (UnsupportedEncodingException | GeneralSecurityException e) {
+                    e.printStackTrace();
+                }
+                return new Pair<>(email, password);
+            }
+
+            @Override
+            protected void onPostExecute(Pair<String, String> pair) {
+                super.onPostExecute(pair);
+                Intent intent = new Intent(DashboardActivity.this, DataActivity.class);
+                intent.putExtra(PARAM_SERVICE, event.service);
+                intent.putExtra(PARAM_SERVICE_ID, event.serviceId);
+                intent.putExtra(PARAM_SERVICE_EMAIL, pair.first);
+                intent.putExtra(PARAM_SERVICE_PASSWORD, pair.second);
+                startActivity(intent);
+            }
+        }.execute();
     }
 
     @Override

@@ -32,12 +32,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.model.UserData.DELIMITER;
+import static com.kent.university.privelt.ui.dashboard.DashboardActivity.PARAM_SERVICE_EMAIL;
+import static com.kent.university.privelt.ui.dashboard.DashboardActivity.PARAM_SERVICE_PASSWORD;
 import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_SERVICE;
 import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_SERVICE_ID;
 
 public class DataActivity extends BaseActivity {
 
     private String service;
+
+    private String email;
+
+    private String password;
 
     private long serviceId;
 
@@ -63,9 +69,13 @@ public class DataActivity extends BaseActivity {
 
         if (savedInstanceState != null) {
             service = savedInstanceState.getString(PARAM_SERVICE, "");
+            email = savedInstanceState.getString(PARAM_SERVICE_EMAIL, "");
+            password = savedInstanceState.getString(PARAM_SERVICE_PASSWORD, "");
             serviceId = savedInstanceState.getLong(PARAM_SERVICE_ID, -1);
         } else if (getIntent() != null) {
             service = getIntent().getStringExtra(PARAM_SERVICE);
+            email = getIntent().getStringExtra(PARAM_SERVICE_EMAIL);
+            password = getIntent().getStringExtra(PARAM_SERVICE_PASSWORD);
             serviceId = getIntent().getLongExtra(PARAM_SERVICE_ID, -1);
         }
         setTitle(service);
@@ -83,6 +93,8 @@ public class DataActivity extends BaseActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(PARAM_SERVICE, service);
+        outState.putString(PARAM_SERVICE_EMAIL, email);
+        outState.putString(PARAM_SERVICE_PASSWORD, password);
         outState.putLong(PARAM_SERVICE_ID, serviceId);
     }
 
@@ -112,7 +124,7 @@ public class DataActivity extends BaseActivity {
         DataExtractor dataExtractor = new DataExtractor(loginService);
         final ArrayList<UserData> allUserData = new ArrayList<>();
 
-        loginService.autoLogin("privelttest@gmail.com", "test123456@", new ResponseCallback() {
+        loginService.autoLogin(email, password, new ResponseCallback() {
             @Override
             public void getResponse(ResponseEnum responseEnum, String data) {
                 Log.d("LUCAS", responseEnum.toString());
