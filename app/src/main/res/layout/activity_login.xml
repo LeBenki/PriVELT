@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg">
 
@@ -62,16 +62,29 @@
             android:textColor="#000000"
             android:padding="15dp" />
 
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/edit_text_bottom"
-            android:hint="Password"
-            android:textColor="#000000"
-            android:inputType="textPassword"
-            android:padding="15dp" />
+        <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
+            <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_bottom"
+                    android:hint="Password"
+                    android:textColor="#000000"
+                    android:inputType="textPassword"
+                    android:padding="15dp"/>
+
+            <ImageView
+                    android:id="@+id/eye_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@id/password"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="15dp"
+                    android:src="@drawable/ic_eye" />
+        </RelativeLayout>
 
         <Button
             android:id="@+id/best_poc"

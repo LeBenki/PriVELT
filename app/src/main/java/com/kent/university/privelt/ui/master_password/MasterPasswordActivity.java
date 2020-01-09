@@ -1,25 +1,22 @@
 package com.kent.university.privelt.ui.master_password;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Pair;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.TextView;
-import android.widget.Toast;
-
+import android.widget.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
@@ -38,14 +35,9 @@ import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.UUID;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
-import butterknife.BindView;
-import butterknife.ButterKnife;
-
 import static com.kent.university.privelt.database.PriVELTDatabase.DB_SIZE;
 import static com.kent.university.privelt.ui.settings.SettingsActivity.ARG_CHANGE_PASSWORD;
+import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
 public class MasterPasswordActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
 
@@ -133,7 +125,10 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         }
         resetMasterPassword();
 
-        configureEye();
+        configureEye(
+                new Pair<>(eye, password),
+                new Pair<>(eyeConfirm, confirmPassword)
+        );
     }
 
     @Override
@@ -142,42 +137,45 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         outState.putBoolean(ARG_CHANGE_PASSWORD, changePassword);
     }
 
+    @SuppressLint("StaticFieldLeak")
     private void resetMasterPassword() {
-        reset.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("StaticFieldLeak")
-            @Override
-            public void onClick(View view) {
-                reset.setEnabled(false);
-                start.setEnabled(false);
-                progressBar.setVisibility(View.VISIBLE);
-                new AsyncTask<Void, Void, Void>() {
-                    @Override
-                    protected Void doInBackground(Void... voids) {
-                        mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false).apply();
-                        masterPasswordAlreadyGiven = false;
-                        mCredentialsViewModel.deleteAllDatabase();
-                        populateDb();
-                        return null;
-                    }
+        reset.setOnClickListener(view -> new AlertDialog.Builder(this)
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setTitle("Resetting all your stored data")
+                .setMessage("Are you sure you want to proceed?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    reset.setEnabled(false);
+                    start.setEnabled(false);
+                    progressBar.setVisibility(View.VISIBLE);
+                    new AsyncTask<Void, Void, Void>() {
+                        @Override
+                        protected Void doInBackground(Void... voids) {
+                            mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false).apply();
+                            masterPasswordAlreadyGiven = false;
+                            mCredentialsViewModel.deleteAllDatabase();
+                            populateDb();
+                            return null;
+                        }
 
-                    @Override
-                    protected void onPostExecute(Void aVoid) {
-                        super.onPostExecute(aVoid);
-                        progressBar.setVisibility(View.GONE);
-                        reset.setEnabled(true);
-                        start.setEnabled(true);
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                            super.onPostExecute(aVoid);
+                            progressBar.setVisibility(View.GONE);
+                            reset.setEnabled(true);
+                            start.setEnabled(true);
 
-                        passwordMeter.setVisibility(View.VISIBLE);
-                        hint.setVisibility(View.VISIBLE);
-                        confirmPassword.setVisibility(View.VISIBLE);
-                        reset.setVisibility(View.GONE);
-                        eyeConfirm.setVisibility(View.VISIBLE);
+                            passwordMeter.setVisibility(View.VISIBLE);
+                            hint.setVisibility(View.VISIBLE);
+                            confirmPassword.setVisibility(View.VISIBLE);
+                            reset.setVisibility(View.GONE);
+                            eyeConfirm.setVisibility(View.VISIBLE);
 
-                        Toast.makeText(MasterPasswordActivity.this, "All your data has been deleted please enter a new master password", Toast.LENGTH_LONG).show();
-                    }
-                }.execute();
-            }
-        });
+                            Toast.makeText(MasterPasswordActivity.this, "All your data has been deleted please enter a new master password", Toast.LENGTH_LONG).show();
+                        }
+                    }.execute();
+                })
+                .setNegativeButton("No", null)
+                .show());
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -311,23 +309,5 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         strengthView.setText(ps.getResId());
         strengthView.setTextColor(ps.getColor());
         progressPassword.getProgressDrawable().setColorFilter(ps.getColor(), android.graphics.PorterDuff.Mode.SRC_IN);
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private void configureEye() {
-        eye.setOnTouchListener((v, event) -> showEye(event, password));
-        eyeConfirm.setOnTouchListener((v, event) -> showEye(event, confirmPassword));
-    }
-
-    private boolean showEye(MotionEvent event, EditText editText) {
-        switch (event.getAction() ) {
-            case MotionEvent.ACTION_DOWN:
-                editText.setInputType(InputType.TYPE_CLASS_TEXT);
-                break;
-            case MotionEvent.ACTION_UP:
-                editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                break;
-        }
-        return true;
     }
 }
