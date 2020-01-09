@@ -1,5 +1,7 @@
 package com.kent.university.privelt.ui.data;
 
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,13 +35,20 @@ public class DataViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(UserData userData) {
-        title.setText(userData.getTitle());
+        title.setText(userData.getTitle().equalsIgnoreCase("devices") ? "Device" : userData.getTitle());
         value.setText(userData.getValue());
-        concatenatedData.setText(userData.getConcatenatedData());
+        concatenatedData.setText(TextUtils.join("\n", userData.getUnConcatenatedData()));
 
-        if (userData.getTitle().equals("devices"))
-            icon.setImageResource(R.drawable.ic_cellphone);
-        else
-            icon.setImageResource(R.drawable.ic_pin);
+        switch (userData.getType()) {
+            case "device":
+                icon.setImageResource(R.drawable.ic_cellphone);
+                break;
+            case "address":
+                icon.setImageResource(R.drawable.ic_pin);
+                break;
+            default:
+                icon.setImageResource(R.drawable.ic_search);
+        }
+
     }
 }

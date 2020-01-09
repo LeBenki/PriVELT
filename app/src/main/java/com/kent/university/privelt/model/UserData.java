@@ -7,6 +7,9 @@ import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static androidx.room.ForeignKey.CASCADE;
 
 @Entity(tableName = "user_data",
@@ -16,7 +19,7 @@ import static androidx.room.ForeignKey.CASCADE;
         onDelete = CASCADE))
 public class UserData {
 
-    public final static String DELIMITER = "@/:(";
+    public final static String DELIMITER = "@/:-";
 
     @PrimaryKey(autoGenerate = true)
     private long id;
@@ -82,6 +85,10 @@ public class UserData {
 
     public String getConcatenatedData() {
         return concatenatedData;
+    }
+
+    public String[] getUnConcatenatedData() {
+        return concatenatedData.split(DELIMITER);
     }
 
     public void setConcatenatedData(String concatenatedData) {
