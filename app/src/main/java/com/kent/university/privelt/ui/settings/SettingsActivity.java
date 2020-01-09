@@ -42,7 +42,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         logout.setOnClickListener(view -> {
             new AlertDialog.Builder(this)
-                    .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("Log out")
                     .setMessage("Are you sure you want to log out?")
                     .setPositiveButton("Yes", (dialog, which) -> {
