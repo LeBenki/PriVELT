@@ -199,7 +199,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         new AsyncTask<Void, Void, Pair<Boolean, String>>() {
             @Override
             protected Pair<Boolean, String> doInBackground(Void... v) {
-
                 if (changePassword || !masterPasswordAlreadyGiven) {
                     if (changePassword) {
                         //check if the old password is the same as before

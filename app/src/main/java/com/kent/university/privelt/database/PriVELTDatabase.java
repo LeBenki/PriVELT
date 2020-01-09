@@ -21,7 +21,7 @@ import androidx.room.RoomDatabase;
 import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 4, exportSchema = false)
+@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 5, exportSchema = false)
 public abstract class PriVELTDatabase extends RoomDatabase {
     private static volatile PriVELTDatabase INSTANCE;
     public final static int DB_SIZE = 1024;
@@ -35,7 +35,7 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                             "PriVELTDatabase.db")
                             .addCallback(prepopulateDatabase())
                             .fallbackToDestructiveMigration()
-                            .addMigrations(MIGRATION_1_4)
+                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                             .build();
                 }
             }
@@ -43,7 +43,28 @@ public abstract class PriVELTDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
-    private static final Migration MIGRATION_1_4 = new Migration(1, 4) {
+    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            fillDbWithDummyPassword(database);
+        }
+    };
+
+    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            fillDbWithDummyPassword(database);
+        }
+    };
+
+    private static final Migration MIGRATION_3_4 = new Migration(3, 4) {
+        @Override
+        public void migrate(@NonNull SupportSQLiteDatabase database) {
+            fillDbWithDummyPassword(database);
+        }
+    };
+
+    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
             fillDbWithDummyPassword(database);
@@ -56,7 +77,6 @@ public abstract class PriVELTDatabase extends RoomDatabase {
             @Override
             public void onCreate(@NonNull SupportSQLiteDatabase db) {
                 super.onCreate(db);
-
                 fillDbWithDummyPassword(db);
             }
         };
@@ -68,7 +88,7 @@ public abstract class PriVELTDatabase extends RoomDatabase {
             contentValues.put("id", i);
             contentValues.put("email", "name" + i);
             contentValues.put("password", SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString()));
-            db.insert("credentials", OnConflictStrategy.IGNORE, contentValues);
+            db.insert("credentials", OnConflictStrategy.REPLACE, contentValues);
         }
     }
 
