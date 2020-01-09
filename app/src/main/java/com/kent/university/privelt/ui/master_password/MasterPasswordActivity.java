@@ -95,8 +95,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         password.addTextChangedListener(this);
 
         zxcvbn = new Zxcvbn();
-
-
+        
         if (getIntent() != null) {
             changePassword = getIntent().getBooleanExtra(ARG_CHANGE_PASSWORD, false);
         }
