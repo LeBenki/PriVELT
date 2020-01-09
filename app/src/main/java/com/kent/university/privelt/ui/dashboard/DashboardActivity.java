@@ -18,9 +18,11 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
+import com.kent.university.privelt.ui.data.DataActivity;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
 import com.kent.university.privelt.utils.SimpleCrypto;
 import com.kent.university.privelt.utils.SimpleHash;
@@ -216,6 +218,13 @@ public class DashboardActivity extends BaseActivity {
     @Subscribe
     public void onEditCredentials(UpdateCredentialsEvent event) {
         editCredentials(event.service, REQUEST_EDIT_LOGIN);
+    }
+
+    @Subscribe
+    public void onLaunchData(LaunchDataEvent event) {
+        Intent intent = new Intent(this, DataActivity.class);
+        intent.putExtra(PARAM_SERVICE, event.service);
+        startActivity(intent);
     }
 
     @Override

@@ -18,10 +18,9 @@ import androidx.room.Database;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
-import androidx.room.migration.Migration;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 5, exportSchema = false)
+@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 1, exportSchema = false)
 public abstract class PriVELTDatabase extends RoomDatabase {
     private static volatile PriVELTDatabase INSTANCE;
     public final static int DB_SIZE = 1024;
@@ -34,42 +33,12 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                             PriVELTDatabase.class,
                             "PriVELTDatabase.db")
                             .addCallback(prepopulateDatabase())
-                            .fallbackToDestructiveMigration()
-                            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
-
-    private static final Migration MIGRATION_1_2 = new Migration(1, 2) {
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-            fillDbWithDummyPassword(database);
-        }
-    };
-
-    private static final Migration MIGRATION_2_3 = new Migration(2, 3) {
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-            fillDbWithDummyPassword(database);
-        }
-    };
-
-    private static final Migration MIGRATION_3_4 = new Migration(3, 4) {
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-            fillDbWithDummyPassword(database);
-        }
-    };
-
-    private static final Migration MIGRATION_4_5 = new Migration(4, 5) {
-        @Override
-        public void migrate(@NonNull SupportSQLiteDatabase database) {
-            fillDbWithDummyPassword(database);
-        }
-    };
 
     private static Callback prepopulateDatabase() {
         return new Callback() {

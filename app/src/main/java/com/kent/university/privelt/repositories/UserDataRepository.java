@@ -21,4 +21,8 @@ public class UserDataRepository {
     public void deleteAllUserDatas() {
         mUserDataDao.deleteAllUserDatas();
     }
+
+    public void insertUserDatas(UserData... userData) {
+        mUserDataDao.insertUserDatas(userData);
+    }
 }

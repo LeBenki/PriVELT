@@ -18,8 +18,7 @@
             android:name=".ui.dashboard.DashboardActivity"
             android:label="@string/title_dashboard"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.dashboard.LoginActivity"
             android:label=""
@@ -33,8 +32,8 @@
         <activity
             android:name=".ui.master_password.MasterPasswordActivity"
             android:label=""
-            android:screenOrientation="portrait"
             android:parentActivityName=".ui.dashboard.DashboardActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTrans">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,8 +42,15 @@
         </activity>
         <activity
             android:name=".ui.settings.SettingsActivity"
-            android:screenOrientation="portrait"
-            android:label="Settings">
+            android:label="Settings"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".ui.data.DataActivity"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />

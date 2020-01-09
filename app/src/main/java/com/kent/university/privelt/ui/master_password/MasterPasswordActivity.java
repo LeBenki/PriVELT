@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Pair;
 import android.view.MotionEvent;
 import android.view.View;
@@ -188,6 +189,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         }
         if (!PasswordChecker.checkPassword(zxcvbn, password.getText().toString())) {
             String errMessage = changePassword || !masterPasswordAlreadyGiven ? "You did not respect the password policy" : "Wrong password, you can reset all your data to enter a new password";
+            Log.d("LUCAS", "ET MERDE");
             Toast.makeText(MasterPasswordActivity.this, errMessage, Toast.LENGTH_LONG).show();
             return;
         }
@@ -223,9 +225,10 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                 else {
                     long index = SimpleHash.calculateIndexOfHash(hashedPassword);
                     Credentials credentials = mCredentialsViewModel.getCredentialsWithId(index);
-
+                    Log.d("LUCAS", hashedPassword);
                     String oldHash = credentials.getPassword();
-                    return new Pair<>(oldHash.equals(password), oldHash);
+                    Log.d("LUCAS", oldHash);
+                    return new Pair<>(oldHash.equals(hashedPassword), password);
                 }
             }
 

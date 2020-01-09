@@ -4,6 +4,7 @@ import com.kent.university.privelt.repositories.CredentialsDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
 import com.kent.university.privelt.ui.dashboard.DashboardViewModel;
+import com.kent.university.privelt.ui.data.DataViewModel;
 import com.kent.university.privelt.ui.master_password.CredentialsViewModel;
 
 import java.lang.reflect.InvocationTargetException;
@@ -42,6 +43,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
                         CredentialsDataRepository.class,
                         Executor.class)
                         .newInstance(mServiceDataSource, mCredentialsDataSource, mExecutor);
+            }
+            else if (DataViewModel.class.equals(modelClass)) {
+                return modelClass.getConstructor(UserDataRepository.class,
+                        Executor.class)
+                        .newInstance(mUserDataSource, mExecutor);
             }
             else
                 throw new IllegalArgumentException("Unknown ViewModel class");

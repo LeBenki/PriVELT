@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
+import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
 
@@ -37,5 +38,6 @@ class DashboardViewHolder extends RecyclerView.ViewHolder {
         PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
         imageService.setImageResource(priVELT.getServiceHelper().getResIdWithName(service.getName()));
         settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent(service.getName())));
+        itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service.getName())));
     }
 }

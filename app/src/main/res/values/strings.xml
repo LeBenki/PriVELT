@@ -4,7 +4,7 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">PriVELT</string>
-    <string name="nav_header_subtitle">Keep your data safe</string>
+    <string name="nav_header_subtitle">Keep your concatenatedData safe</string>
     <string name="nav_header_desc">Navigation header</string>
 
     <string name="menu_google">Google</string>
