@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kent.university.privelt.R;
@@ -223,6 +224,18 @@ public class DashboardActivity extends BaseActivity {
 
     @Subscribe
     public void onLaunchData(LaunchDataEvent event) {
+
+        Service s = null;
+
+        for (Service service : subscribedServices)
+            if (service.getId() == event.serviceId)
+                s = service;
+
+        if (!s.isPasswordSaved()) {
+            Toast.makeText(this, "You did not authorize us to save your password, we cannot process to data extraction.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         Intent intent = new Intent(this, DataActivity.class);
         intent.putExtra(PARAM_SERVICE, event.service);
         intent.putExtra(PARAM_SERVICE_ID, event.serviceId);
