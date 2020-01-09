@@ -20,19 +20,20 @@ public class DataViewModel extends ViewModel {
         this.mExecutor = mExecutor;
     }
 
-    public void init() {
+    void init() {
         if (userDatas == null)
             userDatas = mUserDataRepository.getUserDatas();
     }
 
-    public LiveData<List<UserData>> getUserDatas() {
+    LiveData<List<UserData>> getUserDatas() {
         return userDatas;
     }
 
-    public void replaceUserDatas(UserData... userDatas) {
+    void replaceUserDatas(List<UserData> userDatas) {
         mExecutor.execute(() -> {
             mUserDataRepository.deleteAllUserDatas();
-            mUserDataRepository.insertUserDatas(userDatas);
+            for (UserData userData : userDatas)
+                mUserDataRepository.insertUserDatas(userData);
         });
     }
 }

@@ -26,6 +26,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public static final String PARAM_PASSWORD = "PARAM_PASSWORD";
 
     public static final String PARAM_SERVICE = "PARAM_SERVICE";
+    public static final String PARAM_SERVICE_ID = "PARAM_SERVICE_ID";
+
     private String service;
 
     @BindView(R.id.best_poc)
