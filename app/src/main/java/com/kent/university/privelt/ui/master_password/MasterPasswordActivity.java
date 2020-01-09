@@ -96,7 +96,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
 
         zxcvbn = new Zxcvbn();
 
-
         if (getIntent() != null) {
             changePassword = getIntent().getBooleanExtra(ARG_CHANGE_PASSWORD, false);
         }
@@ -140,7 +139,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @SuppressLint("StaticFieldLeak")
     private void resetMasterPassword() {
         reset.setOnClickListener(view -> new AlertDialog.Builder(this)
-                .setIcon(android.R.drawable.ic_dialog_alert)
                 .setTitle("Resetting all your stored data")
                 .setMessage("Are you sure you want to proceed?")
                 .setPositiveButton("Yes", (dialog, which) -> {

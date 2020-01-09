@@ -71,6 +71,6 @@ dependencies {
     annotationProcessor 'androidx.room:room-compiler:2.2.3'
     implementation 'com.nulab-inc:zxcvbn:1.3.0'
     implementation 'org.greenrobot:eventbus:3.1.1'
-    implementation 'com.kent.university:webviewautologin:1.2.9'
+    implementation 'com.kent.university:webviewautologin:1.3.7'
     implementation 'com.kent.university:dataextractor:1.2.6'
 }

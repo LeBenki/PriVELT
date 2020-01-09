@@ -107,7 +107,7 @@ public class DashboardActivity extends BaseActivity {
         addService.setOnClickListener(view -> {
 
             final ArrayAdapter<String> adp = new ArrayAdapter<>(DashboardActivity.this,
-                    android.R.layout.simple_spinner_item, getServiceHelper().getServiceNames());
+                    android.R.layout.simple_spinner_item, getServiceHelper().getRemainingServices(subscribedServices));
 
             final Spinner sp = new Spinner(DashboardActivity.this);
             sp.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -117,9 +117,7 @@ public class DashboardActivity extends BaseActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
             builder.setTitle("Choose the service you want to subscribe to");
             builder.setView(sp);
-            builder.setPositiveButton("Choose", (dialogInterface, i) -> {
-                editCredentials(sp.getSelectedItem().toString(), REQUEST_LOGIN);
-            });
+            builder.setPositiveButton("Choose", (dialogInterface, i) -> editCredentials(sp.getSelectedItem().toString(), REQUEST_LOGIN));
             builder.create().show();
         });
     }

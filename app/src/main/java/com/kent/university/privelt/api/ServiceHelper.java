@@ -2,10 +2,13 @@ package com.kent.university.privelt.api;
 
 import android.content.Context;
 
+import com.kent.university.privelt.model.Service;
 import com.kent.university.webviewautologin.services.LoginService;
 import com.kent.university.webviewautologin.services.ServiceManager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ServiceHelper {
 
@@ -28,6 +31,15 @@ public class ServiceHelper {
 
     public ServiceManager getServiceManager() {
         return serviceManager;
+    }
+
+    public ArrayList<String> getRemainingServices(ArrayList<Service> subscribedServices) {
+        ArrayList<String> notSubscribed = (ArrayList<String>) this.getServiceNames().clone();
+
+        for (Service service : subscribedServices)
+            notSubscribed.remove(service.getName());
+
+        return notSubscribed;
     }
 
     public ArrayList<String> getServiceNames() {
