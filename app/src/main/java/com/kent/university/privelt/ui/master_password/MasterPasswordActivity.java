@@ -80,7 +80,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @BindView(R.id.eye_confirm_password)
     ImageView eyeConfirm;
 
-    private CredentialsViewModel mCredentialsViewModel;
+    private MasterPasswordViewModel mMasterPasswordViewModel;
     private SharedPreferences mSharedPreferences;
     private boolean masterPasswordAlreadyGiven;
 
@@ -150,7 +150,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                         protected Void doInBackground(Void... voids) {
                             mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false).apply();
                             masterPasswordAlreadyGiven = false;
-                            mCredentialsViewModel.deleteAllDatabase();
+                            mMasterPasswordViewModel.deleteAllDatabase();
                             populateDb();
                             return null;
                         }
@@ -201,18 +201,18 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     if (changePassword) {
                         //check if the old password is the same as before
                         long oldIndex = MasterPasswordActivity.this.getIdentityManager().getMpIndex();
-                        Credentials c = mCredentialsViewModel.getCredentialsWithId(oldIndex);
+                        Credentials c = mMasterPasswordViewModel.getCredentialsWithId(oldIndex);
                         if (c.getPassword().equals(hashedPassword)) {
                             return new Pair<>(false, password);
                         }
                         //Encrypt credentials with new master password
                         changeAllPasswords(password);
                         //remove old password
-                        mCredentialsViewModel.updateCredentials(new Credentials(oldIndex, "email" + oldIndex, SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString())));
+                        mMasterPasswordViewModel.updateCredentials(new Credentials(oldIndex, "email" + oldIndex, SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString())));
                     }
                     long index = SimpleHash.calculateIndexOfHash(hashedPassword);
                     Credentials credentials = new Credentials(index, "email" + index, hashedPassword);
-                    mCredentialsViewModel.updateCredentials(credentials);
+                    mMasterPasswordViewModel.updateCredentials(credentials);
                     if (!masterPasswordAlreadyGiven)
                         mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, true).apply();
                     masterPasswordAlreadyGiven = true;
@@ -220,7 +220,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                 }
                 else {
                     long index = SimpleHash.calculateIndexOfHash(hashedPassword);
-                    Credentials credentials = mCredentialsViewModel.getCredentialsWithId(index);
+                    Credentials credentials = mMasterPasswordViewModel.getCredentialsWithId(index);
                     Log.d("LUCAS", hashedPassword);
                     String oldHash = credentials.getPassword();
                     Log.d("LUCAS", oldHash);
@@ -251,13 +251,13 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     }
 
     private void changeAllPasswords(String newPassword) {
-        List<Service> services = mCredentialsViewModel.getAllServices();
+        List<Service> services = mMasterPasswordViewModel.getAllServices();
         for (Service service : services) {
-            Credentials credentials = mCredentialsViewModel.getCredentialsWithId(SimpleHash.calculateIndexOfHash(service.getName()));
+            Credentials credentials = mMasterPasswordViewModel.getCredentialsWithId(SimpleHash.calculateIndexOfHash(service.getName()));
             try {
                 String oldServicePassword = SimpleCrypto.decrypt(credentials.getPassword(), getIdentityManager().getKey());
                 credentials.setPassword(SimpleCrypto.encrypt(oldServicePassword, getIdentityManager().getKey(newPassword)));
-                mCredentialsViewModel.updateCredentials(credentials);
+                mMasterPasswordViewModel.updateCredentials(credentials);
             } catch (UnsupportedEncodingException | GeneralSecurityException e) {
                 e.printStackTrace();
             }
@@ -266,12 +266,12 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
 
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        mCredentialsViewModel = ViewModelProviders.of(this, viewModelFactory).get(CredentialsViewModel.class);
+        mMasterPasswordViewModel = ViewModelProviders.of(this, viewModelFactory).get(MasterPasswordViewModel.class);
     }
 
     private void populateDb() {
         for (int i = 0; i < DB_SIZE; i++) {
-            mCredentialsViewModel.updateCredentials(new Credentials(i, "email" + i, SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString())));
+            mMasterPasswordViewModel.updateCredentials(new Credentials(i, "email" + i, SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString())));
         }
     }
 

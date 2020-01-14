@@ -2,6 +2,8 @@ package com.kent.university.privelt.model;
 
 import com.kent.university.privelt.utils.SimpleHash;
 
+import java.io.Serializable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -14,7 +16,9 @@ import static androidx.room.ForeignKey.CASCADE;
         parentColumns = "id",
         childColumns = "credentials_id",
         onDelete = CASCADE))
-public class Service {
+public class Service implements Serializable {
+
+    public final static String DELIMITER = "@/:-";
 
     private String name;
 
@@ -26,10 +30,13 @@ public class Service {
 
     private boolean isPasswordSaved;
 
-    public Service(String name, boolean isPasswordSaved) {
+    private String concatenatedScripts;
+
+    public Service(String name, boolean isPasswordSaved, String concatenatedScripts) {
         this.name = name;
         this.credentialsId = SimpleHash.calculateIndexOfHash(name);
         this.isPasswordSaved = isPasswordSaved;
+        this.concatenatedScripts = concatenatedScripts;
     }
 
     public boolean isPasswordSaved() {
@@ -54,6 +61,18 @@ public class Service {
 
     public long getId() {
         return id;
+    }
+
+    public void setConcatenatedScripts(String concatenatedScripts) {
+        this.concatenatedScripts = concatenatedScripts;
+    }
+
+    public String[] getUnConcatenatedScripts() {
+        return concatenatedScripts.split(DELIMITER);
+    }
+
+    public String getConcatenatedScripts() {
+        return concatenatedScripts;
     }
 
     public long getCredentialsId() {

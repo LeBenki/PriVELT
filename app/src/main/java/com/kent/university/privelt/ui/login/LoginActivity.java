@@ -1,20 +1,31 @@
-package com.kent.university.privelt.ui.dashboard;
+package com.kent.university.privelt.ui.login;
 
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Pair;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
+import com.kent.university.privelt.model.Service;
 import com.kent.university.webviewautologin.response.ResponseCallback;
 import com.kent.university.webviewautologin.response.ResponseEnum;
 import com.kent.university.webviewautologin.services.LoginService;
+import com.university.kent.dataextractor.DataExtractor;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
@@ -28,7 +39,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public static final String PARAM_SERVICE = "PARAM_SERVICE";
     public static final String PARAM_SERVICE_ID = "PARAM_SERVICE_ID";
 
-    private String service;
+    private Service service;
 
     @BindView(R.id.best_poc)
     Button button;
@@ -42,17 +53,22 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.progress_circular)
     ProgressBar progressBar;
 
-    @BindView(R.id.title)
-    TextView title;
+//    @BindView(R.id.debug)
+//    Button debug;
 
-    @BindView(R.id.debug)
-    Button debug;
+    @BindView(R.id.scripts)
+    RecyclerView recyclerView;
 
     @BindView(R.id.eye_password)
     ImageView eye;
 
+    @BindView(R.id.remember_password)
+    CheckBox rememberPassword;
+
     LoginService loginService = null;
     AlertDialog alertDialog = null;
+
+    private ScriptsAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,36 +80,42 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         button.setOnClickListener(this);
 
         if (getIntent() != null) {
-            service = getIntent().getStringExtra(PARAM_SERVICE);
+            service = (Service) getIntent().getSerializableExtra(PARAM_SERVICE);
         }
         else if (savedInstanceState != null) {
-            service = savedInstanceState.getString(PARAM_SERVICE);
+            service = (Service) savedInstanceState.getSerializable(PARAM_SERVICE);
         }
 
-        title.setText(service);
+        setTitle(service.getName());
 
-        debug.setOnClickListener(view -> showAlertDebug());
+        /*debug.setOnClickListener(view -> showAlertDebug());*/
 
-        configureEye(
-                new Pair<>(eye, password)
-        );
+        configureEye(new Pair<>(eye, password));
+
+        loginService = getServiceHelper().getServiceWithName(service.getName());
+
+        configureRecyclerView();
+    }
+
+    private void configureRecyclerView() {
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        DataExtractor dataExtractor = new DataExtractor(loginService);
+        dataExtractor.getServiceName();
+        Log.d("LULU", service.getConcatenatedScripts());
+        adapter = new ScriptsAdapter(dataExtractor.getStringScripts(), Arrays.asList(service.getUnConcatenatedScripts()));
+        recyclerView.setAdapter(adapter);
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(PARAM_SERVICE, service);
+        outState.putSerializable(PARAM_SERVICE, service);
     }
 
-    public void processLogin(boolean shouldStorePassword) {
+    public void processLogin() {
 
         progressBar.setVisibility(View.VISIBLE);
         button.setEnabled(false);
-
-        loginService = getServiceHelper().getServiceWithName(service);
-
-        String user = email.getText().toString();
-        String pass = password.getText().toString();
 
         loginService.autoLogin(email.getText().toString(), password.getText().toString(), new ResponseCallback() {
             @Override
@@ -106,13 +128,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     Toast.makeText(LoginActivity.this, responseEnum.getName(), Toast.LENGTH_LONG).show();
 
                 } else {
-                    Intent intent = new Intent();
-                    intent.putExtra(PARAM_SHOULD_STORE, shouldStorePassword);
-                    intent.putExtra(PARAM_USER, user);
-                    intent.putExtra(PARAM_PASSWORD, pass);
-                    intent.putExtra(PARAM_SERVICE, service);
-                    setResult(RESULT_OK, intent);
-                    finish();
+                    Toast.makeText(LoginActivity.this, "Login success", Toast.LENGTH_LONG).show();
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -127,14 +143,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             return;
         }
 
-        new AlertDialog.Builder(LoginActivity.this)
-                .setTitle("Store password")
-                .setMessage("Do you authorize the application to store the password?")
-                .setPositiveButton("Yes", (dialog, which) -> {
-                    processLogin(true);
-                })
-                .setNegativeButton("No", (dialogInterface, i) -> processLogin(false))
-                .show();
+        processLogin();
     }
 
     private void showAlertDebug() {
@@ -154,6 +163,47 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             alertDialog = dialogBuilder.create();
             alertDialog.setCanceledOnTouchOutside(true);
             alertDialog.show();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.check_menu, menu);
+
+        return true;
+    }
+
+    public boolean isValidInput() {
+        if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Please enter an email and a password", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        if (adapter.getConcatenatedScriptsChecked().isEmpty()) {
+            Toast.makeText(LoginActivity.this, "Please choose at least one extraction method", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.check:
+                if (isValidInput()) {
+                    Intent intent = new Intent();
+                    intent.putExtra(PARAM_USER, email.getText().toString());
+                    intent.putExtra(PARAM_PASSWORD, password.getText().toString());
+
+                    service.setPasswordSaved(rememberPassword.isChecked());
+                    service.setConcatenatedScripts(adapter.getConcatenatedScriptsChecked());
+                    intent.putExtra(PARAM_SERVICE, service);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 }

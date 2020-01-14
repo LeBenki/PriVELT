@@ -20,7 +20,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme" />
         <activity
-            android:name=".ui.dashboard.LoginActivity"
+            android:name=".ui.login.LoginActivity"
             android:label=""
             android:parentActivityName=".ui.dashboard.DashboardActivity"
             android:screenOrientation="portrait"

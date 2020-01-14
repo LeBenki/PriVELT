@@ -13,13 +13,13 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-public class CredentialsViewModel extends ViewModel {
+public class MasterPasswordViewModel extends ViewModel {
     private final CredentialsDataRepository mCredentialsDataSource;
     private final UserDataRepository mUserDataSource;
     private final ServiceDataRepository mServiceDataSource;
     private final Executor mExecutor;
 
-    public CredentialsViewModel(CredentialsDataRepository mCredentialsDataSource, UserDataRepository mUserDataSource, ServiceDataRepository mServiceDataSource, Executor mExecutor) {
+    public MasterPasswordViewModel(CredentialsDataRepository mCredentialsDataSource, UserDataRepository mUserDataSource, ServiceDataRepository mServiceDataSource, Executor mExecutor) {
         this.mCredentialsDataSource = mCredentialsDataSource;
         this.mUserDataSource = mUserDataSource;
         this.mServiceDataSource = mServiceDataSource;

@@ -5,7 +5,7 @@ import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
 import com.kent.university.privelt.ui.dashboard.DashboardViewModel;
 import com.kent.university.privelt.ui.data.DataViewModel;
-import com.kent.university.privelt.ui.master_password.CredentialsViewModel;
+import com.kent.university.privelt.ui.master_password.MasterPasswordViewModel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Executor;
@@ -31,7 +31,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         try {
-            if (CredentialsViewModel.class.equals(modelClass)) {
+            if (MasterPasswordViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(CredentialsDataRepository.class,
                         UserDataRepository.class,
                         ServiceDataRepository.class,

@@ -27,6 +27,7 @@ import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.ui.data.DataActivity;
+import com.kent.university.privelt.ui.login.LoginActivity;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
 import com.kent.university.privelt.utils.SimpleCrypto;
 import com.kent.university.privelt.utils.SimpleHash;
@@ -48,11 +49,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_PASSWORD;
-import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_SERVICE;
-import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_SERVICE_ID;
-import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_SHOULD_STORE;
-import static com.kent.university.privelt.ui.dashboard.LoginActivity.PARAM_USER;
+import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_PASSWORD;
+import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
+import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE_ID;
+import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_USER;
 
 public class DashboardActivity extends BaseActivity {
 
@@ -122,12 +122,12 @@ public class DashboardActivity extends BaseActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
             builder.setTitle("Choose the service you want to subscribe to");
             builder.setView(sp);
-            builder.setPositiveButton("Choose", (dialogInterface, i) -> editCredentials(sp.getSelectedItem().toString(), REQUEST_LOGIN));
+            builder.setPositiveButton("Choose", (dialogInterface, i) -> editCredentials(new Service(sp.getSelectedItem().toString(), false , ""), REQUEST_LOGIN));
             builder.create().show();
         });
     }
 
-    private void editCredentials(String service, int requestCode) {
+    private void editCredentials(Service service, int requestCode) {
         Intent intent = new Intent(DashboardActivity.this, LoginActivity.class);
         intent.putExtra(PARAM_SERVICE, service);
         startActivityForResult(intent, requestCode);
@@ -178,31 +178,22 @@ public class DashboardActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == REQUEST_LOGIN || requestCode == REQUEST_EDIT_LOGIN) && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                boolean shouldStorePassword = data.getBooleanExtra(PARAM_SHOULD_STORE, false);
-                String serviceName = data.getStringExtra(PARAM_SERVICE);
+                Service service = (Service) data.getSerializableExtra(PARAM_SERVICE);
 
-                if (shouldStorePassword) {
+                if (service.isPasswordSaved()) {
                     String user = data.getStringExtra(PARAM_USER);
                     String password = data.getStringExtra(PARAM_PASSWORD);
 
                     try {
-                        dashboardViewModel.updateCredentials(new Credentials(SimpleHash.calculateIndexOfHash(serviceName), user, SimpleCrypto.encrypt(password, getIdentityManager().getKey())));
+                        dashboardViewModel.updateCredentials(new Credentials(SimpleHash.calculateIndexOfHash(service.getName()), user, SimpleCrypto.encrypt(password, getIdentityManager().getKey())));
                     } catch (UnsupportedEncodingException | GeneralSecurityException e) {
                         e.printStackTrace();
                     }
                 }
-
-                if (requestCode == REQUEST_LOGIN) {
-                    Service service = new Service(serviceName, shouldStorePassword);
+                if ((requestCode == REQUEST_LOGIN)) {
                     dashboardViewModel.insertService(service);
-                }
-                else {
-                    for (Service service : subscribedServices) {
-                        if (service.getName().equals(serviceName)) {
-                            service.setPasswordSaved(shouldStorePassword);
-                            dashboardViewModel.updateService(service);
-                        }
-                    }
+                } else {
+                    dashboardViewModel.updateService(service);
                 }
             }
         }
