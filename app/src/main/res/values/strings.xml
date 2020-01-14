@@ -20,4 +20,5 @@
     <string name="title_home">Identity Manager</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Settings</string>
+    <string name="change_master_password">Change master password</string>
 </resources>

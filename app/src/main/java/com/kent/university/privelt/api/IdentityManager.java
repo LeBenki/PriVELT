@@ -10,7 +10,7 @@ import java.security.GeneralSecurityException;
 public class IdentityManager {
 
     public final static String SHARED_PREFERENCES_KEY = "SHARED_PREFERENCES_KEY";
-    public final static String KEY_SALT = "KEY_SALT";
+    private final static String KEY_SALT = "KEY_SALT";
 
     private SharedPreferences sharedPreferences;
 
@@ -39,7 +39,7 @@ public class IdentityManager {
         this.mpIndex = mpIndex;
     }
 
-    public String getSalt() {
+    private String getSalt() {
         if (!sharedPreferences.contains(KEY_SALT)) {
             try {
                 sharedPreferences.edit().putString(KEY_SALT, SimpleCrypto.generateSalt()).apply();

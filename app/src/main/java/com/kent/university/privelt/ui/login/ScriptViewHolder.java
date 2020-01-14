@@ -2,7 +2,6 @@ package com.kent.university.privelt.ui.login;
 
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 
 import com.kent.university.privelt.R;
 

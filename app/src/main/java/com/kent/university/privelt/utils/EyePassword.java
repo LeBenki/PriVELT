@@ -1,9 +1,7 @@
 package com.kent.university.privelt.utils;
 
 import android.annotation.SuppressLint;
-import android.media.Image;
 import android.text.InputType;
-import android.util.Pair;
 import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -11,9 +9,8 @@ import android.widget.ImageView;
 public class EyePassword {
 
     @SuppressLint("ClickableViewAccessibility")
-    public static void configureEye(Pair<ImageView, EditText>... imageViews) {
-        for (Pair<ImageView, EditText> pair : imageViews)
-            pair.first.setOnTouchListener((v, event) -> showEye(event, pair.second));
+    public static void configureEye(ImageView image, EditText editText) {
+        image.setOnTouchListener((v, event) -> showEye(event, editText));
     }
 
     private static boolean showEye(MotionEvent event, EditText editText) {

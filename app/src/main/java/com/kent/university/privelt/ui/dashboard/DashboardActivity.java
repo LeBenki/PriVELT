@@ -151,7 +151,7 @@ public class DashboardActivity extends BaseActivity {
             }
 
             @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 new AlertDialog.Builder(DashboardActivity.this)
                         .setTitle("Unsubscribe")
                         .setMessage("Are you sure you want to unsubscribe to this service?")
@@ -180,11 +180,13 @@ public class DashboardActivity extends BaseActivity {
             if (data != null) {
                 Service service = (Service) data.getSerializableExtra(PARAM_SERVICE);
 
+                assert service != null;
                 if (service.isPasswordSaved()) {
                     String user = data.getStringExtra(PARAM_USER);
                     String password = data.getStringExtra(PARAM_PASSWORD);
 
                     try {
+                        assert user != null;
                         dashboardViewModel.updateCredentials(new Credentials(SimpleHash.calculateIndexOfHash(service.getName()), user, SimpleCrypto.encrypt(password, getIdentityManager().getKey())));
                     } catch (UnsupportedEncodingException | GeneralSecurityException e) {
                         e.printStackTrace();
@@ -220,23 +222,16 @@ public class DashboardActivity extends BaseActivity {
     @Subscribe
     public void onLaunchData(LaunchDataEvent event) {
 
-        Service s = null;
-
-        for (Service service : subscribedServices)
-            if (service.getId() == event.serviceId)
-                s = service;
-
-        if (!s.isPasswordSaved()) {
+        if (!event.service.isPasswordSaved()) {
             Toast.makeText(this, "You did not authorize us to save your password, we cannot process to data extraction.", Toast.LENGTH_LONG).show();
             return;
         }
 
-        Service finalS = s;
         new AsyncTask<Void, Void, Pair<String, String>>() {
 
             @Override
             protected Pair<String, String> doInBackground(Void... voids) {
-                Credentials credentials = dashboardViewModel.getCredentialsWithId(finalS.getCredentialsId());
+                Credentials credentials = dashboardViewModel.getCredentialsWithId(event.service.getCredentialsId());
                 String email = credentials.getEmail();
                 String password = "";
                 try {
@@ -251,8 +246,8 @@ public class DashboardActivity extends BaseActivity {
             protected void onPostExecute(Pair<String, String> pair) {
                 super.onPostExecute(pair);
                 Intent intent = new Intent(DashboardActivity.this, DataActivity.class);
-                intent.putExtra(PARAM_SERVICE, event.service);
-                intent.putExtra(PARAM_SERVICE_ID, event.serviceId);
+                intent.putExtra(PARAM_SERVICE, event.service.getName());
+                intent.putExtra(PARAM_SERVICE_ID, event.service.getId());
                 intent.putExtra(PARAM_SERVICE_EMAIL, pair.first);
                 intent.putExtra(PARAM_SERVICE_PASSWORD, pair.second);
                 startActivity(intent);
@@ -270,12 +265,10 @@ public class DashboardActivity extends BaseActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.settings:
-                startActivity(new Intent(this, SettingsActivity.class));
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (item.getItemId() == R.id.settings) {
+            startActivity(new Intent(this, SettingsActivity.class));
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

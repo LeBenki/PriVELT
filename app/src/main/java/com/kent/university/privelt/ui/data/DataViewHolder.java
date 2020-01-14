@@ -1,7 +1,6 @@
 package com.kent.university.privelt.ui.data;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;

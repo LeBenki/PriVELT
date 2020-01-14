@@ -31,25 +31,21 @@ public class MasterPasswordViewModel extends ViewModel {
         return mCredentialsDataSource.getCredentials();
     }
 
-    public Credentials getCredentialsWithId(long id) {
+    Credentials getCredentialsWithId(long id) {
         return mCredentialsDataSource.getCredentialsWithId(id);
     }
 
-    public void updateCredentials(Credentials... credentials) {
+    void updateCredentials(Credentials... credentials) {
         mCredentialsDataSource.updateCredentials(credentials);
     }
 
-    public void deleteAllDatabase() {
+    void deleteAllDatabase() {
         mCredentialsDataSource.deleteAllCredentials();
         mUserDataSource.deleteAllUserDatas();
         mServiceDataSource.deleteAllServices();
     }
 
-    public List<Service> getAllServices() {
+    List<Service> getAllServices() {
         return mServiceDataSource.getAllServices();
-    }
-
-    public void updateServices(Service... services) {
-        mServiceDataSource.updateServices(services);
     }
 }

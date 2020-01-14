@@ -40,17 +40,15 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        logout.setOnClickListener(view -> {
-            new AlertDialog.Builder(this)
-                    .setTitle("Log out")
-                    .setMessage("Are you sure you want to log out?")
-                    .setPositiveButton("Yes", (dialog, which) -> {
-                        startActivity(new Intent(this, MasterPasswordActivity.class));
-                        this.finish();
-                    })
-                    .setNegativeButton("No", null)
-                    .show();
-        });
+        logout.setOnClickListener(view -> new AlertDialog.Builder(this)
+                .setTitle("Log out")
+                .setMessage("Are you sure you want to log out?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    startActivity(new Intent(this, MasterPasswordActivity.class));
+                    this.finish();
+                })
+                .setNegativeButton("No", null)
+                .show());
     }
 
 }

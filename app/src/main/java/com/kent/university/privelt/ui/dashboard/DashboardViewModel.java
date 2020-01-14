@@ -26,7 +26,7 @@ public class DashboardViewModel extends ViewModel {
         mExecutor = executor;
     }
 
-    public void init() {
+    void init() {
         if (mServices == null)
             mServices = mServiceDataSource.getServices();
     }
@@ -36,23 +36,23 @@ public class DashboardViewModel extends ViewModel {
         return mServices;
     }
 
-    public void insertService(Service... services) {
+    void insertService(Service... services) {
         mExecutor.execute(() -> mServiceDataSource.insertServices(services));
     }
 
-    public void deleteService(Service... services) {
+    void deleteService(Service... services) {
         mExecutor.execute(() -> mServiceDataSource.deleteServices(services));
     }
 
-    public void updateService(Service... services) {
+    void updateService(Service... services) {
         mExecutor.execute(() -> mServiceDataSource.updateServices(services));
     }
 
-    public void updateCredentials(Credentials credentials) {
+    void updateCredentials(Credentials credentials) {
         mExecutor.execute(() -> mCredentialsDataSource.updateCredentials(credentials));
     }
 
-    public Credentials getCredentialsWithId(long id) {
+    Credentials getCredentialsWithId(long id) {
         return mCredentialsDataSource.getCredentialsWithId(id);
     }
 }

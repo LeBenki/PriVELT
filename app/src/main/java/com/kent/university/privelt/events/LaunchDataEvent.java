@@ -1,12 +1,12 @@
 package com.kent.university.privelt.events;
 
+import com.kent.university.privelt.model.Service;
+
 public class LaunchDataEvent {
 
-    public String service;
-    public long serviceId;
+    public Service service;
 
-    public LaunchDataEvent(String service, long serviceId) {
+    public LaunchDataEvent(Service service) {
         this.service = service;
-        this.serviceId = serviceId;
     }
 }

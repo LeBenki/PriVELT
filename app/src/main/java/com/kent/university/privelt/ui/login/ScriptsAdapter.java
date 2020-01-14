@@ -1,6 +1,5 @@
 package com.kent.university.privelt.ui.login;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +18,7 @@ public class ScriptsAdapter extends RecyclerView.Adapter<ScriptViewHolder> {
 
     private LinkedHashMap<String, Boolean> scripts;
 
-    public ScriptsAdapter(List<String> scripts, List<String> alreadyChecked) {
+    ScriptsAdapter(List<String> scripts, List<String> alreadyChecked) {
 
         this.scripts = new LinkedHashMap<>();
 
@@ -27,7 +26,6 @@ public class ScriptsAdapter extends RecyclerView.Adapter<ScriptViewHolder> {
             this.scripts.put(script, false);
         }
         for (String script : alreadyChecked) {
-            Log.d("TAG", script);
             if (!script.isEmpty())
                 this.scripts.put(script, true);
         }
@@ -51,7 +49,7 @@ public class ScriptsAdapter extends RecyclerView.Adapter<ScriptViewHolder> {
         return scripts.size();
     }
 
-    public String getConcatenatedScriptsChecked() {
+    String getConcatenatedScriptsChecked() {
         String result = "";
         for (Map.Entry<String, Boolean> entry : scripts.entrySet()) {
             String key = entry.getKey();

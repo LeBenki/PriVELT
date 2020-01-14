@@ -3,8 +3,6 @@ package com.kent.university.privelt.ui.login;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.util.Pair;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,14 +23,11 @@ import com.kent.university.webviewautologin.services.LoginService;
 import com.university.kent.dataextractor.DataExtractor;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
-    private static final String TAG = LoginActivity.class.getSimpleName();
-    public static final String PARAM_SHOULD_STORE = "PARAM_SHOULD_STORE";
     public static final String PARAM_USER = "PARAM_USER";
     public static final String PARAM_PASSWORD = "PARAM_PASSWORD";
 
@@ -86,11 +81,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             service = (Service) savedInstanceState.getSerializable(PARAM_SERVICE);
         }
 
+        assert service != null;
         setTitle(service.getName());
 
         /*debug.setOnClickListener(view -> showAlertDebug());*/
 
-        configureEye(new Pair<>(eye, password));
+        configureEye(eye, password);
 
         loginService = getServiceHelper().getServiceWithName(service.getName());
 
@@ -101,7 +97,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         DataExtractor dataExtractor = new DataExtractor(loginService);
         dataExtractor.getServiceName();
-        Log.d("LULU", service.getConcatenatedScripts());
         adapter = new ScriptsAdapter(dataExtractor.getStringScripts(), Arrays.asList(service.getUnConcatenatedScripts()));
         recyclerView.setAdapter(adapter);
     }
@@ -188,22 +183,20 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.check:
-                if (isValidInput()) {
-                    Intent intent = new Intent();
-                    intent.putExtra(PARAM_USER, email.getText().toString());
-                    intent.putExtra(PARAM_PASSWORD, password.getText().toString());
+        if (item.getItemId() == R.id.check) {
+            if (isValidInput()) {
+                Intent intent = new Intent();
+                intent.putExtra(PARAM_USER, email.getText().toString());
+                intent.putExtra(PARAM_PASSWORD, password.getText().toString());
 
-                    service.setPasswordSaved(rememberPassword.isChecked());
-                    service.setConcatenatedScripts(adapter.getConcatenatedScriptsChecked());
-                    intent.putExtra(PARAM_SERVICE, service);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
+                service.setPasswordSaved(rememberPassword.isChecked());
+                service.setConcatenatedScripts(adapter.getConcatenatedScriptsChecked());
+                intent.putExtra(PARAM_SERVICE, service);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+            return true;
         }
+        return super.onOptionsItemSelected(item);
     }
 }

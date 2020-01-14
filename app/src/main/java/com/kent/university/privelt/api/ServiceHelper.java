@@ -7,8 +7,6 @@ import com.kent.university.webviewautologin.services.LoginService;
 import com.kent.university.webviewautologin.services.ServiceManager;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 public class ServiceHelper {
 
@@ -42,7 +40,7 @@ public class ServiceHelper {
         return notSubscribed;
     }
 
-    public ArrayList<String> getServiceNames() {
+    private ArrayList<String> getServiceNames() {
         return serviceNames;
     }
 

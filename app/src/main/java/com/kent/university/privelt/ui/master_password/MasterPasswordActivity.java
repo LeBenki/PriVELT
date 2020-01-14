@@ -105,7 +105,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
 
         if (changePassword) {
             reset.setVisibility(View.GONE);
-            start.setText("Change master password");
+            start.setText(getString(R.string.change_master_password));
         }
 
         configureViewModel();
@@ -124,10 +124,8 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         }
         resetMasterPassword();
 
-        configureEye(
-                new Pair<>(eye, password),
-                new Pair<>(eyeConfirm, confirmPassword)
-        );
+        configureEye(eye, password);
+        configureEye(eyeConfirm, confirmPassword);
     }
 
     @Override
