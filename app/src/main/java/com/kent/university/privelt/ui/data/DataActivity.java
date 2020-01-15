@@ -12,6 +12,7 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.webviewautologin.response.ResponseCallback;
 import com.kent.university.webviewautologin.response.ResponseEnum;
@@ -22,6 +23,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -37,19 +39,16 @@ import static com.kent.university.privelt.model.UserData.DELIMITER;
 import static com.kent.university.privelt.ui.dashboard.DashboardActivity.PARAM_SERVICE_EMAIL;
 import static com.kent.university.privelt.ui.dashboard.DashboardActivity.PARAM_SERVICE_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
-import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE_ID;
 
 public class DataActivity extends BaseActivity {
 
-    private String service;
+    private Service service;
 
     private String email;
 
     private String password;
 
-    private long serviceId;
-
-    LoginService loginService;
+    private LoginService loginService;
 
     @BindView(R.id.progress_circular)
     ProgressBar progressBar;
@@ -82,17 +81,16 @@ public class DataActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         if (savedInstanceState != null) {
-            service = savedInstanceState.getString(PARAM_SERVICE, "");
+            service = (Service) savedInstanceState.getSerializable(PARAM_SERVICE);
             email = savedInstanceState.getString(PARAM_SERVICE_EMAIL, "");
             password = savedInstanceState.getString(PARAM_SERVICE_PASSWORD, "");
-            serviceId = savedInstanceState.getLong(PARAM_SERVICE_ID, -1);
         } else if (getIntent() != null) {
-            service = getIntent().getStringExtra(PARAM_SERVICE);
+            service = (Service) getIntent().getSerializableExtra(PARAM_SERVICE);
             email = getIntent().getStringExtra(PARAM_SERVICE_EMAIL);
             password = getIntent().getStringExtra(PARAM_SERVICE_PASSWORD);
-            serviceId = getIntent().getLongExtra(PARAM_SERVICE_ID, -1);
         }
-        setTitle(service);
+
+        setTitle(service.getName());
 
         configureRecyclerView();
 
@@ -106,10 +104,9 @@ public class DataActivity extends BaseActivity {
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString(PARAM_SERVICE, service);
+        outState.putSerializable(PARAM_SERVICE, service);
         outState.putString(PARAM_SERVICE_EMAIL, email);
         outState.putString(PARAM_SERVICE_PASSWORD, password);
-        outState.putLong(PARAM_SERVICE_ID, serviceId);
     }
 
     private void configureRecyclerView() {
@@ -133,7 +130,7 @@ public class DataActivity extends BaseActivity {
     }
 
     private void configureLoginService() {
-        loginService = getServiceHelper().getServiceWithName(service);
+        loginService = getServiceHelper().getServiceWithName(service.getName());
 
         DataExtractor dataExtractor = new DataExtractor(loginService);
         final ArrayList<UserData> allUserData = new ArrayList<>();
@@ -146,7 +143,7 @@ public class DataActivity extends BaseActivity {
                     script.setText(responseEnum.getName());
                 } else {
                     script.setText("Logged");
-                    dataExtractor.injectAll(DataActivity.this, (jsonArray, status) -> {
+                    dataExtractor.injectAllScriptsByListName(DataActivity.this,(jsonArray, status) -> {
                         int totalData = (int) ((float)((status.getFailedData() + status.getSucceedData())) / (float)(status.getAmountOfData()) * 100);
                         Log.d("LUCAS", String.valueOf(totalData));
                         percent.setText(String.valueOf(totalData).concat("%"));
@@ -161,7 +158,7 @@ public class DataActivity extends BaseActivity {
                             return;
                         allUserData.addAll(parseJSON(jsonArray));
                         Log.d("LUCAS", jsonArray.toString());
-                    });
+                    }, Arrays.asList(service.getUnConcatenatedScripts()));
                 }
             }
         });
@@ -182,7 +179,7 @@ public class DataActivity extends BaseActivity {
                         obj.getString("type"),
                         obj.getString("value"),
                         TextUtils.join(DELIMITER, td),
-                        serviceId);
+                        service.getId());
                 Log.d("Response", userData.getType());
                 Log.d("Response", userData.getValue());
                 Log.d("Response", userData.getConcatenatedData());

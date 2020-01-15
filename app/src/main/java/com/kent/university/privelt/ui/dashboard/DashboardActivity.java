@@ -51,7 +51,6 @@ import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
-import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE_ID;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_USER;
 
 public class DashboardActivity extends BaseActivity {
@@ -246,8 +245,7 @@ public class DashboardActivity extends BaseActivity {
             protected void onPostExecute(Pair<String, String> pair) {
                 super.onPostExecute(pair);
                 Intent intent = new Intent(DashboardActivity.this, DataActivity.class);
-                intent.putExtra(PARAM_SERVICE, event.service.getName());
-                intent.putExtra(PARAM_SERVICE_ID, event.service.getId());
+                intent.putExtra(PARAM_SERVICE, event.service);
                 intent.putExtra(PARAM_SERVICE_EMAIL, pair.first);
                 intent.putExtra(PARAM_SERVICE_PASSWORD, pair.second);
                 startActivity(intent);
