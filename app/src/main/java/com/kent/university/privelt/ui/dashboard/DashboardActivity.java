@@ -26,6 +26,7 @@ import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
+import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.ui.data.DataActivity;
 import com.kent.university.privelt.ui.login.LoginActivity;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
@@ -64,6 +65,8 @@ public class DashboardActivity extends BaseActivity {
 
     private ArrayList<Service> subscribedServices;
 
+    private ArrayList<UserData> userDatas;
+
     @BindView(R.id.recycler_view_services)
     RecyclerView servicesList;
 
@@ -88,6 +91,18 @@ public class DashboardActivity extends BaseActivity {
 
         configureViewModel();
         getServices();
+        getUserDatas();
+    }
+
+    private void getUserDatas() {
+        dashboardViewModel.getUserDatas().observe(this, this::updateUserDatas);
+    }
+
+    private void updateUserDatas(List<UserData> userData) {
+        userDatas = new ArrayList<>(userData);
+        dashboardAdapter.updateServices(subscribedServices);
+        dashboardAdapter.updateUserDatas(userDatas);
+        dashboardAdapter.notifyDataSetChanged();
     }
 
     private void getServices() {
@@ -104,6 +119,7 @@ public class DashboardActivity extends BaseActivity {
             noService.setVisibility(View.VISIBLE);
 
         dashboardAdapter.updateServices(subscribedServices);
+        dashboardAdapter.updateUserDatas(userDatas);
         dashboardAdapter.notifyDataSetChanged();
     }
 
@@ -137,7 +153,7 @@ public class DashboardActivity extends BaseActivity {
         subscribedServices = new ArrayList<>();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         servicesList.setLayoutManager(layoutManager);
-        dashboardAdapter = new DashboardAdapter(subscribedServices);
+        dashboardAdapter = new DashboardAdapter();
         servicesList.setAdapter(dashboardAdapter);
     }
 

@@ -41,8 +41,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             else if (DashboardViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(ServiceDataRepository.class,
                         CredentialsDataRepository.class,
+                        UserDataRepository.class,
                         Executor.class)
-                        .newInstance(mServiceDataSource, mCredentialsDataSource, mExecutor);
+                        .newInstance(mServiceDataSource, mCredentialsDataSource, mUserDataSource, mExecutor);
             }
             else if (DataViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(UserDataRepository.class,
