@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_service"
+        android:icon="@drawable/ic_service"
+        android:title="@string/services"/>
+
+    <item
+        android:id="@+id/navigation_risk_value"
+        android:icon="@drawable/ic_risk_value"
+        android:title="@string/risk_value"/>
+
+</menu>

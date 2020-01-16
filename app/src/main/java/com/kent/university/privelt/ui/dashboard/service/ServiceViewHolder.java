@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard;
+package com.kent.university.privelt.ui.dashboard.service;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -10,7 +10,7 @@ import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
-import com.kent.university.privelt.ui.dashboard.data_metrics.DataMetricsAdapter;
+import com.kent.university.privelt.ui.dashboard.service.data_metrics.DataMetricsAdapter;
 import com.kent.university.privelt.utils.ParseUserData;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,7 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-class DashboardViewHolder extends RecyclerView.ViewHolder {
+class ServiceViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.image_service)
     ImageView imageService;
@@ -42,7 +42,7 @@ class DashboardViewHolder extends RecyclerView.ViewHolder {
 
     private DataMetricsAdapter dataMetricsAdapter;
 
-    DashboardViewHolder(@NonNull View itemView) {
+    ServiceViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
 

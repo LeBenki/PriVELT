@@ -36,8 +36,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.model.UserData.DELIMITER;
-import static com.kent.university.privelt.ui.dashboard.DashboardActivity.PARAM_SERVICE_EMAIL;
-import static com.kent.university.privelt.ui.dashboard.DashboardActivity.PARAM_SERVICE_PASSWORD;
+import static com.kent.university.privelt.ui.dashboard.service.ServiceFragment.PARAM_SERVICE_EMAIL;
+import static com.kent.university.privelt.ui.dashboard.service.ServiceFragment.PARAM_SERVICE_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 
 public class DataActivity extends BaseActivity {

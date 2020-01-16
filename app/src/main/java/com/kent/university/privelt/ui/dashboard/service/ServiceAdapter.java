@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard;
+package com.kent.university.privelt.ui.dashboard.service;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,26 +17,26 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class DashboardAdapter extends RecyclerView.Adapter<DashboardViewHolder> {
+public class ServiceAdapter extends RecyclerView.Adapter<ServiceViewHolder> {
 
     private List<Service> services;
     private LinkedHashMap<Service, List<UserData>> linkedCredentials;
 
-    DashboardAdapter() {
+    ServiceAdapter() {
         this.services = new ArrayList<>();
         this.linkedCredentials = new LinkedHashMap<>();
     }
 
     @NonNull
     @Override
-    public DashboardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ServiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.cell_dashboard, parent, false);
-        return new DashboardViewHolder(view);
+        return new ServiceViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DashboardViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ServiceViewHolder holder, int position) {
         holder.bind(services.get(position), linkedCredentials.get(services.get(position)));
     }
 

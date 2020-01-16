@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard.data_metrics;
+package com.kent.university.privelt.ui.dashboard.service.data_metrics;
 
 import android.view.View;
 import android.widget.TextView;

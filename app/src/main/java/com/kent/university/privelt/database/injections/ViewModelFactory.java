@@ -3,7 +3,7 @@ package com.kent.university.privelt.database.injections;
 import com.kent.university.privelt.repositories.CredentialsDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
-import com.kent.university.privelt.ui.dashboard.DashboardViewModel;
+import com.kent.university.privelt.ui.dashboard.service.ServiceViewModel;
 import com.kent.university.privelt.ui.data.DataViewModel;
 import com.kent.university.privelt.ui.master_password.MasterPasswordViewModel;
 
@@ -38,7 +38,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
                         Executor.class)
                         .newInstance(mCredentialsDataSource, mUserDataSource, mServiceDataSource, mExecutor);
             }
-            else if (DashboardViewModel.class.equals(modelClass)) {
+            else if (ServiceViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(ServiceDataRepository.class,
                         CredentialsDataRepository.class,
                         UserDataRepository.class,

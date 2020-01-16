@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard;
+package com.kent.university.privelt.ui.dashboard.service;
 
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-public class DashboardViewModel extends ViewModel {
+public class ServiceViewModel extends ViewModel {
     private final ServiceDataRepository mServiceDataSource;
     private final CredentialsDataRepository mCredentialsDataSource;
     private final UserDataRepository mUserDataSource;
@@ -25,7 +25,7 @@ public class DashboardViewModel extends ViewModel {
 
     private LiveData<List<UserData>> mUserDatas;
 
-    public DashboardViewModel(ServiceDataRepository serviceDataRepository, CredentialsDataRepository credentialsDataRepository, UserDataRepository userDataSource, Executor executor) {
+    public ServiceViewModel(ServiceDataRepository serviceDataRepository, CredentialsDataRepository credentialsDataRepository, UserDataRepository userDataSource, Executor executor) {
         mServiceDataSource = serviceDataRepository;
         mCredentialsDataSource = credentialsDataRepository;
         mUserDataSource = userDataSource;
