@@ -21,6 +21,6 @@ public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(String key, Integer value) {
-        metrics.setText(value + " different " + key + " found");
+        metrics.setText(String.format(itemView.getResources().getString(R.string.information_found), value, key));
     }
 }

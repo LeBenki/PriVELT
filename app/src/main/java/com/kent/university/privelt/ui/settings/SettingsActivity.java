@@ -3,14 +3,11 @@ package com.kent.university.privelt.ui.settings;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.ui.master_password.MasterPasswordActivity;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import butterknife.BindView;
@@ -41,13 +38,13 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         logout.setOnClickListener(view -> new AlertDialog.Builder(this)
-                .setTitle("Log out")
-                .setMessage("Are you sure you want to log out?")
-                .setPositiveButton("Yes", (dialog, which) -> {
+                .setTitle(R.string.log_out)
+                .setMessage(R.string.log_out_confirmation)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
                     startActivity(new Intent(this, MasterPasswordActivity.class));
                     this.finish();
                 })
-                .setNegativeButton("No", null)
+                .setNegativeButton(R.string.no, null)
                 .show());
     }
 

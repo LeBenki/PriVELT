@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class DataMetricsAdapter extends RecyclerView.Adapter<DataMetricsViewHolder> {
 
-    LinkedHashMap<String, Integer> dataMetrics;
+    private LinkedHashMap<String, Integer> dataMetrics;
 
     public DataMetricsAdapter() {
         this.dataMetrics = new LinkedHashMap<>();

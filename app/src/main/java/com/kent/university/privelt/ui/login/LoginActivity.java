@@ -122,7 +122,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     Toast.makeText(LoginActivity.this, responseEnum.getName(), Toast.LENGTH_LONG).show();
 
                 } else {
-                    Toast.makeText(LoginActivity.this, "Login success", Toast.LENGTH_LONG).show();
+                    Toast.makeText(LoginActivity.this, R.string.login_success, Toast.LENGTH_LONG).show();
                 }
                 progressBar.setVisibility(View.GONE);
             }
@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public void onClick(View view) {
 
         if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Please enter an email with a password", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, "", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -141,11 +141,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void showAlertDebug() {
-
+/*
         if (loginService == null) {
             Toast.makeText(LoginActivity.this, "Login service is not instanced yet", Toast.LENGTH_LONG).show();
             return;
-        }
+        }*/
 
         if (loginService.getWebview().getParent() != null) {
             ((ViewGroup)loginService.getWebview().getParent()).removeView(loginService.getWebview());
@@ -170,11 +170,11 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     public boolean isValidInput() {
         if (email.getText().toString().isEmpty() || password.getText().toString().isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Please enter an email and a password", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, R.string.email_or_password_empty, Toast.LENGTH_LONG).show();
             return false;
         }
         if (adapter.getConcatenatedScriptsChecked().isEmpty()) {
-            Toast.makeText(LoginActivity.this, "Please choose at least one extraction method", Toast.LENGTH_LONG).show();
+            Toast.makeText(LoginActivity.this, R.string.choose_script_empty, Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

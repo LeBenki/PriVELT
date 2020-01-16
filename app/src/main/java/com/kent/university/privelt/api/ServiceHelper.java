@@ -32,7 +32,7 @@ public class ServiceHelper {
     }
 
     public ArrayList<String> getRemainingServices(ArrayList<Service> subscribedServices) {
-        ArrayList<String> notSubscribed = (ArrayList<String>) this.getServiceNames().clone();
+        ArrayList<String> notSubscribed = new ArrayList<>(this.getServiceNames());
 
         for (Service service : subscribedServices)
             notSubscribed.remove(service.getName());

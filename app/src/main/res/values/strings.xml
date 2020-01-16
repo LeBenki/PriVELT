@@ -21,4 +21,57 @@
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Settings</string>
     <string name="change_master_password">Change master password</string>
+
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="check">Check</string>
+    <string name="settings">Settings</string>
+
+    <!--DashboardActivity -->
+    <string name="unsubscribe">Unsubscribe</string>
+    <string name="unsubscribe_confirmation">Are you sure you want to unsubscribe to this service?</string>
+    <string name="choose_service">Choose the service you want to subscribe to</string>
+    <string name="choose">Choose</string>
+    <string name="authorize_save_password">You did not authorize us to save your password, we cannot process to data extraction.</string>
+    <string name="privacy_value_risk">Privacy-Value risk</string>
+
+    <!--DataMetricsAdapter -->
+    <string name="information_found">%1$d different %2$s found</string>
+    <string name="information_found_total">%1$d different information found</string>
+
+    <!--DataActivity -->
+    <string name="extracting">Extracting: %1$s</string>
+    <string name="logged">Logged</string>
+    <string name="logging_in">Logging in</string>
+    <string name="percent">%1$d\%</string>
+    <string name="no_service">You did not subscribed to any service</string>
+
+    <!-- LoginActivity -->
+    <string name="login_success">Login success</string>
+    <string name="email_or_password_empty">Please enter an email with a password</string>
+    <string name="choose_script_empty">Please choose at least one extraction method</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="remember_password">Remember password</string>
+    <string name="test_connection">Test connection</string>
+
+    <!--MasterPasswordActivity -->
+    <string name="reset_confirmation">Resetting all your stored data</string>
+    <string name="process_confirmation">Are you sure you want to proceed?</string>
+    <string name="reset_done">All your data has been deleted please enter a new master password</string>
+    <string name="different_password">Passwords are not the same</string>
+    <string name="not_respect_policy">You did not respect the password policy</string>
+    <string name="wrong_password">Wrong password, you can reset all your data to enter a new password</string>
+    <string name="same_password">The password is the same as before</string>
+    <string name="title_master_password">Please enter your main password it will be used to encrypt all your data in this app</string>
+    <string name="reset_data">Click here to reset all your data</string>
+    <string name="password_policy">Your password must be at least 8 characters. With at least 1 number, 1 upper letter, 1 lower letter, 1 special character and should be at least strong</string>
+    <string name="master_password">Master password</string>
+    <string name="confirm_master_password">Confirm master password</string>
+    <string name="start_master_button">Start using the app</string>
+
+    <!--SettingsActivity-->
+    <string name="log_out">Log out</string>
+    <string name="log_out_confirmation">Are you sure you want to log out?</string>
 </resources>

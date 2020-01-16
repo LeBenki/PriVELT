@@ -135,6 +135,8 @@ public class DataActivity extends BaseActivity {
         DataExtractor dataExtractor = new DataExtractor(loginService);
         final ArrayList<UserData> allUserData = new ArrayList<>();
 
+        percent.setText(String.format(getResources().getString(R.string.percent), 0));
+
         loginService.autoLogin(email, password, new ResponseCallback() {
             @Override
             public void getResponse(ResponseEnum responseEnum, String data) {
@@ -142,15 +144,15 @@ public class DataActivity extends BaseActivity {
                 if (responseEnum != ResponseEnum.SUCCESS) {
                     script.setText(responseEnum.getName());
                 } else {
-                    script.setText("Logged");
+                    script.setText(R.string.logged);
                     dataExtractor.injectAllScriptsByListName(DataActivity.this,(jsonArray, status) -> {
                         int totalData = (int) ((float)((status.getFailedData() + status.getSucceedData())) / (float)(status.getAmountOfData()) * 100);
                         Log.d("LUCAS", String.valueOf(totalData));
-                        percent.setText(String.valueOf(totalData).concat("%"));
+                        percent.setText(String.format(getResources().getString(R.string.percent), totalData));
                         progressScript.setProgress(totalData);
-                        script.setText(new String("Extracting: ").concat(status.getTaskName()));
+                        script.setText(String.format(getResources().getString(R.string.extracting), status.getTaskName()));
                         if (status.isDone()) {
-                            Log.d("LUCAS", "LOGIN SERVICE:" + String.valueOf(allUserData.size()));
+                            Log.d("LUCAS", "LOGIN SERVICE:" + allUserData.size());
                             dataViewModel.replaceUserDatas(allUserData);
                         }
                         Log.d("LUCAS", status.toString());

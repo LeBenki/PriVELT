@@ -137,9 +137,9 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @SuppressLint("StaticFieldLeak")
     private void resetMasterPassword() {
         reset.setOnClickListener(view -> new AlertDialog.Builder(this)
-                .setTitle("Resetting all your stored data")
-                .setMessage("Are you sure you want to proceed?")
-                .setPositiveButton("Yes", (dialog, which) -> {
+                .setTitle(R.string.reset_confirmation)
+                .setMessage(R.string.process_confirmation)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
                     reset.setEnabled(false);
                     start.setEnabled(false);
                     progressBar.setVisibility(View.VISIBLE);
@@ -166,11 +166,11 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                             reset.setVisibility(View.GONE);
                             eyeConfirm.setVisibility(View.VISIBLE);
 
-                            Toast.makeText(MasterPasswordActivity.this, "All your data has been deleted please enter a new master password", Toast.LENGTH_LONG).show();
+                            Toast.makeText(MasterPasswordActivity.this, R.string.reset_done, Toast.LENGTH_LONG).show();
                         }
                     }.execute();
                 })
-                .setNegativeButton("No", null)
+                .setNegativeButton(R.string.no, null)
                 .show());
     }
 
@@ -178,12 +178,11 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @Override
     public void onClick(View view) {
         if (confirmPassword.getVisibility() == View.VISIBLE && !password.getText().toString().equals(confirmPassword.getText().toString())) {
-            Toast.makeText(MasterPasswordActivity.this, "Passwords are not the same", Toast.LENGTH_LONG).show();
+            Toast.makeText(MasterPasswordActivity.this, R.string.different_password, Toast.LENGTH_LONG).show();
             return;
         }
         if (!PasswordChecker.checkPassword(zxcvbn, password.getText().toString())) {
-            String errMessage = changePassword || !masterPasswordAlreadyGiven ? "You did not respect the password policy" : "Wrong password, you can reset all your data to enter a new password";
-            Log.d("LUCAS", "ET MERDE");
+            int errMessage = changePassword || !masterPasswordAlreadyGiven ? R.string.not_respect_policy : R.string.wrong_password;
             Toast.makeText(MasterPasswordActivity.this, errMessage, Toast.LENGTH_LONG).show();
             return;
         }
@@ -241,7 +240,7 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     finish();
                 }
                 else {
-                    String errMessage = changePassword ? "The password is the same as before" : "Wrong password, you can reset all your data to enter a new password";
+                    int errMessage = changePassword ? R.string.same_password : R.string.wrong_password;
                     Toast.makeText(MasterPasswordActivity.this, errMessage, Toast.LENGTH_LONG).show();
                 }
             }

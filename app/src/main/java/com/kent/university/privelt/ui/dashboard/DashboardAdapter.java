@@ -5,12 +5,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kent.university.privelt.R;
-import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 
-import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -71,6 +68,7 @@ public class DashboardAdapter extends RecyclerView.Adapter<DashboardViewHolder> 
             }
             else {
                 List<UserData> tmp = linkedCredentials.get(getServiceFromIndex(userData.getServiceId()));
+                assert tmp != null;
                 tmp.add(userData);
                 linkedCredentials.put(getServiceFromIndex(userData.getServiceId()), tmp);
             }

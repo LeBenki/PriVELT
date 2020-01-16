@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/edit_text_top"
-            android:hint="Username"
+            android:hint="@string/username"
             android:inputType="textEmailAddress"
             android:padding="15dp"
             android:textColor="#000000" />
@@ -50,7 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_bottom"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:inputType="textPassword"
                 android:padding="15dp"
                 android:textColor="#000000" />
@@ -69,7 +69,7 @@
             android:id="@+id/remember_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Remember password"
+            android:text="@string/remember_password"
             android:textColor="#ffffff"
             android:buttonTint="#ffffff"
             android:layout_marginVertical="@dimen/activity_vertical_margin"/>
@@ -80,7 +80,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/button"
             android:foreground="?android:attr/selectableItemBackground"
-            android:text="Test connection"
+            android:text="@string/test_connection"
             android:textAllCaps="false"
             android:textColor="#FE5295"
             android:textSize="17sp" />

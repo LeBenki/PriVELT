@@ -60,7 +60,7 @@ class DashboardViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service)));
 
         if (userDatas != null) {
-            totalMetrics.setText(userDatas.size() + " different information found");
+            totalMetrics.setText(String.format(itemView.getResources().getString(R.string.information_found_total), userDatas.size()));
             dataMetricsAdapter.setDataMetrics(ParseUserData.parseUserData(userDatas));
             dataMetricsAdapter.notifyDataSetChanged();
         }

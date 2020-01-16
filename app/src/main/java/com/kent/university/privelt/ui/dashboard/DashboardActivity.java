@@ -81,7 +81,7 @@ public class DashboardActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_dashboard);
 
         ButterKnife.bind(this);
 
@@ -135,9 +135,9 @@ public class DashboardActivity extends BaseActivity {
             sp.setAdapter(adp);
 
             AlertDialog.Builder builder = new AlertDialog.Builder(DashboardActivity.this);
-            builder.setTitle("Choose the service you want to subscribe to");
+            builder.setTitle(R.string.choose_service);
             builder.setView(sp);
-            builder.setPositiveButton("Choose", (dialogInterface, i) -> editCredentials(new Service(sp.getSelectedItem().toString(), false , ""), REQUEST_LOGIN));
+            builder.setPositiveButton(R.string.choose, (dialogInterface, i) -> editCredentials(new Service(sp.getSelectedItem().toString(), false , ""), REQUEST_LOGIN));
             builder.create().show();
         });
     }
@@ -168,13 +168,13 @@ public class DashboardActivity extends BaseActivity {
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 new AlertDialog.Builder(DashboardActivity.this)
-                        .setTitle("Unsubscribe")
-                        .setMessage("Are you sure you want to unsubscribe to this service?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
+                        .setTitle(R.string.unsubscribe)
+                        .setMessage(R.string.unsubscribe_confirmation)
+                        .setPositiveButton(R.string.yes, (dialog, which) -> {
                             int position = viewHolder.getAdapterPosition();
                             dashboardViewModel.deleteService(subscribedServices.get(position));
                         })
-                        .setNegativeButton("No", (dialogInterface, i) -> dashboardAdapter.notifyDataSetChanged())
+                        .setNegativeButton(R.string.no, (dialogInterface, i) -> dashboardAdapter.notifyDataSetChanged())
                         .show();
             }
         };
@@ -238,7 +238,7 @@ public class DashboardActivity extends BaseActivity {
     public void onLaunchData(LaunchDataEvent event) {
 
         if (!event.service.isPasswordSaved()) {
-            Toast.makeText(this, "You did not authorize us to save your password, we cannot process to data extraction.", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.authorize_save_password, Toast.LENGTH_LONG).show();
             return;
         }
 
