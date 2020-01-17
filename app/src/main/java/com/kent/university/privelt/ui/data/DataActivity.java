@@ -145,7 +145,7 @@ public class DataActivity extends BaseActivity {
                     script.setText(responseEnum.getName());
                 } else {
                     script.setText(R.string.logged);
-                    dataExtractor.injectAllScriptsByListName(DataActivity.this,(jsonArray, status) -> {
+                    dataExtractor.injectAll(DataActivity.this,(jsonArray, status) -> {
                         int totalData = (int) ((float)((status.getFailedData() + status.getSucceedData())) / (float)(status.getAmountOfData()) * 100);
                         Log.d("LUCAS", String.valueOf(totalData));
                         percent.setText(String.format(getResources().getString(R.string.percent), totalData));
@@ -160,7 +160,7 @@ public class DataActivity extends BaseActivity {
                             return;
                         allUserData.addAll(parseJSON(jsonArray));
                         Log.d("LUCAS", jsonArray.toString());
-                    }, Arrays.asList(service.getUnConcatenatedScripts()));
+                    });
                 }
             }
         });

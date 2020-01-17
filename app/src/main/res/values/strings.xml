@@ -47,7 +47,7 @@
     <string name="extracting">Extracting: %1$s</string>
     <string name="logged">Logged</string>
     <string name="logging_in">Logging in</string>
-    <string name="percent">%1$d\%</string>
+    <string name="percent">%1$d%%</string>
     <string name="no_service">You did not subscribed to any service</string>
 
     <!-- LoginActivity -->

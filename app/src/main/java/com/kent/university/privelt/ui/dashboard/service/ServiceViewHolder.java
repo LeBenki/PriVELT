@@ -59,10 +59,16 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
         settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent(service)));
         itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service)));
 
-        if (userDatas != null) {
+        if (userDatas != null && userDatas.size() != 0) {
+            metrics.setVisibility(View.VISIBLE);
+            totalMetrics.setVisibility(View.VISIBLE);
             totalMetrics.setText(String.format(itemView.getResources().getString(R.string.information_found_total), userDatas.size()));
             dataMetricsAdapter.setDataMetrics(ParseUserData.parseUserData(userDatas));
             dataMetricsAdapter.notifyDataSetChanged();
+        }
+        else {
+            metrics.setVisibility(View.GONE);
+            totalMetrics.setVisibility(View.GONE);
         }
     }
 }
