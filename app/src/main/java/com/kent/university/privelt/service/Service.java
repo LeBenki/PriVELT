@@ -250,6 +250,11 @@ public class Service extends android.app.Service {
                     Log.d("LUCAS", responseEnum.toString());
                     if (responseEnum == ResponseEnum.SUCCESS) {
                         dataExtractor.injectAll(((PriVELT)getApplicationContext()).getCurrentActivity(), (jsonArray, status) -> {
+                            Log.d("LUCAS", status.toString());
+                            if (status.isFailed() || jsonArray == null)
+                                return;
+                            allUserData.addAll(parseJSON(jsonArray, service));
+                            Log.d("LUCASCACABOUDIN", jsonArray.toString());
                             if (status.isDone()) {
                                 Log.d("LUCAS", "LOGIN SERVICE:" + allUserData.size());
 
@@ -259,11 +264,6 @@ public class Service extends android.app.Service {
                                     userDataRepository.insertUserDatas(userData);
 
                             }
-                            Log.d("LUCAS", status.toString());
-                            if (status.isFailed() || jsonArray == null)
-                                return;
-                            allUserData.addAll(parseJSON(jsonArray, service));
-                            Log.d("LUCAS", jsonArray.toString());
                         });
                     }
                 }
