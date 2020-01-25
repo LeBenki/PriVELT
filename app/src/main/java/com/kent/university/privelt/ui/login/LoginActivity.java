@@ -92,6 +92,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         ServiceHelper serviceHelper = new ServiceHelper(this);
         loginService = serviceHelper.getServiceWithName(service.getName());
 
+        rememberPassword.setChecked(service.isPasswordSaved());
         configureRecyclerView();
     }
 

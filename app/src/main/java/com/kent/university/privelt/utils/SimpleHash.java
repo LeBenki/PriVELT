@@ -137,9 +137,9 @@ public class SimpleHash {
     }
 
     public static long calculateIndexOfHash(String hash) {
+        hash = hash.replace(".", "a");
         byte[] decodedBigIntegerBytes = Base64.decode(hash, DEFAULT);
         BigInteger decodedBigInteger = new BigInteger(decodedBigIntegerBytes);
         return decodedBigInteger.mod(BigInteger.valueOf(DB_SIZE)).longValue();
-
     }
 }
