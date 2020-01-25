@@ -32,6 +32,8 @@ import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import androidx.annotation.Nullable;
 
@@ -53,6 +55,12 @@ public class Service extends android.app.Service {
         super();
     }
 
+    /**
+     * static to avoid multiple timers to be created when the service is called several times
+     */
+    private static Timer timer;
+    private static TimerTask timerTask;
+    long oldTime = 0;
 
     @Override
     public void onCreate() {
@@ -61,7 +69,6 @@ public class Service extends android.app.Service {
             restartForeground();
         }
         mCurrentService = this;
-        serviceHelper = new ServiceHelper(getApplicationContext());
     }
 
     @Override
@@ -125,6 +132,7 @@ public class Service extends android.app.Service {
         // restart the never ending service
         Intent broadcastIntent = new Intent(RESTART_INTENT);
         sendBroadcast(broadcastIntent);
+        stoptimertask();
     }
 
 
@@ -160,15 +168,50 @@ public class Service extends android.app.Service {
 
         Log.i(TAG, "Starting timer");
 
-        new Thread(new Runnable() {
-            @Override
+        //set a new Timer - if one is already running, cancel it to avoid two running at the same time
+        stoptimertask();
+        timer = new Timer();
+
+        //initialize the TimerTask's job
+        initializeTimerTask();
+
+        Log.i(TAG, "initialising TimerTask");
+        timerTask = new TimerTask() {
             public void run() {
                 processExtractionForEachService();
             }
-        }).start();
+        };
+
+        Log.i(TAG, "Scheduling...");
+        //schedule the timer, to wake up every 1 second
+        timer.schedule(timerTask, 1000, 1000*60*60);
+    }
+
+    /**
+     * it sets the timer to print the counter every x seconds
+     */
+    public void initializeTimerTask() {
+        Log.i(TAG, "initialising TimerTask");
+        timerTask = new TimerTask() {
+            public void run() {
+            }
+        };
+    }
+
+    /**
+     * not needed
+     */
+    public void stoptimertask() {
+        //stop the timer, if it's not already null
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
     }
 
     private void processExtractionForEachService() {
+
+        serviceHelper = new ServiceHelper(getApplicationContext());
 
         CredentialsDataRepository credentialsDataRepository = provideCredentialsDataSource(getApplicationContext());
         ServiceDataRepository serviceDataRepository = provideServiceDataSource(getApplicationContext());
