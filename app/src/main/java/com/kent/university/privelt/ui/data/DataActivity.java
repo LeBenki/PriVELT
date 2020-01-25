@@ -1,9 +1,8 @@
 package com.kent.university.privelt.ui.data;
 
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.LinearLayout;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
@@ -38,21 +37,8 @@ public class DataActivity extends BaseActivity {
     @BindView(R.id.recycler_view_userdata)
     RecyclerView recyclerView;
 
-    /*
     @BindView(R.id.progress_layout)
     LinearLayout progressLayout;
-
-    @BindView(R.id.progress_circular)
-    ProgressBar progressBar;
-
-    @BindView(R.id.progress_script)
-    ProgressBar progressScript;
-
-    @BindView(R.id.script_name)
-    TextView script;
-
-    @BindView(R.id.percent)
-    TextView percent;*/
 
     private DataViewModel dataViewModel;
 
@@ -101,21 +87,22 @@ public class DataActivity extends BaseActivity {
     }
 
     private void getUserDatas() {
-        dataViewModel.getUserDatas().observe(this, this::updateUserData);
+        dataViewModel.getUserDatasForService(service.getId()).observe(this, this::updateUserData);
     }
 
     private void updateUserData(List<UserData> userData) {
-
-        Log.d("LUCAS", String.valueOf(userData.size()));
-        dataAdapter.setUserData(userData);
-        dataAdapter.notifyDataSetChanged();
-
-//        progressLayout.setVisibility(userData.size() == 0 ? View.VISIBLE : View.GONE);
+        if (userData.isEmpty()) {
+            progressLayout.setVisibility(View.VISIBLE);
+        } else {
+            dataAdapter.setUserData(userData);
+            dataAdapter.notifyDataSetChanged();
+            progressLayout.setVisibility(View.GONE);
+        }
     }
 
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         dataViewModel = ViewModelProviders.of(this, viewModelFactory).get(DataViewModel.class);
-        dataViewModel.init();
+        dataViewModel.init(service.getId());
     }
 }

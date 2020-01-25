@@ -20,12 +20,12 @@ public class DataViewModel extends ViewModel {
         this.mExecutor = mExecutor;
     }
 
-    void init() {
+    void init(long serviceId) {
         if (userDatas == null)
-            userDatas = mUserDataRepository.getUserDatas();
+            userDatas = mUserDataRepository.getUserDatasForAService(serviceId);
     }
 
-    LiveData<List<UserData>> getUserDatas() {
+    LiveData<List<UserData>> getUserDatasForService(long serviceId) {
         return userDatas;
     }
 

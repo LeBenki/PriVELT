@@ -11,7 +11,6 @@
         android:clipToPadding="false"
         android:paddingBottom="48dp"/>
 
-    <!--
     <LinearLayout
         android:id="@+id/progress_layout"
         android:layout_width="match_parent"
@@ -27,23 +26,6 @@
             android:layout_gravity="center_horizontal"
             android:layout_margin="@dimen/activity_vertical_margin" />
 
-        <ProgressBar
-            android:id="@+id/progress_script"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:maxHeight="20dip"
-            android:minHeight="20dip"
-            android:progress="0" />
-
-        <TextView
-            android:id="@+id/percent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/percent"/>
 
         <TextView
             android:id="@+id/script_name"
@@ -52,7 +34,7 @@
             android:gravity="center_horizontal"
             android:layout_margin="@dimen/activity_vertical_margin"
             android:layout_gravity="center_horizontal"
-            android:text="@string/logging_in"/>
-    </LinearLayout> -->
+            android:text="@string/no_data_extracted_yet"/>
+    </LinearLayout>
 
 </RelativeLayout>

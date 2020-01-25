@@ -29,4 +29,8 @@ public class UserDataRepository {
     public void deleteUserDatasForAService(long id) {
         mUserDataDao.deleteUserDatasForAService(id);
     }
+
+    public LiveData<List<UserData>> getUserDatasForAService(long id) {
+        return mUserDataDao.getUserDatasForAService(id);
+    }
 }

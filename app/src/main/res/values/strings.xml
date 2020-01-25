@@ -78,4 +78,5 @@
     <string name="log_out">Log out</string>
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="script_title">Select the different data you want to monitor :</string>
+    <string name="no_data_extracted_yet">No data extracted yet</string>
 </resources>
