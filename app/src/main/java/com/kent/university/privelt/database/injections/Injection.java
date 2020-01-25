@@ -12,17 +12,17 @@ import java.util.concurrent.Executors;
 
 public class Injection {
 
-    private static CredentialsDataRepository provideCredentialsDataSource(Context context) {
+    public static CredentialsDataRepository provideCredentialsDataSource(Context context) {
         PriVELTDatabase database = PriVELTDatabase.getInstance(context);
         return new CredentialsDataRepository(database.credentialsDao());
     }
 
-    private static UserDataRepository provideUserDataSource(Context context) {
+    public static UserDataRepository provideUserDataSource(Context context) {
         PriVELTDatabase database = PriVELTDatabase.getInstance(context);
         return new UserDataRepository(database.userDataDao());
     }
 
-    private static ServiceDataRepository provideServiceSource(Context context) {
+    public static ServiceDataRepository provideServiceDataSource(Context context) {
         PriVELTDatabase database = PriVELTDatabase.getInstance(context);
         return new ServiceDataRepository(database.serviceDao());
     }
@@ -34,7 +34,7 @@ public class Injection {
     public static ViewModelFactory provideViewModelFactory(Context context) {
         CredentialsDataRepository credentialsDataSource = provideCredentialsDataSource(context);
         UserDataRepository userDataSource = provideUserDataSource(context);
-        ServiceDataRepository serviceSource = provideServiceSource(context);
+        ServiceDataRepository serviceSource = provideServiceDataSource(context);
         Executor executor = provideExecutor();
         return new ViewModelFactory(credentialsDataSource, userDataSource, serviceSource, executor);
     }

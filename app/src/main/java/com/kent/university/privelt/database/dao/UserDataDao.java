@@ -18,6 +18,9 @@ public interface UserDataDao {
     @Query("DELETE FROM user_data")
     void deleteAllUserDatas();
 
+    @Query("DELETE FROM user_data WHERE service_id = :serviceId")
+    void deleteUserDatasForAService(long serviceId);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertUserDatas(UserData... userData);
 }

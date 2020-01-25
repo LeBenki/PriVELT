@@ -1,6 +1,7 @@
 package com.kent.university.privelt.api;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.kent.university.privelt.model.Service;
 import com.kent.university.webviewautologin.services.LoginService;
@@ -57,9 +58,16 @@ public class ServiceHelper {
     }
 
     public LoginService getServiceWithName(String name) {
+        Log.d("LULUCACA", "CACA BITE" +  name);
+        Log.d("LULUCACA", String.valueOf(serviceManager.size()));
+
         for (int i = 0; i < serviceNames.size(); i++){
-            if (serviceNames.get(i).equals(name))
+            Log.d("LULUCACA", serviceManager.get(i).getName());
+            if (serviceNames.get(i).equals(name)) {
+                Log.d("LULUCACA", "found");
+                Log.d("LULUCACA", String.valueOf(serviceManager.getServiceList().get(i)));
                 return serviceManager.getServiceList().get(i);
+            }
         }
         return null;
     }

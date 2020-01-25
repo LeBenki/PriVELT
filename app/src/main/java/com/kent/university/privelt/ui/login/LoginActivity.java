@@ -3,6 +3,7 @@ package com.kent.university.privelt.ui.login;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -114,6 +115,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         loginService.autoLogin(email.getText().toString(), password.getText().toString(), new ResponseCallback() {
             @Override
             public void getResponse(ResponseEnum responseEnum, String data) {
+                Log.d("LULUCACA", "GGGGGGGGGGG");
                 if (responseEnum != ResponseEnum.SUCCESS) {
                     button.setEnabled(true);
 

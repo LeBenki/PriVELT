@@ -11,6 +11,7 @@
         android:clipToPadding="false"
         android:paddingBottom="48dp"/>
 
+    <!--
     <LinearLayout
         android:id="@+id/progress_layout"
         android:layout_width="match_parent"
@@ -52,6 +53,6 @@
             android:layout_margin="@dimen/activity_vertical_margin"
             android:layout_gravity="center_horizontal"
             android:text="@string/logging_in"/>
-    </LinearLayout>
+    </LinearLayout> -->
 
 </RelativeLayout>

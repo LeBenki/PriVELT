@@ -29,11 +29,12 @@ public class DataViewModel extends ViewModel {
         return userDatas;
     }
 
-    void replaceUserDatas(List<UserData> userDatas) {
+/*    void replaceUserDatas(List<UserData> userDatas) {
         mExecutor.execute(() -> {
             mUserDataRepository.deleteAllUserDatas();
             for (UserData userData : userDatas)
                 mUserDataRepository.insertUserDatas(userData);
         });
     }
+    */
 }

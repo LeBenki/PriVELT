@@ -20,7 +20,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 1, exportSchema = false)
+@Database(entities = {Credentials.class, UserData.class, Service.class}, version = 2, exportSchema = false)
 public abstract class PriVELTDatabase extends RoomDatabase {
     private static volatile PriVELTDatabase INSTANCE;
     public final static int DB_SIZE = 1024;
@@ -32,6 +32,7 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             PriVELTDatabase.class,
                             "PriVELTDatabase.db")
+                            .fallbackToDestructiveMigration()
                             .addCallback(prepopulateDatabase())
                             .build();
                 }

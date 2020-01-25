@@ -1,12 +1,15 @@
 package com.kent.university.privelt.ui.dashboard;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
+import com.kent.university.privelt.service.ProcessMainClass;
+import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver;
 import com.kent.university.privelt.ui.dashboard.risk_value.RiskValueFragment;
 import com.kent.university.privelt.ui.dashboard.service.ServiceFragment;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
@@ -38,6 +41,17 @@ public class DashboardActivity extends BaseActivity {
 
         toolbar.setTitle(R.string.services);
         loadFragment(new ServiceFragment());
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
+        } else {
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(getApplicationContext());
+        }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

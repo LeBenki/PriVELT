@@ -25,4 +25,8 @@ public class UserDataRepository {
     public void insertUserDatas(UserData... userData) {
         mUserDataDao.insertUserDatas(userData);
     }
+
+    public void deleteUserDatasForAService(long id) {
+        mUserDataDao.deleteUserDatasForAService(id);
+    }
 }

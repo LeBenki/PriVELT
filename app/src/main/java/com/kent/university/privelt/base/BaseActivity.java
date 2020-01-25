@@ -15,4 +15,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected ServiceHelper getServiceHelper() {
         return ((PriVELT)getApplicationContext()).getServiceHelper();
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((PriVELT) getApplicationContext()).setCurrentActivity(this);
+    }
 }
