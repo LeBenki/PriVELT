@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.kent.university.privelt.R;
+import com.kent.university.privelt.api.ServiceHelper;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.webviewautologin.response.ResponseCallback;
@@ -88,7 +89,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         configureEye(eye, password);
 
-        loginService = getServiceHelper().getServiceWithName(service.getName());
+        ServiceHelper serviceHelper = new ServiceHelper(this);
+        loginService = serviceHelper.getServiceWithName(service.getName());
 
         configureRecyclerView();
     }

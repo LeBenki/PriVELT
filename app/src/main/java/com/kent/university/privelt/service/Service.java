@@ -46,7 +46,6 @@ public class Service extends android.app.Service {
     public static final String RESTART_INTENT = "uk.ac.shef.oak.restarter";
     protected static final int NOTIFICATION_ID = 1337;
     private static String TAG = "Service";
-    private static Service mCurrentService;
     private WindowManager windowManager;
     private WindowManager.LayoutParams params;
     private ServiceHelper serviceHelper;
@@ -60,7 +59,6 @@ public class Service extends android.app.Service {
      */
     private static Timer timer;
     private static TimerTask timerTask;
-    long oldTime = 0;
 
     @Override
     public void onCreate() {
@@ -68,7 +66,6 @@ public class Service extends android.app.Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             restartForeground();
         }
-        mCurrentService = this;
     }
 
     @Override
@@ -135,13 +132,6 @@ public class Service extends android.app.Service {
         stoptimertask();
     }
 
-
-    /**
-     * this is called when the process is killed by Android
-     *
-     * @param rootIntent
-     */
-
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
@@ -157,10 +147,17 @@ public class Service extends android.app.Service {
 
     public void process() {
 
+        int LAYOUT_FLAG;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        } else {
+            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
+        }
+
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
         params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.TOP | Gravity.LEFT;
+                LAYOUT_FLAG, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
+        params.gravity = Gravity.TOP | Gravity.START;
         params.x = 0;
         params.y = 0;
         params.width = 0;
@@ -251,8 +248,7 @@ public class Service extends android.app.Service {
                 @Override
                 public void getResponse(ResponseEnum responseEnum, String data) {
                     Log.d("LUCAS", responseEnum.toString());
-                    if (responseEnum != ResponseEnum.SUCCESS) {
-                    } else {
+                    if (responseEnum == ResponseEnum.SUCCESS) {
                         dataExtractor.injectAll(((PriVELT)getApplicationContext()).getCurrentActivity(), (jsonArray, status) -> {
                             if (status.isDone()) {
                                 Log.d("LUCAS", "LOGIN SERVICE:" + allUserData.size());
@@ -300,13 +296,5 @@ public class Service extends android.app.Service {
             Log.d("Response", Objects.requireNonNull(e.getLocalizedMessage()));
         }
         return array;
-    }
-
-    public static Service getmCurrentService() {
-        return mCurrentService;
-    }
-
-    public static void setmCurrentService(Service mCurrentService) {
-        Service.mCurrentService = mCurrentService;
     }
 }
