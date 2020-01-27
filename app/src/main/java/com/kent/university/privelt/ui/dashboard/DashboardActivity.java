@@ -56,15 +56,14 @@ public class DashboardActivity extends BaseActivity {
                     this.startActivity(myIntent);
                 }).setNegativeButton(R.string.no, null);
                 alertDialog.show();
+                return;
             }
         }
-        else {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
-                RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
-            } else {
-                ProcessMainClass bck = new ProcessMainClass();
-                bck.launchService(getApplicationContext());
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
+            RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
+        } else {
+            ProcessMainClass bck = new ProcessMainClass();
+            bck.launchService(getApplicationContext());
         }
     }
 

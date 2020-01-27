@@ -19,11 +19,19 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseFragment;
+import com.kent.university.privelt.database.injections.Injection;
+import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.model.Service;
+import com.kent.university.privelt.model.UserData;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -32,14 +40,52 @@ public class RiskValueFragment extends BaseFragment {
     @BindView(R.id.chart)
     RadarChart chart;
 
+    private RiskValueViewModel riskValueViewModel;
+
+    private List<Service> services;
+    private List<UserData> userDatas;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_risk_value, container, false);
         ButterKnife.bind(this, view);
 
-        configureChart();
+        services = new ArrayList<>();
+        userDatas = new ArrayList<>();
+
+        configureViewModel();
+
+        getServices();
+
+        getUserdatas();
+
         return view;
+    }
+
+    private void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getContext());
+        riskValueViewModel = ViewModelProviders.of(this, viewModelFactory).get(RiskValueViewModel.class);
+        riskValueViewModel.init();
+    }
+
+    private void updateUserDatas(List<UserData> userData) {
+        this.userDatas = userData;
+        if (!userDatas.isEmpty() && !services.isEmpty())
+            configureChart();
+    }
+
+    private void updateServices(List<Service> services) {
+        this.services = services;
+        if (!userDatas.isEmpty() && !services.isEmpty())
+            configureChart();
+    }
+
+    private void getServices() {
+        riskValueViewModel.getServices().observe(this, this::updateServices);
+    }
+    private void getUserdatas() {
+        riskValueViewModel.getUserDatas().observe(this, this::updateUserDatas);
     }
 
     private void configureChart() {
@@ -59,7 +105,9 @@ public class RiskValueFragment extends BaseFragment {
         mv.setChartView(chart); // For bounds control
         chart.setMarker(mv); // Set the marker to the chart
 
-        setData();
+        String[] mActivities = getNumberOfTypes();
+
+        setData(mActivities);
 
         chart.animateXY(1400, 1400, Easing.EaseInOutQuad);
 
@@ -67,22 +115,53 @@ public class RiskValueFragment extends BaseFragment {
         xAxis.setTextSize(9f);
         xAxis.setYOffset(0f);
         xAxis.setXOffset(0f);
+
+
         xAxis.setValueFormatter(new ValueFormatter() {
-
-            private final String[] mActivities = new String[]{"Devices", "Addresses", "Personal information", "Location History", "Planes history"};
-
             @Override
             public String getFormattedValue(float value) {
                 return mActivities[(int) value % mActivities.length];
             }
         });
         //xAxis.setTextColor(Color.WHITE);
+        //l.setTextColor(Color.WHITE);
+    }
+
+    private String[] getNumberOfTypes() {
+        Set<String> types = new HashSet<>();
+        for (UserData userData : userDatas) {
+            types.add(userData.getType());
+        }
+        return types.toArray(new String[types.size()]);
+    }
+
+    private void setData(String[] mActivities) {
+
+        List<IRadarDataSet> sets = new ArrayList<>();
+
+        for (Service service : services) {
+            RadarDataSet set1 = new RadarDataSet(getDataEntriesForEachService(mActivities, service), service.getName());
+            set1.setColor(Color.YELLOW);
+            set1.setFillColor(Color.YELLOW);
+            set1.setDrawFilled(true);
+            set1.setFillAlpha(180);
+            set1.setLineWidth(2f);
+            set1.setDrawHighlightCircleEnabled(true);
+            set1.setDrawHighlightIndicators(false);
+            sets.add(set1);
+        }
+
+        RadarData data = new RadarData(sets);
+        data.setValueTextSize(8f);
+        data.setDrawValues(false);
+        data.setValueTextColor(Color.WHITE);
 
         YAxis yAxis = chart.getYAxis();
-        yAxis.setLabelCount(5, false);
+        yAxis.setLabelCount(mActivities.length, false);
         yAxis.setTextSize(9f);
         yAxis.setAxisMinimum(0f);
-        yAxis.setAxisMaximum(80f);
+
+        yAxis.setAxisMaximum(200f);
         yAxis.setDrawLabels(false);
 
         Legend l = chart.getLegend();
@@ -92,70 +171,40 @@ public class RiskValueFragment extends BaseFragment {
         l.setDrawInside(false);
         l.setXEntrySpace(7f);
         l.setYEntrySpace(5f);
-        //l.setTextColor(Color.WHITE);
-    }
-
-    private void setData() {
-
-        float mul = 80;
-        float min = 20;
-        int cnt = 5;
-
-        ArrayList<RadarEntry> entries1 = new ArrayList<>();
-        ArrayList<RadarEntry> entries2 = new ArrayList<>();
-        ArrayList<RadarEntry> entries3 = new ArrayList<>();
-
-        // NOTE: The order of the entries when being added to the entries array determines their position around the center of
-        // the chart.
-        for (int i = 0; i < cnt; i++) {
-            float val1 = (float) (Math.random() * mul) + min;
-            entries1.add(new RadarEntry(val1));
-
-            float val2 = (float) (Math.random() * mul) + min;
-            entries2.add(new RadarEntry(val2));
-
-            float val3 = (float) (Math.random() * mul) + min;
-            entries3.add(new RadarEntry(val3));
-        }
-
-        RadarDataSet set1 = new RadarDataSet(entries1, "Google");
-        set1.setColor(Color.YELLOW);
-        set1.setFillColor(Color.YELLOW);
-        set1.setDrawFilled(true);
-        set1.setFillAlpha(180);
-        set1.setLineWidth(2f);
-        set1.setDrawHighlightCircleEnabled(true);
-        set1.setDrawHighlightIndicators(false);
-
-        RadarDataSet set2 = new RadarDataSet(entries2, "Strava");
-        set2.setColor(Color.BLUE);
-        set2.setFillColor(Color.BLUE);
-        set2.setDrawFilled(true);
-        set2.setFillAlpha(180);
-        set2.setLineWidth(2f);
-        set2.setDrawHighlightCircleEnabled(true);
-        set2.setDrawHighlightIndicators(false);
-
-        RadarDataSet set3 = new RadarDataSet(entries3, "Hotels.com");
-        set3.setColor(Color.GREEN);
-        set3.setFillColor(Color.GREEN);
-        set3.setDrawFilled(true);
-        set3.setFillAlpha(180);
-        set3.setLineWidth(2f);
-        set3.setDrawHighlightCircleEnabled(true);
-        set3.setDrawHighlightIndicators(false);
-
-        ArrayList<IRadarDataSet> sets = new ArrayList<>();
-        sets.add(set1);
-        sets.add(set2);
-        sets.add(set3);
-
-        RadarData data = new RadarData(sets);
-        data.setValueTextSize(8f);
-        data.setDrawValues(false);
-        data.setValueTextColor(Color.WHITE);
 
         chart.setData(data);
         chart.invalidate();
+    }
+
+    private float getMaximumValue(List<IRadarDataSet> sets) {
+        float max = 0;
+        for (IRadarDataSet set : sets) {
+            for (int i = 0; i < set.getEntryCount(); i++) {
+                if (max < set.getEntryForIndex(i).getValue()) {
+                    max = set.getEntryForIndex(i).getValue();
+                }
+            }
+        }
+        return (max + 50);
+    }
+
+    private List<RadarEntry> getDataEntriesForEachService(String[] mActivities, Service service) {
+
+        ArrayList<RadarEntry> entries = new ArrayList<>();
+
+        for (int i = 0; i < mActivities.length; i++) {
+            int val = countTypeForEachService(mActivities[i], service);
+            entries.add(new RadarEntry(val));
+        }
+        return entries;
+    }
+
+    private int countTypeForEachService(String mActivity, Service service) {
+        int count = 0;
+        for (UserData userData : userDatas) {
+            if (userData.getServiceId() == service.getId() && userData.getType().equals(mActivity))
+                count += 1;
+        }
+        return count;
     }
 }
