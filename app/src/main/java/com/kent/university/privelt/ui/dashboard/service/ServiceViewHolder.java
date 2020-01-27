@@ -2,6 +2,7 @@ package com.kent.university.privelt.ui.dashboard.service;
 
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kent.university.privelt.PriVELT;
@@ -40,6 +41,9 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.total_metrics)
     TextView totalMetrics;
 
+    @BindView(R.id.risk_progress)
+    ProgressBar riskProgress;
+
     private DataMetricsAdapter dataMetricsAdapter;
 
     ServiceViewHolder(@NonNull View itemView) {
@@ -60,6 +64,8 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
         itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service)));
 
         if (userDatas != null && userDatas.size() != 0) {
+            //TODO: 200 HARDCODED (MAX DATA)
+            riskProgress.setProgress(userDatas.size() * 100 / 200);
             metrics.setVisibility(View.VISIBLE);
             totalMetrics.setVisibility(View.VISIBLE);
             totalMetrics.setText(String.format(itemView.getResources().getString(R.string.information_found_total), userDatas.size()));

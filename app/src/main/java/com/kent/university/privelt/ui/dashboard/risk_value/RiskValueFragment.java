@@ -161,6 +161,7 @@ public class RiskValueFragment extends BaseFragment {
         yAxis.setTextSize(9f);
         yAxis.setAxisMinimum(0f);
 
+        //TODO: 200 HARDCODED (MAX DATA)
         yAxis.setAxisMaximum(200f);
         yAxis.setDrawLabels(false);
 
