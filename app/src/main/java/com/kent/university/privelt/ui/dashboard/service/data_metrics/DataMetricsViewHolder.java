@@ -2,13 +2,12 @@ package com.kent.university.privelt.ui.dashboard.service.data_metrics;
 
 import android.view.View;
 import android.widget.TextView;
-
-import com.kent.university.privelt.R;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.kent.university.privelt.R;
+import com.kent.university.privelt.utils.sentence.SentenceAdapter;
 
 public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
 
@@ -21,6 +20,6 @@ public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(String key, Integer value) {
-        metrics.setText(String.format(itemView.getResources().getString(R.string.information_found), value, key));
+        metrics.setText(SentenceAdapter.adapt(itemView.getResources().getString(R.string.information_found), value, key));
     }
 }

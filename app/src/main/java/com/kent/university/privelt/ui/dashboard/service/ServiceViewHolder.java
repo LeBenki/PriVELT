@@ -3,7 +3,11 @@ package com.kent.university.privelt.ui.dashboard.service;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.LaunchDataEvent;
@@ -12,16 +16,10 @@ import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.ui.dashboard.service.data_metrics.DataMetricsAdapter;
 import com.kent.university.privelt.utils.ParseUserData;
-
+import com.kent.university.privelt.utils.sentence.SentenceAdapter;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 class ServiceViewHolder extends RecyclerView.ViewHolder {
 
@@ -62,7 +60,7 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
         if (userDatas != null && userDatas.size() != 0) {
             metrics.setVisibility(View.VISIBLE);
             totalMetrics.setVisibility(View.VISIBLE);
-            totalMetrics.setText(String.format(itemView.getResources().getString(R.string.information_found_total), userDatas.size()));
+            totalMetrics.setText(SentenceAdapter.adapt(itemView.getResources().getString(R.string.information_found_total), userDatas.size()));
             dataMetricsAdapter.setDataMetrics(ParseUserData.parseUserData(userDatas));
             dataMetricsAdapter.notifyDataSetChanged();
         }
