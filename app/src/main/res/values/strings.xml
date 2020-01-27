@@ -1,25 +1,12 @@
 <resources>
     <string name="app_name">PriVELT</string>
-    <string name="title_activity_main">MainActivity</string>
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">PriVELT</string>
-    <string name="nav_header_subtitle">Keep your concatenatedData safe</string>
-    <string name="nav_header_desc">Navigation header</string>
 
-    <string name="menu_google">Google</string>
-    <string name="menu_hotels">Hotels.com</string>
-    <string name="menu_strava">Strava</string>
-    <string name="menu_settings">Settings</string>
     <string name="weak">Weak</string>
     <string name="fair">Fair</string>
     <string name="good">Good</string>
     <string name="strong">Strong</string>
     <string name="very_strong">Very strong</string>
-    <string name="title_activity_main2">Main2Activity</string>
-    <string name="title_home">Identity Manager</string>
     <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Settings</string>
     <string name="change_master_password">Change master password</string>
 
     <string name="yes">Yes</string>
@@ -38,6 +25,8 @@
     <string name="choose">Choose</string>
     <string name="authorize_save_password">You did not authorize us to save your password, we cannot process to data extraction.</string>
     <string name="privacy_value_risk">Privacy-Value risk</string>
+    <string name="overlay_permission">Please add display over app permission, it is needed for data extraction while the application is in the background</string>
+    <string name="data_extraction">Data Extraction</string>
 
     <!--DataMetricsAdapter -->
     <string name="information_found">%1$d different %2$s found</string>
@@ -79,6 +68,4 @@
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="script_title">Select the different data you want to monitor :</string>
     <string name="no_data_extracted_yet">No data extracted yet</string>
-    <string name="overlay_permission">Please add display over app permission, it is needed for data extraction while the application is in the background</string>
-    <string name="data_extraction">Data Extraction</string>
 </resources>
