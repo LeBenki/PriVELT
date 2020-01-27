@@ -182,6 +182,10 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             Toast.makeText(LoginActivity.this, R.string.choose_script_empty, Toast.LENGTH_LONG).show();
             return false;
         }
+        if (!rememberPassword.isChecked()) {
+            Toast.makeText(LoginActivity.this, R.string.remember_password_error, Toast.LENGTH_LONG).show();
+            return false;
+        }
         return true;
     }
 
