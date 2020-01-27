@@ -79,4 +79,6 @@
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="script_title">Select the different data you want to monitor :</string>
     <string name="no_data_extracted_yet">No data extracted yet</string>
+    <string name="overlay_permission">Please add display over app permission, it is needed for data extraction while the application is in the background</string>
+    <string name="data_extraction">Data Extraction</string>
 </resources>
