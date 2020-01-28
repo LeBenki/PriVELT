@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -14,6 +16,7 @@ import com.kent.university.privelt.service.ProcessMainClass;
 import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver;
 import com.kent.university.privelt.ui.dashboard.risk_value.RiskValueFragment;
 import com.kent.university.privelt.ui.dashboard.service.ServiceFragment;
+import com.kent.university.privelt.ui.dashboard.user.UserFragment;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
 
 import androidx.annotation.NonNull;
@@ -84,8 +87,12 @@ public class DashboardActivity extends BaseActivity {
                     fragment = new RiskValueFragment();
                     loadFragment(fragment);
                     return true;
+                case R.id.navigation_user:
+                    toolbar.setTitle(R.string.user);
+                    fragment = new UserFragment();
+                    loadFragment(fragment);
+                    return true;
             }
-
             return false;
         }
     };
@@ -95,6 +102,28 @@ public class DashboardActivity extends BaseActivity {
         transaction.replace(R.id.container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    public boolean onPrepareOptionsMenu(Menu menu)
+    {
+        MenuItem settings = menu.findItem(R.id.settings);
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
+        if(fragment instanceof UserFragment)
+        {
+            settings.setVisible(true);
+        }
+        else
+        {
+            settings.setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.dashboard_menu, menu);
+        return true;
     }
 
     @Override

@@ -17,6 +17,7 @@
 
     <string name="services">Services</string>
     <string name="risk_value">Risk value</string>
+    <string name="user">User</string>
 
     <!--ServiceFragment -->
     <string name="unsubscribe">Unsubscribe</string>
