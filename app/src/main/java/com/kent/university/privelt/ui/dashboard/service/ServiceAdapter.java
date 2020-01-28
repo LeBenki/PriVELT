@@ -8,11 +8,7 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,7 +60,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceViewHolder> {
 
         for (UserData userData : userDataList) {
             if (!linkedCredentials.containsKey(getServiceFromIndex(userData.getServiceId()))) {
-                linkedCredentials.put(getServiceFromIndex(userData.getServiceId()), new LinkedList<>(Arrays.asList(userData)));
+                linkedCredentials.put(getServiceFromIndex(userData.getServiceId()), new LinkedList<>(Collections.singletonList(userData)));
             }
             else {
                 List<UserData> tmp = linkedCredentials.get(getServiceFromIndex(userData.getServiceId()));

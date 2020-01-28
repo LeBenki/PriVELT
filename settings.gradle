@@ -1,2 +1,2 @@
-include ':app', ':web-auto-login'
+include ':app'
 rootProject.name='PriVELT'

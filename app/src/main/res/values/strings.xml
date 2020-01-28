@@ -29,8 +29,8 @@
     <string name="data_extraction">Data Extraction</string>
 
     <!--DataMetricsAdapter -->
-    <string name="information_found">%1$d different %2$s found</string>
-    <string name="information_found_total">%1$d different information found</string>
+    <string name="information_found">%1$d different @plural(%1$d,%2$s)@ found</string>
+    <string name="information_found_total">%1$d different @plural(%1$d,information)@ found</string>
 
     <!--DataActivity -->
     <string name="extracting">Extracting: %1$s</string>
