@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.RadarChart;
@@ -40,6 +41,9 @@ public class RiskValueFragment extends BaseFragment {
     @BindView(R.id.chart)
     RadarChart chart;
 
+    @BindView(R.id.no_data)
+    TextView noData;
+
     private RiskValueViewModel riskValueViewModel;
 
     private List<Service> services;
@@ -71,8 +75,15 @@ public class RiskValueFragment extends BaseFragment {
 
     private void updateUserDatas(List<UserData> userData) {
         this.userDatas = userData;
-        if (!userDatas.isEmpty() && !services.isEmpty())
+        if (!userDatas.isEmpty() && !services.isEmpty()) {
+            chart.setVisibility(View.VISIBLE);
+            noData.setVisibility(View.GONE);
             configureChart();
+        }
+        else {
+            chart.setVisibility(View.GONE);
+            noData.setVisibility(View.VISIBLE);
+        }
     }
 
     private void updateServices(List<Service> services) {
