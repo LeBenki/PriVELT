@@ -40,7 +40,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.best_poc)
     Button button;
 
-    @BindView(R.id.email)
+    @BindView(R.id.mail)
     EditText email;
 
     @BindView(R.id.password)

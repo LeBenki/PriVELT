@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.kent.university.privelt.database.PriVELTDatabase;
 import com.kent.university.privelt.repositories.CredentialsDataRepository;
+import com.kent.university.privelt.repositories.CurrentUserDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
 
@@ -27,6 +28,11 @@ public class Injection {
         return new ServiceDataRepository(database.serviceDao());
     }
 
+    public static CurrentUserDataRepository provideCurrentUserDataSource(Context context) {
+        PriVELTDatabase database = PriVELTDatabase.getInstance(context);
+        return new CurrentUserDataRepository(database.currentUserDao());
+    }
+
     private static Executor provideExecutor() {
         return Executors.newSingleThreadExecutor();
     }
@@ -35,7 +41,8 @@ public class Injection {
         CredentialsDataRepository credentialsDataSource = provideCredentialsDataSource(context);
         UserDataRepository userDataSource = provideUserDataSource(context);
         ServiceDataRepository serviceSource = provideServiceDataSource(context);
+        CurrentUserDataRepository currentUserSource = provideCurrentUserDataSource(context);
         Executor executor = provideExecutor();
-        return new ViewModelFactory(credentialsDataSource, userDataSource, serviceSource, executor);
+        return new ViewModelFactory(credentialsDataSource, userDataSource, serviceSource, currentUserSource, executor);
     }
 }

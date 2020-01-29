@@ -42,7 +42,7 @@
 
     <!-- LoginActivity -->
     <string name="login_success">Login success</string>
-    <string name="email_or_password_empty">Please enter an email with a password</string>
+    <string name="email_or_password_empty">Please enter an mail with a password</string>
     <string name="choose_script_empty">Please choose at least one extraction method</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
@@ -70,4 +70,14 @@
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="script_title">Select the different data you want to monitor :</string>
     <string name="no_data_extracted_yet">No data extracted yet</string>
+
+    <!--UserFragment-->
+    <string name="mail">Mail</string>
+    <string name="phone_number">Phone number</string>
+    <string name="address">Address</string>
+    <string name="birthday">Birthday</string>
+    <string name="last_name">Last name</string>
+    <string name="first_name">First name</string>
+    <string name="personal_data">Personal data</string>
+    <string name="personal_data_explain">We need to check if you share your real data</string>
 </resources>
