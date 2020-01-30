@@ -103,10 +103,14 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
             changePassword = savedInstanceState.getBoolean(ARG_CHANGE_PASSWORD, false);
         }
 
+        setTitle("");
+
         if (changePassword) {
             reset.setVisibility(View.GONE);
             start.setText(getString(R.string.change_master_password));
         }
+        else
+            getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         configureViewModel();
 
