@@ -7,11 +7,14 @@ import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseFragment;
@@ -68,9 +71,40 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
     @SetterMethod(method = "setMail")
     EditText mail;
 
+    @BindView(R.id.first_name_tv)
+    @SetterMethod(method = "setFirstName")
+    TextView firstNameTv;
+
+    @BindView(R.id.last_name_tv)
+    @SetterMethod(method = "setLastName")
+    TextView lastNameTv;
+
+    @BindView(R.id.birthday_tv)
+    @SetterMethod(method = "setBirthday")
+    TextView birthdayTv;
+
+    @BindView(R.id.address_tv)
+    @SetterMethod(method = "setAddress")
+    TextView addressTv;
+
+    @BindView(R.id.phone_number_tv)
+    @SetterMethod(method = "setPhoneNumber")
+    TextView phoneNumberTv;
+
+    @BindView(R.id.mail_tv)
+    @SetterMethod(method = "setMail")
+    TextView mailTv;
+
+    @BindView(R.id.edit_texts)
+    LinearLayout editTexts;
+
+    @BindView(R.id.text_views)
+    LinearLayout textViews;
+
     private UserViewModel userViewModel;
 
     private CurrentUser currentUser;
+    private Menu mOptionsMenu;
 
     @Nullable
     @Override
@@ -87,16 +121,13 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
         return view;
     }
 
-    ;
 
     @OnClick(R.id.birthday)
     public void onBirthdayClick(View view) {
 
 
         DatePickerDialog.OnDateSetListener listener = (datePicker, dayOfMonth, monthOfYear, year) -> {
-            // TODO Auto-generated method stub
             birthday.setText(new StringBuilder()
-                    // Month is 0 based so add 1
                     .append(dayOfMonth).append("/").append(monthOfYear + 1).append("/").append(year).append(" "));
         };
 
@@ -109,7 +140,11 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
     }
 
     private void configureEditTexts() {
-        this.onFieldsAction((s) -> s.second.addTextChangedListener(new UserTextWatcher(s.second, this)));
+        editTexts.setVisibility(View.INVISIBLE);
+        this.onFieldsAction((s) -> {
+            if (s.second instanceof EditText)
+                s.second.addTextChangedListener(new UserTextWatcher((EditText) s.second, this));
+        });
     }
 
     private void configureViewModel() {
@@ -145,11 +180,6 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
     public void afterTextChanged(EditText editText, Editable editable) {
         this.onFieldsAction((pair) -> {
             String m = pair.first.getAnnotation(SetterMethod.class).method();
@@ -165,7 +195,7 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
         }, editText);
     }
 
-    private void onFieldsAction(ValueCallback<Pair<Field, EditText>> callback, Object... objects) {
+    private void onFieldsAction(ValueCallback<Pair<Field, TextView>> callback, Object... objects) {
         final Field[] fields = getClass().getDeclaredFields();
         for (final Field field : fields) {
             if (!field.isAnnotationPresent(SetterMethod.class))
@@ -178,7 +208,7 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
 
             try {
                 if (objects.length > 0 && field.get(this) == objects[0] || objects.length == 0)
-                    callback.onReceiveValue(new Pair<>(field, (EditText) field.get(this)));
+                    callback.onReceiveValue(new Pair<>(field, (TextView) field.get(this)));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -186,8 +216,28 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        userViewModel.updateCurrentUser(currentUser);
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.edit) {
+            textViews.setVisibility(View.INVISIBLE);
+            editTexts.setVisibility(View.VISIBLE);
+            mOptionsMenu.findItem(R.id.edit).setVisible(false);
+            mOptionsMenu.findItem(R.id.check).setVisible(true);
+            mOptionsMenu.findItem(R.id.settings).setVisible(false);
+        }
+        else if (item.getItemId() == R.id.check) {
+            textViews.setVisibility(View.VISIBLE);
+            editTexts.setVisibility(View.INVISIBLE);
+            mOptionsMenu.findItem(R.id.edit).setVisible(true);
+            mOptionsMenu.findItem(R.id.check).setVisible(false);
+            mOptionsMenu.findItem(R.id.settings).setVisible(true);
+            userViewModel.updateCurrentUser(currentUser);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu,inflater);
+        mOptionsMenu = menu;
     }
 }

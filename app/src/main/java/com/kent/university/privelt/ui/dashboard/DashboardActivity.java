@@ -107,14 +107,21 @@ public class DashboardActivity extends BaseActivity {
     public boolean onPrepareOptionsMenu(Menu menu)
     {
         MenuItem settings = menu.findItem(R.id.settings);
+        MenuItem edit = menu.findItem(R.id.edit);
+        MenuItem check = menu.findItem(R.id.check);
+
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
         if(fragment instanceof UserFragment)
         {
             settings.setVisible(true);
+            edit.setVisible(true);
+            check.setVisible(false);
         }
         else
         {
             settings.setVisible(false);
+            edit.setVisible(false);
+            check.setVisible(false);
         }
         return true;
     }

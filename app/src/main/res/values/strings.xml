@@ -81,4 +81,5 @@
     <string name="first_name">First name</string>
     <string name="personal_data">Personal data</string>
     <string name="personal_data_explain">We need to check if you share your real data</string>
+    <string name="edit">edit</string>
 </resources>

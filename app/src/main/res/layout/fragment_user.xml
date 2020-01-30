@@ -1,85 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="30dp">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/personal_data"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
-
-    <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/personal_data"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_below="@id/title"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:gravity="center_horizontal"
         android:text="@string/personal_data_explain" />
 
-    <EditText
-        android:lines="1"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:id="@+id/first_name"
+    <LinearLayout
+        android:id="@+id/edit_texts"
+        android:layout_below="@id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/first_name"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        android:orientation="vertical">
 
-    <EditText
-        android:lines="1"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:id="@+id/last_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/last_name"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        <EditText
+            android:id="@+id/first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/first_name"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true" />
 
-    <EditText
-        android:lines="1"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:focusable="false"
-        android:id="@+id/birthday"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/birthday"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        <EditText
+            android:id="@+id/last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/last_name"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true" />
 
-    <EditText
-        android:lines="1"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:id="@+id/address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/address"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        <EditText
+            android:id="@+id/birthday"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:focusable="false"
+            android:hint="@string/birthday"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true" />
 
-    <EditText
-        android:lines="1"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:id="@+id/phone_number"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/phone_number"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
+        <EditText
+            android:id="@+id/address"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/address"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true" />
 
-    <EditText
-        android:lines="1"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:id="@+id/mail"
+        <EditText
+            android:id="@+id/phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/phone_number"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true" />
+
+        <EditText
+            android:id="@+id/mail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/mail"
+            android:lines="1"
+            android:maxLines="1"
+            android:singleLine="true" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/text_views"
+        android:layout_below="@id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/mail"
-        android:layout_marginTop="@dimen/activity_vertical_margin"/>
-</LinearLayout>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/first_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/first_name"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/last_name_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/last_name"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/birthday_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/birthday"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/address_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/address"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/phone_number_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/phone_number"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/mail_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:hint="@string/mail"
+            android:textSize="20sp"/>
+    </LinearLayout>
+
+</RelativeLayout>
