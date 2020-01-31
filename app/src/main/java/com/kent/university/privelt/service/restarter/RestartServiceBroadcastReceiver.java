@@ -1,6 +1,5 @@
 package com.kent.university.privelt.service.restarter;
 
-
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
@@ -86,10 +85,6 @@ public class RestartServiceBroadcastReceiver extends BroadcastReceiver {
 
     private void registerRestarterReceiver(final Context context) {
 
-        // the context can be null if app just installed and this is called from restartsensorservice
-        // https://stackoverflow.com/questions/24934260/intentreceiver-components-are-not-allowed-to-register-to-receive-intents-when
-        // Final decision: in case it is called from installation of new version (i.e. from manifest, the application is
-        // null. So we must use context.registerReceiver. Otherwise this will crash and we try with context.getApplicationContext
         if (restartSensorServiceReceiver == null)
             restartSensorServiceReceiver = new RestartServiceBroadcastReceiver();
         else try{
@@ -99,8 +94,6 @@ public class RestartServiceBroadcastReceiver extends BroadcastReceiver {
         }
         // give the time to run
         new Handler().postDelayed(() -> {
-            // we register the  receiver that will restart the background service if it is killed
-            // see onDestroy of Service
             IntentFilter filter = new IntentFilter();
             filter.addAction(RESTART_INTENT);
             try {

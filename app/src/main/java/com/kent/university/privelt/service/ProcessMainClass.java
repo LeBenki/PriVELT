@@ -1,15 +1,9 @@
 package com.kent.university.privelt.service;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
-import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.kent.university.privelt.R;
 
 public class ProcessMainClass {
     private static final String TAG = ProcessMainClass.class.getSimpleName();
