@@ -1,6 +1,7 @@
 package com.kent.university.privelt.api;
 
 import android.content.SharedPreferences;
+import android.text.Editable;
 
 import com.kent.university.privelt.utils.SimpleCrypto;
 import com.tozny.crypto.android.AesCbcWithIntegrity;
@@ -15,19 +16,18 @@ public class IdentityManager {
     private SharedPreferences sharedPreferences;
 
     private long mpIndex;
-    private String password;
+    private Editable password;
 
     public IdentityManager(SharedPreferences sharedPreferences) {
         this.sharedPreferences = sharedPreferences;
         mpIndex = -1;
-        password = "";
     }
 
-    public String getPassword() {
-        return password;
+    public Editable getPassword() {
+        return Editable.Factory.getInstance().newEditable(password);
     }
 
-    public void setPassword(String password) {
+    public void setPassword(Editable password) {
         this.password = password;
     }
 
@@ -51,7 +51,7 @@ public class IdentityManager {
     }
 
     public AesCbcWithIntegrity.SecretKeys getKey() {
-        return getKey(getPassword());
+        return getKey(getPassword().toString());
     }
 
     public AesCbcWithIntegrity.SecretKeys getKey(String password) {

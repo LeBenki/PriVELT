@@ -14,12 +14,18 @@ public class PriVELT extends Application {
     private IdentityManager identityManager;
     private ServiceHelper serviceManager;
     private AppCompatActivity activity;
+    private static volatile PriVELT INSTANCE;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        INSTANCE = this;
         serviceManager = new ServiceHelper(this);
         identityManager = new IdentityManager(getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE));
+    }
+
+    public static PriVELT getInstance() {
+        return INSTANCE;
     }
 
     public ServiceHelper getServiceHelper() {

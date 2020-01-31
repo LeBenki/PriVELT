@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteException;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -36,6 +37,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.kent.university.privelt.database.PriVELTDatabase.DB_SIZE;
+import static com.kent.university.privelt.database.PriVELTDatabase.changeMasterPassword;
 import static com.kent.university.privelt.ui.settings.SettingsActivity.ARG_CHANGE_PASSWORD;
 import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
@@ -111,8 +113,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         }
         else
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-
-        configureViewModel();
 
         mSharedPreferences = getSharedPreferences(KEY_SP, MODE_PRIVATE);
         masterPasswordAlreadyGiven = mSharedPreferences.getBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false);
@@ -193,23 +193,31 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         start.setEnabled(false);
         reset.setEnabled(false);
         progressBar.setVisibility(View.VISIBLE);
-        String password = this.password.getText().toString();
-        String hashedPassword = SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, password);
-        new AsyncTask<Void, Void, Pair<Boolean, String>>() {
+        Editable password = this.password.getText();
+
+        getIdentityManager().setPassword(password);
+
+        configureViewModel();
+
+        String hashedPassword = SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, password.toString());
+        new AsyncTask<Void, Void, Boolean>() {
             @Override
-            protected Pair<Boolean, String> doInBackground(Void... v) {
+            protected Boolean doInBackground(Void... v) {
                 if (changePassword || !masterPasswordAlreadyGiven) {
                     if (changePassword) {
                         //check if the old password is the same as before
                         long oldIndex = MasterPasswordActivity.this.getIdentityManager().getMpIndex();
                         Credentials c = mMasterPasswordViewModel.getCredentialsWithId(oldIndex);
-                        if (c.getPassword().equals(hashedPassword)) {
-                            return new Pair<>(false, password);
-                        }
+/*                        if (c.getPassword().equals(hashedPassword)) {
+                            return false;
+                        }*/
                         //Encrypt credentials with new master password
-                        changeAllPasswords(password);
+                        changeAllPasswords(password.toString());
                         //remove old password
                         mMasterPasswordViewModel.updateCredentials(new Credentials(oldIndex, "email" + oldIndex, SimpleHash.getHashedPassword(SimpleHash.HashMethod.SHA256, UUID.randomUUID().toString())));
+                        MasterPasswordActivity.this.getIdentityManager().setMpIndex(SimpleHash.calculateIndexOfHash(password.toString()));
+                        MasterPasswordActivity.this.getIdentityManager().setPassword(password);
+                        changeMasterPassword();
                     }
                     long index = SimpleHash.calculateIndexOfHash(hashedPassword);
                     Credentials credentials = new Credentials(index, "email" + index, hashedPassword);
@@ -217,30 +225,34 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     if (!masterPasswordAlreadyGiven)
                         mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, true).apply();
                     masterPasswordAlreadyGiven = true;
-                    return new Pair<>(true, password);
+                    return true;
                 }
                 else {
                     long index = SimpleHash.calculateIndexOfHash(hashedPassword);
-                    Credentials credentials = mMasterPasswordViewModel.getCredentialsWithId(index);
+                    Credentials credentials;
+                    try {
+                        credentials = mMasterPasswordViewModel.getCredentialsWithId(index);
+                    }
+                    catch (SQLiteException e) {
+                        return false;
+                    }
                     Log.d("LUCAS", hashedPassword);
                     String oldHash = credentials.getPassword();
                     Log.d("LUCAS", oldHash);
-                    return new Pair<>(oldHash.equals(hashedPassword), password);
+                    return oldHash.equals(hashedPassword);
                 }
             }
 
             @Override
-            protected void onPostExecute(Pair<Boolean, String> pair) {
-                super.onPostExecute(pair);
+            protected void onPostExecute(Boolean res) {
+                super.onPostExecute(res);
                 start.setEnabled(true);
                 reset.setEnabled(true);
                 progressBar.setVisibility(View.GONE);
-                if (pair.first) {
+                if (res) {
                     if (!changePassword) {
                         startActivity(new Intent(MasterPasswordActivity.this, DashboardActivity.class));
                     }
-                    MasterPasswordActivity.this.getIdentityManager().setMpIndex(SimpleHash.calculateIndexOfHash(pair.second));
-                    MasterPasswordActivity.this.getIdentityManager().setPassword(pair.second);
                     finish();
                 }
                 else {

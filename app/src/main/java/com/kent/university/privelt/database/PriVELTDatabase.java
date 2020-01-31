@@ -2,7 +2,11 @@ package com.kent.university.privelt.database;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 
+import com.commonsware.cwac.saferoom.SQLCipherUtils;
+import com.commonsware.cwac.saferoom.SafeHelperFactory;
+import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.database.dao.CredentialsDao;
 import com.kent.university.privelt.database.dao.CurrentUserDao;
 import com.kent.university.privelt.database.dao.ServiceDao;
@@ -27,16 +31,25 @@ public abstract class PriVELTDatabase extends RoomDatabase {
     private static volatile PriVELTDatabase INSTANCE;
     public final static int DB_SIZE = 1024;
 
+    public static void changeMasterPassword() {
+        SafeHelperFactory.rekey(INSTANCE.mDatabase, PriVELT.getInstance().getIdentityManager().getPassword());
+    }
+
     public static PriVELTDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (PriVELTDatabase.class) {
                 if (INSTANCE == null) {
+                    SafeHelperFactory factory = SafeHelperFactory.fromUser(PriVELT.getInstance().getIdentityManager().getPassword());
+
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             PriVELTDatabase.class,
                             "PriVELTDatabase.db")
                             .fallbackToDestructiveMigration()
                             .addCallback(prepopulateDatabase())
+                            .openHelperFactory(factory)
                             .build();
+
+                    Log.d("LULUCAS", String.valueOf(SQLCipherUtils.getDatabaseState(context, "PriVELTDatabase.db")));
                 }
             }
         }
