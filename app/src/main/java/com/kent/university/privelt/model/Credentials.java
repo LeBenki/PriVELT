@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey;
 @Entity(tableName = "credentials")
 public class Credentials {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     private long id;
 
     @NonNull
@@ -16,8 +16,7 @@ public class Credentials {
     @NonNull
     private String password;
 
-    public Credentials(long id, @NonNull String email, @NonNull String password) {
-        this.id = id;
+    public Credentials(@NonNull String email, @NonNull String password) {
         this.email = email;
         this.password = password;
     }

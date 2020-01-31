@@ -3,7 +3,6 @@ package com.kent.university.privelt.ui.dashboard.service;
 import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
-import com.kent.university.privelt.repositories.CredentialsDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
 
@@ -16,7 +15,6 @@ import androidx.lifecycle.ViewModel;
 
 public class ServiceViewModel extends ViewModel {
     private final ServiceDataRepository mServiceDataSource;
-    private final CredentialsDataRepository mCredentialsDataSource;
     private final UserDataRepository mUserDataSource;
     private final Executor mExecutor;
 
@@ -25,9 +23,8 @@ public class ServiceViewModel extends ViewModel {
 
     private LiveData<List<UserData>> mUserDatas;
 
-    public ServiceViewModel(ServiceDataRepository serviceDataRepository, CredentialsDataRepository credentialsDataRepository, UserDataRepository userDataSource, Executor executor) {
+    public ServiceViewModel(ServiceDataRepository serviceDataRepository, UserDataRepository userDataSource, Executor executor) {
         mServiceDataSource = serviceDataRepository;
-        mCredentialsDataSource = credentialsDataRepository;
         mUserDataSource = userDataSource;
         mExecutor = executor;
     }
@@ -54,14 +51,6 @@ public class ServiceViewModel extends ViewModel {
 
     void updateService(Service... services) {
         mExecutor.execute(() -> mServiceDataSource.updateServices(services));
-    }
-
-    void updateCredentials(Credentials credentials) {
-        mExecutor.execute(() -> mCredentialsDataSource.updateCredentials(credentials));
-    }
-
-    Credentials getCredentialsWithId(long id) {
-        return mCredentialsDataSource.getCredentialsWithId(id);
     }
 
     LiveData<List<UserData>> getUserDatas() {

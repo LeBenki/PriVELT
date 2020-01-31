@@ -1,6 +1,5 @@
 package com.kent.university.privelt.database.injections;
 
-import com.kent.university.privelt.repositories.CredentialsDataRepository;
 import com.kent.university.privelt.repositories.CurrentUserDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
@@ -18,14 +17,12 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 public class ViewModelFactory implements ViewModelProvider.Factory {
-    private final CredentialsDataRepository mCredentialsDataSource;
     private final UserDataRepository mUserDataSource;
     private final ServiceDataRepository mServiceDataSource;
     private final CurrentUserDataRepository mCurrentUserDataRepository;
     private final Executor mExecutor;
 
-    ViewModelFactory(CredentialsDataRepository credentialsDataSource, UserDataRepository userDataSource, ServiceDataRepository serviceSource, CurrentUserDataRepository currentUserDataRepository, Executor executor) {
-        mCredentialsDataSource = credentialsDataSource;
+    ViewModelFactory(UserDataRepository userDataSource, ServiceDataRepository serviceSource, CurrentUserDataRepository currentUserDataRepository, Executor executor) {
         mUserDataSource = userDataSource;
         mServiceDataSource = serviceSource;
         mCurrentUserDataRepository = currentUserDataRepository;
@@ -37,18 +34,16 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         try {
             if (MasterPasswordViewModel.class.equals(modelClass)) {
-                return modelClass.getConstructor(CredentialsDataRepository.class,
-                        UserDataRepository.class,
+                return modelClass.getConstructor(UserDataRepository.class,
                         ServiceDataRepository.class,
                         Executor.class)
-                        .newInstance(mCredentialsDataSource, mUserDataSource, mServiceDataSource, mExecutor);
+                        .newInstance(mUserDataSource, mServiceDataSource, mExecutor);
             }
             else if (ServiceViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(ServiceDataRepository.class,
-                        CredentialsDataRepository.class,
                         UserDataRepository.class,
                         Executor.class)
-                        .newInstance(mServiceDataSource, mCredentialsDataSource, mUserDataSource, mExecutor);
+                        .newInstance(mServiceDataSource, mUserDataSource, mExecutor);
             }
             else if (DataViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(UserDataRepository.class,

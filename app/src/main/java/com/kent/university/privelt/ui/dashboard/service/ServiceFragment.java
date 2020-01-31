@@ -28,8 +28,6 @@ import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.ui.data.DataActivity;
 import com.kent.university.privelt.ui.login.LoginActivity;
-import com.kent.university.privelt.utils.SimpleCrypto;
-import com.kent.university.privelt.utils.SimpleHash;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -138,7 +136,8 @@ public class ServiceFragment extends BaseFragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
             builder.setTitle(R.string.choose_service);
             builder.setView(sp);
-            builder.setPositiveButton(R.string.choose, (dialogInterface, i) -> editCredentials(new Service(sp.getSelectedItem().toString(), false , ""), REQUEST_LOGIN));
+            builder.setPositiveButton(R.string.choose, (dialogInterface, i) -> editCredentials(
+                    new Service(sp.getSelectedItem().toString(), false, "", "", ""), REQUEST_LOGIN));
             builder.create().show();
         });
     }
@@ -201,12 +200,11 @@ public class ServiceFragment extends BaseFragment {
                     String user = data.getStringExtra(PARAM_USER);
                     String password = data.getStringExtra(PARAM_PASSWORD);
 
-                    try {
-                        assert user != null;
-                        serviceViewModel.updateCredentials(new Credentials(SimpleHash.calculateIndexOfHash(service.getName()), user, SimpleCrypto.encrypt(password, getIdentityManager().getKey())));
-                    } catch (UnsupportedEncodingException | GeneralSecurityException e) {
-                        e.printStackTrace();
-                    }
+                    service.setUser(user);
+                    service.setPassword(password);
+
+                    serviceViewModel.updateService(service);
+
                 }
                 if ((requestCode == REQUEST_LOGIN)) {
                     serviceViewModel.insertService(service);
@@ -234,7 +232,6 @@ public class ServiceFragment extends BaseFragment {
         editCredentials(event.service, REQUEST_EDIT_LOGIN);
     }
 
-    @SuppressLint("StaticFieldLeak")
     @Subscribe
     public void onLaunchData(LaunchDataEvent event) {
 
@@ -243,30 +240,10 @@ public class ServiceFragment extends BaseFragment {
             return;
         }
 
-        new AsyncTask<Void, Void, Pair<String, String>>() {
-
-            @Override
-            protected Pair<String, String> doInBackground(Void... voids) {
-                Credentials credentials = serviceViewModel.getCredentialsWithId(event.service.getCredentialsId());
-                String email = credentials.getEmail();
-                String password = "";
-                try {
-                    password = SimpleCrypto.decrypt(credentials.getPassword(), getIdentityManager().getKey());
-                } catch (UnsupportedEncodingException | GeneralSecurityException e) {
-                    e.printStackTrace();
-                }
-                return new Pair<>(email, password);
-            }
-
-            @Override
-            protected void onPostExecute(Pair<String, String> pair) {
-                super.onPostExecute(pair);
-                Intent intent = new Intent(getContext(), DataActivity.class);
-                intent.putExtra(PARAM_SERVICE, event.service);
-                intent.putExtra(PARAM_SERVICE_EMAIL, pair.first);
-                intent.putExtra(PARAM_SERVICE_PASSWORD, pair.second);
-                startActivity(intent);
-            }
-        }.execute();
+        Intent intent = new Intent(getContext(), DataActivity.class);
+        intent.putExtra(PARAM_SERVICE, event.service);
+        intent.putExtra(PARAM_SERVICE_EMAIL, event.service.getUser());
+        intent.putExtra(PARAM_SERVICE_PASSWORD, event.service.getPassword());
+        startActivity(intent);
     }
 }

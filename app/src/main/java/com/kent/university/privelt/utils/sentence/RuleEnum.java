@@ -1,6 +1,5 @@
 package com.kent.university.privelt.utils.sentence;
 
-import android.util.Log;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

@@ -12,13 +12,10 @@ import android.view.WindowManager;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.api.ServiceHelper;
-import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.UserData;
-import com.kent.university.privelt.repositories.CredentialsDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
 import com.kent.university.privelt.service.utilities.Notification;
-import com.kent.university.privelt.utils.SimpleCrypto;
 import com.kent.university.webviewautologin.response.ResponseCallback;
 import com.kent.university.webviewautologin.response.ResponseEnum;
 import com.kent.university.webviewautologin.services.LoginService;
@@ -27,8 +24,6 @@ import com.university.kent.dataextractor.DataExtractor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -37,7 +32,6 @@ import java.util.TimerTask;
 
 import androidx.annotation.Nullable;
 
-import static com.kent.university.privelt.database.injections.Injection.provideCredentialsDataSource;
 import static com.kent.university.privelt.database.injections.Injection.provideServiceDataSource;
 import static com.kent.university.privelt.database.injections.Injection.provideUserDataSource;
 import static com.kent.university.privelt.model.UserData.DELIMITER;
@@ -211,24 +205,13 @@ public class Service extends android.app.Service {
 
         serviceHelper = new ServiceHelper(getApplicationContext());
 
-        CredentialsDataRepository credentialsDataRepository = provideCredentialsDataSource(getApplicationContext());
         ServiceDataRepository serviceDataRepository = provideServiceDataSource(getApplicationContext());
 
         List<com.kent.university.privelt.model.Service> services = serviceDataRepository.getAllServices();
         for (com.kent.university.privelt.model.Service service : services) {
             if (!service.isPasswordSaved())
                 continue;
-            Credentials credentials = credentialsDataRepository.getCredentialsWithId(service.getCredentialsId());
-            String email = credentials.getEmail();
-            String password = null;
-            if (((PriVELT) (getApplicationContext())).getIdentityManager().getKey() == null)
-                return;
-            try {
-                password = SimpleCrypto.decrypt(credentials.getPassword(), ((PriVELT) (getApplicationContext())).getIdentityManager().getKey());
-            } catch (UnsupportedEncodingException | GeneralSecurityException e) {
-                e.printStackTrace();
-            }
-            processDataExtraction(service, email, password);
+            processDataExtraction(service, service.getUser(), service.getPassword());
         }
     }
 

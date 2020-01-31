@@ -2,7 +2,7 @@ package com.kent.university.privelt.utils.sentence;
 
 public class SentenceAdapter {
 
-    static String delimiter = "@plural";
+    private static String delimiter = "@plural";
 
     private static String handlePlural(String word) {
         if (!word.contains(delimiter)) return word;
@@ -31,7 +31,7 @@ public class SentenceAdapter {
         return checkWords(sentence.split(" "));
     }
 
-    public static String convertArrayToStringMethod(String[] strArray) {
+    private static String convertArrayToStringMethod(String[] strArray) {
         StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < strArray.length; i++) {
             stringBuilder.append(strArray[i]);

@@ -159,12 +159,14 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
 
     private void updateCurrentUser(CurrentUser currentUser) {
         this.currentUser = currentUser;
+        if (currentUser == null)
+            this.currentUser = new CurrentUser("", "", "", "", "", "");
         this.onFieldsAction((pair) -> {
             String m = pair.first.getAnnotation(SetterMethod.class).method().replaceFirst("s", "g");
-            for (final Method method : currentUser.getClass().getMethods()) {
+            for (final Method method : this.currentUser.getClass().getMethods()) {
                 if (method.getName().equalsIgnoreCase(m)) {
                     try {
-                        pair.second.setText((CharSequence) method.invoke(currentUser));
+                        pair.second.setText((CharSequence) method.invoke(this.currentUser));
                     } catch (IllegalAccessException | InvocationTargetException e) {
                         e.printStackTrace();
                     }

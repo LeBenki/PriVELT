@@ -34,7 +34,7 @@ public class DataViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(UserData userData) {
-        title.setText(userData.getTitle().substring(0,1).toUpperCase().concat(userData.getTitle().substring(1)));
+        title.setText(userData.getTitle());
         value.setText(userData.getValue());
         concatenatedData.setText(TextUtils.join("\n", userData.getUnConcatenatedData()));
 

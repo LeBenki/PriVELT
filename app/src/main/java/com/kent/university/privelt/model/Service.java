@@ -1,21 +1,11 @@
 package com.kent.university.privelt.model;
 
-import com.kent.university.privelt.utils.SimpleHash;
-
 import java.io.Serializable;
 
-import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
-import static androidx.room.ForeignKey.CASCADE;
-
-@Entity(tableName = "service",
-        foreignKeys = @ForeignKey(entity = Credentials.class,
-        parentColumns = "id",
-        childColumns = "credentials_id",
-        onDelete = CASCADE))
+@Entity(tableName = "service")
 public class Service implements Serializable {
 
     public final static String DELIMITER = "@/:-";
@@ -25,18 +15,36 @@ public class Service implements Serializable {
     @PrimaryKey(autoGenerate = true)
     private long id;
 
-    @ColumnInfo(name = "credentials_id", index = true)
-    private long credentialsId;
-
     private boolean isPasswordSaved;
 
     private String concatenatedScripts;
 
-    public Service(String name, boolean isPasswordSaved, String concatenatedScripts) {
+    private String user;
+
+    private String password;
+
+    public Service(String name, boolean isPasswordSaved, String concatenatedScripts, String user, String password) {
         this.name = name;
-        this.credentialsId = SimpleHash.calculateIndexOfHash(name);
         this.isPasswordSaved = isPasswordSaved;
         this.concatenatedScripts = concatenatedScripts;
+        this.user = user;
+        this.password = password;
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public boolean isPasswordSaved() {
@@ -73,13 +81,5 @@ public class Service implements Serializable {
 
     public String getConcatenatedScripts() {
         return concatenatedScripts;
-    }
-
-    public long getCredentialsId() {
-        return credentialsId;
-    }
-
-    public void setCredentialsId(long credentialsId) {
-        this.credentialsId = credentialsId;
     }
 }

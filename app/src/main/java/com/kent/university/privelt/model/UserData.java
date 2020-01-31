@@ -1,7 +1,5 @@
 package com.kent.university.privelt.model;
 
-import com.kent.university.privelt.utils.SimpleHash;
-
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -38,14 +36,6 @@ public class UserData {
         this.value = value;
         this.concatenatedData = concatenatedData;
         this.serviceId = serviceId;
-    }
-
-    public UserData(String title, String type, String value, String concatenatedData, String serviceName) {
-        this.title = title;
-        this.type = type;
-        this.value = value;
-        this.concatenatedData = concatenatedData;
-        this.serviceId = SimpleHash.calculateIndexOfHash(serviceName);
     }
 
     public long getId() {

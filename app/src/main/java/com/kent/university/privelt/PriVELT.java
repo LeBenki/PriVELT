@@ -2,16 +2,14 @@ package com.kent.university.privelt;
 
 import android.app.Application;
 
-import com.kent.university.privelt.api.IdentityManager;
+import com.kent.university.privelt.api.PasswordManager;
 import com.kent.university.privelt.api.ServiceHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import static com.kent.university.privelt.api.IdentityManager.SHARED_PREFERENCES_KEY;
-
 public class PriVELT extends Application {
 
-    private IdentityManager identityManager;
+    private PasswordManager identityManager;
     private ServiceHelper serviceManager;
     private AppCompatActivity activity;
     private static volatile PriVELT INSTANCE;
@@ -21,7 +19,7 @@ public class PriVELT extends Application {
         super.onCreate();
         INSTANCE = this;
         serviceManager = new ServiceHelper(this);
-        identityManager = new IdentityManager(getSharedPreferences(SHARED_PREFERENCES_KEY, MODE_PRIVATE));
+        identityManager = new PasswordManager();
     }
 
     public static PriVELT getInstance() {
@@ -32,7 +30,7 @@ public class PriVELT extends Application {
         return serviceManager;
     }
 
-    public IdentityManager getIdentityManager() {
+    public PasswordManager getIdentityManager() {
         return identityManager;
     }
 
