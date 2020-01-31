@@ -203,7 +203,7 @@ public class Service extends android.app.Service {
 
     private void processExtractionForEachService() {
 
-        serviceHelper = new ServiceHelper(getApplicationContext());
+        serviceHelper = new ServiceHelper(((PriVELT) (getApplicationContext())).getCurrentActivity());
 
         ServiceDataRepository serviceDataRepository = provideServiceDataSource(getApplicationContext());
 
