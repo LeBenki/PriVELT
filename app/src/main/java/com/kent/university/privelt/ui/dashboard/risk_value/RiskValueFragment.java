@@ -28,6 +28,7 @@ import com.kent.university.privelt.model.UserData;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
@@ -58,6 +59,9 @@ public class RiskValueFragment extends BaseFragment {
         services = new ArrayList<>();
         userDatas = new ArrayList<>();
 
+        chart.setVisibility(View.GONE);
+        noData.setVisibility(View.VISIBLE);
+
         configureViewModel();
 
         getServices();
@@ -75,15 +79,8 @@ public class RiskValueFragment extends BaseFragment {
 
     private void updateUserDatas(List<UserData> userData) {
         this.userDatas = userData;
-        if (!userDatas.isEmpty() && !services.isEmpty()) {
-            chart.setVisibility(View.VISIBLE);
-            noData.setVisibility(View.GONE);
+        if (!userDatas.isEmpty() && !services.isEmpty())
             configureChart();
-        }
-        else {
-            chart.setVisibility(View.GONE);
-            noData.setVisibility(View.VISIBLE);
-        }
     }
 
     private void updateServices(List<Service> services) {
@@ -100,7 +97,9 @@ public class RiskValueFragment extends BaseFragment {
     }
 
     private void configureChart() {
-//        chart.setBackgroundColor(Color.rgb(60, 65, 82));
+
+        chart.setVisibility(View.VISIBLE);
+        noData.setVisibility(View.GONE);
 
         chart.getDescription().setEnabled(false);
 
@@ -152,8 +151,10 @@ public class RiskValueFragment extends BaseFragment {
 
         for (Service service : services) {
             RadarDataSet set1 = new RadarDataSet(getDataEntriesForEachService(mActivities, service), service.getName());
-            set1.setColor(Color.YELLOW);
-            set1.setFillColor(Color.YELLOW);
+            Random rnd = new Random();
+            int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+            set1.setColor(color);
+            set1.setFillColor(color);
             set1.setDrawFilled(true);
             set1.setFillAlpha(180);
             set1.setLineWidth(2f);
@@ -173,7 +174,7 @@ public class RiskValueFragment extends BaseFragment {
         yAxis.setAxisMinimum(0f);
 
         //TODO: 200 HARDCODED (MAX DATA)
-        yAxis.setAxisMaximum(200f);
+        yAxis.setAxisMaximum(getMaximumValue(sets));
         yAxis.setDrawLabels(false);
 
         Legend l = chart.getLegend();
@@ -197,7 +198,7 @@ public class RiskValueFragment extends BaseFragment {
                 }
             }
         }
-        return (max + 50);
+        return (max);
     }
 
     private List<RadarEntry> getDataEntriesForEachService(String[] mActivities, Service service) {

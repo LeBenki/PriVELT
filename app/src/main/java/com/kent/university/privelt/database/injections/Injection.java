@@ -22,7 +22,7 @@ public class Injection {
         return new ServiceDataRepository(database.serviceDao());
     }
 
-    public static CurrentUserDataRepository provideCurrentUserDataSource(Context context) {
+    private static CurrentUserDataRepository provideCurrentUserDataSource(Context context) {
         PriVELTDatabase database = PriVELTDatabase.getInstance(context);
         return new CurrentUserDataRepository(database.currentUserDao());
     }
