@@ -233,7 +233,8 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     try {
                         credentials = mMasterPasswordViewModel.getCredentialsWithId(index);
                     }
-                    catch (SQLiteException e) {
+                    catch (Exception e) {
+                        e.printStackTrace();
                         return false;
                     }
                     Log.d("LUCAS", hashedPassword);

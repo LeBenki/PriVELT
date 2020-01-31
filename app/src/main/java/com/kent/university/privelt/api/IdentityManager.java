@@ -8,6 +8,8 @@ import com.tozny.crypto.android.AesCbcWithIntegrity;
 
 import java.security.GeneralSecurityException;
 
+import static com.kent.university.privelt.database.PriVELTDatabase.changeMasterPassword;
+
 public class IdentityManager {
 
     public final static String SHARED_PREFERENCES_KEY = "SHARED_PREFERENCES_KEY";
@@ -24,11 +26,19 @@ public class IdentityManager {
     }
 
     public Editable getPassword() {
-        return Editable.Factory.getInstance().newEditable(password);
+        if (password != null)
+            return Editable.Factory.getInstance().newEditable(password);
+        else
+            return null;
     }
 
     public void setPassword(Editable password) {
         this.password = password;
+    }
+
+    public void changePassword(Editable password) {
+        this.password = password;
+        changeMasterPassword();
     }
 
     public long getMpIndex() {

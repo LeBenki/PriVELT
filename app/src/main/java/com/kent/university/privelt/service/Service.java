@@ -175,7 +175,8 @@ public class Service extends android.app.Service {
         Log.i(TAG, "initialising TimerTask");
         timerTask = new TimerTask() {
             public void run() {
-                //processExtractionForEachService();
+                if (((PriVELT)getApplicationContext()).getIdentityManager().getPassword() != null)
+                    processExtractionForEachService();
             }
         };
 
