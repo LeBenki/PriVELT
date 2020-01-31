@@ -1,6 +1,5 @@
 package com.kent.university.privelt.ui.dashboard.service;
 
-import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.repositories.ServiceDataRepository;

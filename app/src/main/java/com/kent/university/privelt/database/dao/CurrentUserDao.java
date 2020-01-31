@@ -15,4 +15,7 @@ public interface CurrentUserDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void updateCurrentUser(CurrentUser... user);
+
+    @Query("DELETE FROM current_user")
+    void deleteCurrentUser();
 }

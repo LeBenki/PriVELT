@@ -20,4 +20,8 @@ public class CurrentUserDataRepository {
     public void updateCurrentUser(CurrentUser... currentUsers) {
         mCurrentUserDao.updateCurrentUser(currentUsers);
     }
+
+    public void deleteCurrentUser() {
+        mCurrentUserDao.deleteCurrentUser();
+    }
 }

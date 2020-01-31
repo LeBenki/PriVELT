@@ -36,8 +36,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             if (MasterPasswordViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(UserDataRepository.class,
                         ServiceDataRepository.class,
+                        CurrentUserDataRepository.class,
                         Executor.class)
-                        .newInstance(mUserDataSource, mServiceDataSource, mExecutor);
+                        .newInstance(mUserDataSource, mServiceDataSource, mCurrentUserDataRepository, mExecutor);
             }
             else if (ServiceViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(ServiceDataRepository.class,

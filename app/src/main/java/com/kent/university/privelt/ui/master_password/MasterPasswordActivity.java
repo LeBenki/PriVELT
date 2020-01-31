@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
+import com.kent.university.privelt.database.PriVELTDatabase;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.ui.dashboard.DashboardActivity;
@@ -138,7 +139,8 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                         protected Void doInBackground(Void... voids) {
                             mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false).apply();
                             masterPasswordAlreadyGiven = false;
-                            mMasterPasswordViewModel.deleteAllDatabase();
+                            changePassword = false;
+                            MasterPasswordActivity.this.deleteDatabase(PriVELTDatabase.PriVELTDatabaseName);
                             return null;
                         }
 

@@ -1,10 +1,9 @@
 package com.kent.university.privelt.ui.master_password;
 
-import com.kent.university.privelt.model.Service;
+import com.kent.university.privelt.repositories.CurrentUserDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
 
-import java.util.List;
 import java.util.concurrent.Executor;
 
 import androidx.lifecycle.ViewModel;
@@ -12,11 +11,13 @@ import androidx.lifecycle.ViewModel;
 public class MasterPasswordViewModel extends ViewModel {
     private final UserDataRepository mUserDataSource;
     private final ServiceDataRepository mServiceDataSource;
+    private final CurrentUserDataRepository mCurrentUserDataRepository;
     private final Executor mExecutor;
 
-    public MasterPasswordViewModel(UserDataRepository mUserDataSource, ServiceDataRepository mServiceDataSource, Executor mExecutor) {
+    public MasterPasswordViewModel(UserDataRepository mUserDataSource, ServiceDataRepository mServiceDataSource, CurrentUserDataRepository mCurrentUserDataRepository, Executor mExecutor) {
         this.mUserDataSource = mUserDataSource;
         this.mServiceDataSource = mServiceDataSource;
+        this.mCurrentUserDataRepository = mCurrentUserDataRepository;
         this.mExecutor = mExecutor;
     }
 
@@ -24,10 +25,6 @@ public class MasterPasswordViewModel extends ViewModel {
     void deleteAllDatabase() {
         mUserDataSource.deleteAllUserDatas();
         mServiceDataSource.deleteAllServices();
-        //TODO: delete also current_user
-    }
-
-    List<Service> getAllServices() {
-        return mServiceDataSource.getAllServices();
+        mCurrentUserDataRepository.deleteCurrentUser();
     }
 }

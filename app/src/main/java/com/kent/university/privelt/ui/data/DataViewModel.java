@@ -28,13 +28,4 @@ public class DataViewModel extends ViewModel {
     LiveData<List<UserData>> getUserDatasForService(long serviceId) {
         return userDatas;
     }
-
-/*    void replaceUserDatas(List<UserData> userDatas) {
-        mExecutor.execute(() -> {
-            mUserDataRepository.deleteAllUserDatas();
-            for (UserData userData : userDatas)
-                mUserDataRepository.insertUserDatas(userData);
-        });
-    }
-    */
 }

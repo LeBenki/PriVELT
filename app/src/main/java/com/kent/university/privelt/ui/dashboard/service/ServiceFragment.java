@@ -1,12 +1,9 @@
 package com.kent.university.privelt.ui.dashboard.service;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +20,6 @@ import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
-import com.kent.university.privelt.model.Credentials;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.ui.data.DataActivity;
@@ -32,8 +28,6 @@ import com.kent.university.privelt.ui.login.LoginActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.UnsupportedEncodingException;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -242,8 +236,6 @@ public class ServiceFragment extends BaseFragment {
 
         Intent intent = new Intent(getContext(), DataActivity.class);
         intent.putExtra(PARAM_SERVICE, event.service);
-        intent.putExtra(PARAM_SERVICE_EMAIL, event.service.getUser());
-        intent.putExtra(PARAM_SERVICE_PASSWORD, event.service.getPassword());
         startActivity(intent);
     }
 }

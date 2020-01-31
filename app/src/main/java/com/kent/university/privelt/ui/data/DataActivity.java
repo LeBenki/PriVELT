@@ -22,17 +22,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.kent.university.privelt.ui.dashboard.service.ServiceFragment.PARAM_SERVICE_EMAIL;
-import static com.kent.university.privelt.ui.dashboard.service.ServiceFragment.PARAM_SERVICE_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 
 public class DataActivity extends BaseActivity {
 
     private Service service;
-
-    private String email;
-
-    private String password;
 
     @BindView(R.id.recycler_view_userdata)
     RecyclerView recyclerView;
@@ -54,12 +48,8 @@ public class DataActivity extends BaseActivity {
 
         if (savedInstanceState != null) {
             service = (Service) savedInstanceState.getSerializable(PARAM_SERVICE);
-            email = savedInstanceState.getString(PARAM_SERVICE_EMAIL, "");
-            password = savedInstanceState.getString(PARAM_SERVICE_PASSWORD, "");
         } else if (getIntent() != null) {
             service = (Service) getIntent().getSerializableExtra(PARAM_SERVICE);
-            email = getIntent().getStringExtra(PARAM_SERVICE_EMAIL);
-            password = getIntent().getStringExtra(PARAM_SERVICE_PASSWORD);
         }
 
         setTitle(service.getName());
@@ -75,8 +65,6 @@ public class DataActivity extends BaseActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(PARAM_SERVICE, service);
-        outState.putString(PARAM_SERVICE_EMAIL, email);
-        outState.putString(PARAM_SERVICE_PASSWORD, password);
     }
 
     private void configureRecyclerView() {
