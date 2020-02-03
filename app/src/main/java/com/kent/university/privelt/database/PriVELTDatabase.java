@@ -42,6 +42,12 @@ public abstract class PriVELTDatabase extends RoomDatabase {
         return INSTANCE;
     }
 
+    public static void nullDatabase() {
+        synchronized (PriVELTDatabase.class) {
+            INSTANCE = null;
+        }
+    }
+
     public abstract UserDataDao userDataDao();
 
     public abstract ServiceDao serviceDao();

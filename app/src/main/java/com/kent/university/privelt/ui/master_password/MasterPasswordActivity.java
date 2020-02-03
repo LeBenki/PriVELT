@@ -12,14 +12,12 @@ import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.database.PriVELTDatabase;
-import com.kent.university.privelt.database.injections.Injection;
-import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.utils.PasswordChecker;
 import com.nulabinc.zxcvbn.Strength;
@@ -69,7 +67,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @BindView(R.id.eye_confirm_password)
     ImageView eyeConfirm;
 
-    private MasterPasswordViewModel mMasterPasswordViewModel;
     private SharedPreferences mSharedPreferences;
     private boolean masterPasswordAlreadyGiven;
 
@@ -197,11 +194,12 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     return true;
                 }
                 else {
+                    PriVELTDatabase dbHelperObj = PriVELTDatabase.getInstance(MasterPasswordActivity.this);
                     try {
-                        configureViewModel();
-                    }
-                    catch (Exception e) {
-                        e.printStackTrace();
+                        dbHelperObj.getOpenHelper().getReadableDatabase();
+                    } catch (Exception e) {
+                        dbHelperObj.close();
+                        PriVELTDatabase.nullDatabase();
                         return false;
                     }
                     return true;
@@ -226,11 +224,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                 }
             }
         }.execute();
-    }
-
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        mMasterPasswordViewModel = ViewModelProviders.of(this, viewModelFactory).get(MasterPasswordViewModel.class);
     }
 
     @Override
