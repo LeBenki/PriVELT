@@ -1,48 +1,24 @@
 package com.kent.university.privelt.service;
 
 import android.content.Intent;
-import android.graphics.PixelFormat;
 import android.os.Build;
 import android.os.IBinder;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.WindowManager;
 
-import com.kent.university.privelt.BuildConfig;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
-import com.kent.university.privelt.api.ServiceHelper;
-import com.kent.university.privelt.model.UserData;
-import com.kent.university.privelt.repositories.ServiceDataRepository;
-import com.kent.university.privelt.repositories.UserDataRepository;
 import com.kent.university.privelt.service.utilities.Notification;
-import com.kent.university.webviewautologin.response.ResponseCallback;
-import com.kent.university.webviewautologin.response.ResponseEnum;
-import com.kent.university.webviewautologin.services.LoginService;
-import com.university.kent.dataextractor.DataExtractor;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import androidx.annotation.Nullable;
 
-import static com.kent.university.privelt.database.injections.Injection.provideServiceDataSource;
-import static com.kent.university.privelt.database.injections.Injection.provideUserDataSource;
-import static com.kent.university.privelt.model.UserData.DELIMITER;
+import static com.kent.university.privelt.api.DataExtraction.processExtractionForEachService;
 
 public class Service extends android.app.Service {
     public static final String RESTART_INTENT = "uk.ac.shef.oak.restarter";
     protected static final int NOTIFICATION_ID = 1337;
     private static String TAG = "ServiceDataExtraction";
-    private WindowManager windowManager;
-    private WindowManager.LayoutParams params;
-    private ServiceHelper serviceHelper;
 
     public Service() {
         super();
@@ -135,22 +111,6 @@ public class Service extends android.app.Service {
 
     public void process() {
 
-        int LAYOUT_FLAG;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
-        } else {
-            LAYOUT_FLAG = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT;
-        }
-
-        windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        params = new WindowManager.LayoutParams(WindowManager.LayoutParams.WRAP_CONTENT, WindowManager.LayoutParams.WRAP_CONTENT,
-                LAYOUT_FLAG, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE, PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.TOP | Gravity.START;
-        params.x = 0;
-        params.y = 0;
-        params.width = 0;
-        params.height = 0;
-
         //set a new Timer - if one is already running, cancel it to avoid two running at the same time
         stoptimertask();
         timer = new Timer();
@@ -158,7 +118,7 @@ public class Service extends android.app.Service {
         timerTask = new TimerTask() {
             public void run() {
                 if (((PriVELT)getApplicationContext()).getIdentityManager().getPassword() != null)
-                    processExtractionForEachService();
+                    processExtractionForEachService(getApplicationContext());
             }
         };
 
@@ -175,84 +135,5 @@ public class Service extends android.app.Service {
             timer.cancel();
             timer = null;
         }
-    }
-
-    private void processExtractionForEachService() {
-
-        serviceHelper = new ServiceHelper(((PriVELT) (getApplicationContext())).getCurrentActivity());
-
-        ServiceDataRepository serviceDataRepository = provideServiceDataSource(getApplicationContext());
-
-        List<com.kent.university.privelt.model.Service> services = serviceDataRepository.getAllServices();
-        for (com.kent.university.privelt.model.Service service : services) {
-            if (!service.isPasswordSaved())
-                continue;
-            processDataExtraction(service, service.getUser(), service.getPassword());
-        }
-    }
-
-    private void processDataExtraction(com.kent.university.privelt.model.Service service, String email, String password) {
-
-        UserDataRepository userDataRepository = provideUserDataSource(getApplicationContext());
-
-        LoginService loginService = serviceHelper.getServiceWithName(service.getName());
-
-        DataExtractor dataExtractor = new DataExtractor(loginService);
-        final ArrayList<UserData> allUserData = new ArrayList<>();
-
-        ((PriVELT) (getApplicationContext())).getCurrentActivity().runOnUiThread(() -> {
-            loginService.load();
-            windowManager.addView(loginService.getWebview(), params);
-            loginService.autoLogin(email, password, new ResponseCallback() {
-                @Override
-                public void getResponse(ResponseEnum responseEnum, String data) {
-                    if (BuildConfig.DEBUG)
-                        Log.d(TAG, responseEnum.toString());
-                    if (responseEnum == ResponseEnum.SUCCESS) {
-                        dataExtractor.injectAll(((PriVELT)getApplicationContext()).getCurrentActivity(), (jsonArray, status) -> {
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, status.toString());
-                            if (status.isFailed() || jsonArray == null)
-                                return;
-                            allUserData.addAll(parseJSON(jsonArray, service));
-                            if (BuildConfig.DEBUG)
-                                Log.d(TAG, jsonArray.toString());
-                            if (status.isDone()) {
-                                if (BuildConfig.DEBUG)
-                                    Log.d(TAG, "LOGIN SERVICE:" + allUserData.size());
-                                userDataRepository.deleteUserDatasForAService(service.getId());
-
-                                for (UserData userData : allUserData)
-                                    userDataRepository.insertUserDatas(userData);
-
-                            }
-                        });
-                    }
-                }
-            });
-        });
-    }
-
-    private ArrayList<UserData> parseJSON(JSONArray jsonArray, com.kent.university.privelt.model.Service service) {
-        ArrayList<UserData> array = new ArrayList<>();
-        try {
-            for (int i = 0; i < jsonArray.length(); i++) {
-                JSONObject obj = jsonArray.getJSONObject(i);
-                JSONArray datas = obj.getJSONArray("data");
-                List<String> td = new ArrayList<>();
-                for (int j = 0; j < datas.length(); j++) {
-                    td.add(datas.getString(j));
-                }
-                UserData userData = new UserData(
-                        obj.getString("title"),
-                        obj.getString("type"),
-                        obj.getString("value"),
-                        TextUtils.join(DELIMITER, td),
-                        service.getId());
-                array.add(userData);
-            }
-        } catch (Exception ignored) {
-        }
-        return array;
     }
 }

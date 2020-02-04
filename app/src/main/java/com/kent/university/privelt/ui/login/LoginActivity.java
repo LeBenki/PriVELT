@@ -3,7 +3,6 @@ package com.kent.university.privelt.ui.login;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -26,6 +25,7 @@ import com.university.kent.dataextractor.DataExtractor;
 
 import java.util.Arrays;
 
+import static com.kent.university.privelt.api.DataExtraction.processDataExtraction;
 import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
@@ -48,9 +48,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @BindView(R.id.progress_circular)
     ProgressBar progressBar;
-
-//    @BindView(R.id.debug)
-//    Button debug;
 
     @BindView(R.id.scripts)
     RecyclerView recyclerView;
@@ -84,8 +81,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         assert service != null;
         setTitle(service.getName());
-
-        /*debug.setOnClickListener(view -> showAlertDebug());*/
 
         configureEye(eye, password);
 
@@ -145,11 +140,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void showAlertDebug() {
-/*
-        if (loginService == null) {
-            Toast.makeText(LoginActivity.this, "Login service is not instanced yet", Toast.LENGTH_LONG).show();
-            return;
-        }*/
 
         if (loginService.getWebview().getParent() != null) {
             ((ViewGroup)loginService.getWebview().getParent()).removeView(loginService.getWebview());
@@ -177,14 +167,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             Toast.makeText(LoginActivity.this, R.string.email_or_password_empty, Toast.LENGTH_LONG).show();
             return false;
         }
-/*        if (adapter.getConcatenatedScriptsChecked().isEmpty()) {
-            Toast.makeText(LoginActivity.this, R.string.choose_script_empty, Toast.LENGTH_LONG).show();
-            return false;
-        }*/
-        if (!rememberPassword.isChecked()) {
-            Toast.makeText(LoginActivity.this, R.string.remember_password_error, Toast.LENGTH_LONG).show();
-            return false;
-        }
         return true;
     }
 
@@ -200,6 +182,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 service.setConcatenatedScripts(adapter.getConcatenatedScriptsChecked());
                 intent.putExtra(PARAM_SERVICE, service);
                 setResult(RESULT_OK, intent);
+
                 finish();
             }
             return true;

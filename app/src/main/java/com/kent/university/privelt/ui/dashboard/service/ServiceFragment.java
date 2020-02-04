@@ -1,8 +1,10 @@
 package com.kent.university.privelt.ui.dashboard.service;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kent.university.privelt.R;
+import com.kent.university.privelt.api.ServiceHelper;
 import com.kent.university.privelt.base.BaseFragment;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
@@ -40,6 +43,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.kent.university.privelt.api.DataExtraction.processDataExtraction;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_USER;
@@ -48,8 +52,6 @@ public class ServiceFragment extends BaseFragment {
 
     private static final int REQUEST_LOGIN = 765;
     private static final int REQUEST_EDIT_LOGIN = 7654;
-    public static final String PARAM_SERVICE_EMAIL = "PARAM_SERVICE_EMAIL";
-    public static final String PARAM_SERVICE_PASSWORD = "PARAM_SERVICE_PASSWORD";
 
     private ServiceViewModel serviceViewModel;
 
@@ -182,6 +184,7 @@ public class ServiceFragment extends BaseFragment {
         serviceViewModel.init();
     }
 
+    @SuppressLint("StaticFieldLeak")
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -189,22 +192,34 @@ public class ServiceFragment extends BaseFragment {
             if (data != null) {
                 Service service = (Service) data.getSerializableExtra(PARAM_SERVICE);
 
+                String user = data.getStringExtra(PARAM_USER);
+                String password = data.getStringExtra(PARAM_PASSWORD);
+
                 assert service != null;
                 if (service.isPasswordSaved()) {
-                    String user = data.getStringExtra(PARAM_USER);
-                    String password = data.getStringExtra(PARAM_PASSWORD);
 
                     service.setUser(user);
                     service.setPassword(password);
-
-                    serviceViewModel.updateService(service);
-
                 }
-                if ((requestCode == REQUEST_LOGIN)) {
-                    serviceViewModel.insertService(service);
-                } else {
-                    serviceViewModel.updateService(service);
-                }
+
+                new AsyncTask<Void, Void , Void>() {
+                    @Override
+                    protected Void doInBackground(Void... voids) {
+                        if ((requestCode == REQUEST_LOGIN)) {
+                            serviceViewModel.insertService(service);
+                        } else {
+                            serviceViewModel.updateService(service);
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    protected void onPostExecute(Void aVoid) {
+                        super.onPostExecute(aVoid);
+                        if (!service.isPasswordSaved())
+                            processDataExtraction(new ServiceHelper(getContext()), service, user, password, getContext().getApplicationContext());
+                    }
+                }.execute();
             }
         }
     }

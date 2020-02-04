@@ -41,7 +41,7 @@ public class ServiceViewModel extends ViewModel {
     }
 
     void insertService(Service... services) {
-        mExecutor.execute(() -> mServiceDataSource.insertServices(services));
+        mServiceDataSource.insertServices(services);
     }
 
     void deleteService(Service... services) {
@@ -49,7 +49,7 @@ public class ServiceViewModel extends ViewModel {
     }
 
     void updateService(Service... services) {
-        mExecutor.execute(() -> mServiceDataSource.updateServices(services));
+         mServiceDataSource.updateServices(services);
     }
 
     LiveData<List<UserData>> getUserDatas() {
