@@ -10,7 +10,6 @@ import java.util.List;
 public class ParseUserData {
     public static LinkedHashMap<String, Integer> parseUserData(List<UserData> userDatas) {
         LinkedHashMap<String, Integer> datas = new LinkedHashMap<>();
-        Log.d("LULU", String.valueOf(userDatas.size()));
         for (UserData userData : userDatas) {
             if (!datas.containsKey(userData.getType())) {
                 datas.put(userData.getType(), 1);
@@ -19,7 +18,6 @@ public class ParseUserData {
                 datas.put(userData.getType(), datas.get(userData.getType()) + 1);
             }
         }
-        Log.d("LULU", String.valueOf(datas.size()));
         return datas;
     }
 }

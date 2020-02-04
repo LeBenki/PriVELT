@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.WindowManager;
 
+import com.kent.university.privelt.BuildConfig;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.api.ServiceHelper;
@@ -26,7 +27,6 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -39,7 +39,7 @@ import static com.kent.university.privelt.model.UserData.DELIMITER;
 public class Service extends android.app.Service {
     public static final String RESTART_INTENT = "uk.ac.shef.oak.restarter";
     protected static final int NOTIFICATION_ID = 1337;
-    private static String TAG = "Service";
+    private static String TAG = "ServiceDataExtraction";
     private WindowManager windowManager;
     private WindowManager.LayoutParams params;
     private ServiceHelper serviceHelper;
@@ -65,7 +65,6 @@ public class Service extends android.app.Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log.d(TAG, "restarting Service !!");
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
         if (intent == null) {
@@ -103,14 +102,11 @@ public class Service extends android.app.Service {
      */
     public void restartForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Log.i(TAG, "restarting foreground");
             try {
                 Notification notification = new Notification();
                 startForeground(NOTIFICATION_ID, notification.setNotification(this, "Service notification", "We are extracting data for you", R.drawable.ic_sleep));
-                Log.i(TAG, "restarting foreground successful");
                 process();
-            } catch (Exception e) {
-                Log.e(TAG, "Error in notification " + e.getMessage());
+            } catch (Exception ignored) {
             }
         }
     }
@@ -119,7 +115,6 @@ public class Service extends android.app.Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i(TAG, "onDestroy called");
         // restart the never ending service
         Intent broadcastIntent = new Intent(RESTART_INTENT);
         sendBroadcast(broadcastIntent);
@@ -129,7 +124,6 @@ public class Service extends android.app.Service {
     @Override
     public void onTaskRemoved(Intent rootIntent) {
         super.onTaskRemoved(rootIntent);
-        Log.i(TAG, "onTaskRemoved called");
         // restart the never ending service
         Intent broadcastIntent = new Intent(RESTART_INTENT);
         sendBroadcast(broadcastIntent);
@@ -157,16 +151,10 @@ public class Service extends android.app.Service {
         params.width = 0;
         params.height = 0;
 
-        Log.i(TAG, "Starting timer");
-
         //set a new Timer - if one is already running, cancel it to avoid two running at the same time
         stoptimertask();
         timer = new Timer();
 
-        //initialize the TimerTask's job
-        initializeTimerTask();
-
-        Log.i(TAG, "initialising TimerTask");
         timerTask = new TimerTask() {
             public void run() {
                 if (((PriVELT)getApplicationContext()).getIdentityManager().getPassword() != null)
@@ -174,20 +162,8 @@ public class Service extends android.app.Service {
             }
         };
 
-        Log.i(TAG, "Scheduling...");
         //schedule the timer, to wake up every 1 second
         timer.schedule(timerTask, 1000, 1000*60*60);
-    }
-
-    /**
-     * it sets the timer to print the counter every x seconds
-     */
-    public void initializeTimerTask() {
-        Log.i(TAG, "initialising TimerTask");
-        timerTask = new TimerTask() {
-            public void run() {
-            }
-        };
     }
 
     /**
@@ -217,7 +193,6 @@ public class Service extends android.app.Service {
 
     private void processDataExtraction(com.kent.university.privelt.model.Service service, String email, String password) {
 
-        Log.d("DAMNNN", "LULU");
         UserDataRepository userDataRepository = provideUserDataSource(getApplicationContext());
 
         LoginService loginService = serviceHelper.getServiceWithName(service.getName());
@@ -231,17 +206,20 @@ public class Service extends android.app.Service {
             loginService.autoLogin(email, password, new ResponseCallback() {
                 @Override
                 public void getResponse(ResponseEnum responseEnum, String data) {
-                    Log.d("LUCAS", responseEnum.toString());
+                    if (BuildConfig.DEBUG)
+                        Log.d(TAG, responseEnum.toString());
                     if (responseEnum == ResponseEnum.SUCCESS) {
                         dataExtractor.injectAll(((PriVELT)getApplicationContext()).getCurrentActivity(), (jsonArray, status) -> {
-                            Log.d("LUCAS", status.toString());
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, status.toString());
                             if (status.isFailed() || jsonArray == null)
                                 return;
                             allUserData.addAll(parseJSON(jsonArray, service));
-                            Log.d("LUCASCACABOUDIN", jsonArray.toString());
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, jsonArray.toString());
                             if (status.isDone()) {
-                                Log.d("LUCAS", "LOGIN SERVICE:" + allUserData.size());
-
+                                if (BuildConfig.DEBUG)
+                                    Log.d(TAG, "LOGIN SERVICE:" + allUserData.size());
                                 userDataRepository.deleteUserDatasForAService(service.getId());
 
                                 for (UserData userData : allUserData)
@@ -271,13 +249,9 @@ public class Service extends android.app.Service {
                         obj.getString("value"),
                         TextUtils.join(DELIMITER, td),
                         service.getId());
-                Log.d("Response", userData.getType());
-                Log.d("Response", userData.getValue());
-                Log.d("Response", userData.getConcatenatedData());
                 array.add(userData);
             }
-        } catch (Exception e) {
-            Log.d("Response", Objects.requireNonNull(e.getLocalizedMessage()));
+        } catch (Exception ignored) {
         }
         return array;
     }

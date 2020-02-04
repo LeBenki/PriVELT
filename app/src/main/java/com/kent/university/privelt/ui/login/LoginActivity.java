@@ -118,7 +118,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         loginService.autoLogin(email.getText().toString(), password.getText().toString(), new ResponseCallback() {
             @Override
             public void getResponse(ResponseEnum responseEnum, String data) {
-                Log.d("LULUCACA", "GGGGGGGGGGG");
                 if (responseEnum != ResponseEnum.SUCCESS) {
                     button.setEnabled(true);
 

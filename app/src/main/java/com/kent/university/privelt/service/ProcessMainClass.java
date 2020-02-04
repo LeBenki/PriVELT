@@ -33,7 +33,6 @@ public class ProcessMainClass {
         } else {
             context.startService(serviceIntent);
         }
-        Log.d(TAG, "ProcessMainClass: start service go!!!!");
     }
 }
 
