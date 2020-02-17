@@ -39,9 +39,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -62,7 +60,6 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
 
     private static final int REQUEST_LOGIN = 765;
     private static final int REQUEST_EDIT_LOGIN = 7654;
-    private static final String FILTERS = "filters";
 
     private ServiceViewModel serviceViewModel;
 
