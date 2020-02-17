@@ -7,13 +7,16 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kent.university.privelt.R;
@@ -25,14 +28,19 @@ import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
+import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.ui.data.DataActivity;
 import com.kent.university.privelt.ui.login.LoginActivity;
+import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
+import com.kent.university.privelt.utils.sentence.SentenceAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,7 +56,7 @@ import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_USER;
 
-public class ServiceFragment extends BaseFragment {
+public class ServiceFragment extends BaseFragment implements FilterAlertDialog.FilterDialogListener {
 
     private static final int REQUEST_LOGIN = 765;
     private static final int REQUEST_EDIT_LOGIN = 7654;
@@ -68,7 +76,15 @@ public class ServiceFragment extends BaseFragment {
     @BindView(R.id.add_service)
     FloatingActionButton addService;
 
+    @BindView(R.id.global_privacy_value)
+    TextView privacyValue;
+
+    @BindView(R.id.risk_progress_overall)
+    ProgressBar progressBar;
+
     private ServiceAdapter serviceAdapter;
+
+    private boolean[] filters;
 
     @Nullable
     @Override
@@ -86,6 +102,8 @@ public class ServiceFragment extends BaseFragment {
         configureViewModel();
         getServices();
         getUserDatas();
+
+        progressBar.setOnClickListener((v) -> startActivity(new Intent(getActivity(), RiskValueActivity.class)));
         return view;
     }
 
@@ -95,9 +113,7 @@ public class ServiceFragment extends BaseFragment {
 
     private void updateUserDatas(List<UserData> userData) {
         userDatas = new ArrayList<>(userData);
-        serviceAdapter.updateServices(subscribedServices);
-        serviceAdapter.updateUserDatas(userDatas);
-        serviceAdapter.notifyDataSetChanged();
+        updateRecyclerView();
     }
 
     private void getServices() {
@@ -107,15 +123,42 @@ public class ServiceFragment extends BaseFragment {
     private void updateServices(List<Service> services) {
 
         subscribedServices = new ArrayList<>(services);
+        updateRecyclerView();
+    }
 
-        if (subscribedServices.size() > 0)
+    private void updateRecyclerView() {
+        if (subscribedServices.size() == 0)
             noService.setVisibility(View.GONE);
-        else
+        else {
             noService.setVisibility(View.VISIBLE);
+            serviceAdapter.updateServices(subscribedServices);
+            serviceAdapter.updateUserDatas(userDatas, filters);
+            serviceAdapter.notifyDataSetChanged();
+            updateOverallRiskValue();
+        }
+    }
 
-        serviceAdapter.updateServices(subscribedServices);
-        serviceAdapter.updateUserDatas(userDatas);
-        serviceAdapter.notifyDataSetChanged();
+    private void updateOverallRiskValue() {
+        LinkedHashMap<Service, List<UserData>>  map =  serviceAdapter.getLinkedCredentials();
+
+        int riskValue = 0;
+        for (Map.Entry<Service, List<UserData>> entry : map.entrySet()) {
+            Service key = entry.getKey();
+            List<UserData> value = entry.getValue();
+            riskValue += value.size();
+        }
+
+        if (riskValue > 100)
+            riskValue = 100;
+
+        if (riskValue < 20)
+            privacyValue.setText(SentenceAdapter.adapt(getResources().getString(R.string.global_privacy_value), "Low"));
+        else if (riskValue < 60)
+            privacyValue.setText(SentenceAdapter.adapt(getResources().getString(R.string.global_privacy_value), "Medium"));
+        else
+            privacyValue.setText(SentenceAdapter.adapt(getResources().getString(R.string.global_privacy_value), "High"));
+
+        progressBar.setProgress(riskValue);
     }
 
     private void setupAddButton() {
@@ -218,6 +261,8 @@ public class ServiceFragment extends BaseFragment {
                         super.onPostExecute(aVoid);
                         if (!service.isPasswordSaved())
                             processDataExtraction(new ServiceHelper(getContext()), service, user, password, getContext().getApplicationContext());
+                        else
+                            ((DashboardActivity)getActivity()).launchService();
                     }
                 }.execute();
             }
@@ -243,14 +288,35 @@ public class ServiceFragment extends BaseFragment {
 
     @Subscribe
     public void onLaunchData(LaunchDataEvent event) {
-
-        if (!event.service.isPasswordSaved()) {
-            Toast.makeText(getContext(), R.string.authorize_save_password, Toast.LENGTH_LONG).show();
-            return;
-        }
-
         Intent intent = new Intent(getContext(), DataActivity.class);
         intent.putExtra(PARAM_SERVICE, event.service);
         startActivity(intent);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.filter) {
+            FilterAlertDialog cdf = new FilterAlertDialog(this);
+            cdf.show(getFragmentManager(), "");
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onDialogPositiveClick(boolean[] selectedItems) {
+        filters = selectedItems;
+        updateRecyclerView();
     }
 }

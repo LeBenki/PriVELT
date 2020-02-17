@@ -8,7 +8,7 @@ import android.content.Intent;
 import android.os.Build;
 
 import com.kent.university.privelt.R;
-import com.university.kent.dataextractor.MainActivity;
+import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -21,7 +21,7 @@ public class Notification {
      */
     public android.app.Notification setNotification(Context context, String title, String text, int icon) {
         if (notificationPendingIntent == null) {
-            Intent notificationIntent = new Intent(context, MainActivity.class);
+            Intent notificationIntent = new Intent(context, DashboardActivity.class);
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             // notificationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             notificationPendingIntent = PendingIntent.getActivity(context, 0, notificationIntent, 0);

@@ -59,6 +59,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
         </activity>
+        <activity
+            android:name=".ui.risk_value.RiskValueActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
+        </activity>
 
         <service
             android:name=".service.restarter.JobService"

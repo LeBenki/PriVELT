@@ -1,5 +1,6 @@
 package com.kent.university.privelt.ui.dashboard.service;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -16,11 +17,13 @@ import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.ui.dashboard.service.data_metrics.DataMetricsAdapter;
+import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
 import com.kent.university.privelt.utils.ParseUserData;
-import com.kent.university.privelt.utils.sentence.SentenceAdapter;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
+
+import static com.kent.university.privelt.ui.risk_value.RiskValueActivity.PARAM_SERVICE;
 
 class ServiceViewHolder extends RecyclerView.ViewHolder {
 
@@ -36,7 +39,7 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.metric_rv)
     RecyclerView metrics;
 
-    @BindView(R.id.total_metrics)
+    @BindView(R.id.service_value)
     TextView totalMetrics;
 
     @BindView(R.id.risk_progress)
@@ -48,7 +51,7 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(itemView.getContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(itemView.getContext(), LinearLayoutManager.HORIZONTAL, false);
         metrics.setLayoutManager(layoutManager);
         dataMetricsAdapter = new DataMetricsAdapter();
         metrics.setAdapter(dataMetricsAdapter);
@@ -64,15 +67,21 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
         if (userDatas != null && userDatas.size() != 0) {
             //TODO: 200 HARDCODED (MAX DATA)
             riskProgress.setProgress(userDatas.size() * 100 / 200);
+            riskProgress.setOnClickListener((v) -> {
+                Intent intent = new Intent(riskProgress.getContext(), RiskValueActivity.class);
+                intent.putExtra(PARAM_SERVICE, service.getName());
+                riskProgress.getContext().startActivity(intent);
+            });
             metrics.setVisibility(View.VISIBLE);
             totalMetrics.setVisibility(View.VISIBLE);
-            totalMetrics.setText(SentenceAdapter.adapt(itemView.getResources().getString(R.string.information_found_total), userDatas.size()));
+            totalMetrics.setText(String.valueOf(userDatas.size() < 99 ? userDatas.size() : 99));
             dataMetricsAdapter.setDataMetrics(ParseUserData.parseUserData(userDatas));
             dataMetricsAdapter.notifyDataSetChanged();
         }
         else {
             metrics.setVisibility(View.GONE);
             totalMetrics.setVisibility(View.GONE);
+            riskProgress.setOnClickListener(null);
         }
     }
 }

@@ -14,7 +14,6 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.service.ProcessMainClass;
 import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver;
-import com.kent.university.privelt.ui.dashboard.risk_value.RiskValueFragment;
 import com.kent.university.privelt.ui.dashboard.service.ServiceFragment;
 import com.kent.university.privelt.ui.dashboard.user.UserFragment;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
@@ -46,6 +45,7 @@ public class DashboardActivity extends BaseActivity {
 
         toolbar.setTitle(R.string.services);
         loadFragment(new ServiceFragment());
+        launchService();
     }
 
     @Override
@@ -62,6 +62,9 @@ public class DashboardActivity extends BaseActivity {
                 return;
             }
         }
+    }
+
+    public void launchService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP){
             RestartServiceBroadcastReceiver.scheduleJob(getApplicationContext());
         } else {
@@ -80,11 +83,6 @@ public class DashboardActivity extends BaseActivity {
                 case R.id.navigation_service:
                     toolbar.setTitle(R.string.services);
                     fragment = new ServiceFragment();
-                    loadFragment(fragment);
-                    return true;
-                case R.id.navigation_risk_value:
-                    toolbar.setTitle(R.string.risk_value);
-                    fragment = new RiskValueFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_user:
@@ -109,6 +107,7 @@ public class DashboardActivity extends BaseActivity {
         MenuItem settings = menu.findItem(R.id.settings);
         MenuItem edit = menu.findItem(R.id.edit);
         MenuItem check = menu.findItem(R.id.check);
+        MenuItem filter = menu.findItem(R.id.filter);
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.container);
         if(fragment instanceof UserFragment)
@@ -116,12 +115,14 @@ public class DashboardActivity extends BaseActivity {
             settings.setVisible(true);
             edit.setVisible(true);
             check.setVisible(false);
+            filter.setVisible(false);
         }
         else
         {
             settings.setVisible(false);
             edit.setVisible(false);
             check.setVisible(false);
+            filter.setVisible(true);
         }
         return true;
     }

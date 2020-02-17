@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard.risk_value;
+package com.kent.university.privelt.ui.risk_value;
 
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;

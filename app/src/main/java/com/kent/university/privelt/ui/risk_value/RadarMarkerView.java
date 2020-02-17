@@ -1,7 +1,6 @@
-package com.kent.university.privelt.ui.dashboard.risk_value;
+package com.kent.university.privelt.ui.risk_value;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.components.MarkerView;

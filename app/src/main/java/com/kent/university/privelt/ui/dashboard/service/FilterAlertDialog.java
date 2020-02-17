@@ -1,0 +1,58 @@
+package com.kent.university.privelt.ui.dashboard.service;
+
+import android.app.Dialog;
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Bundle;
+
+import com.kent.university.privelt.R;
+
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
+
+public class FilterAlertDialog extends DialogFragment {
+
+    private static final String DATA = "data";
+    private static final String SERVICE = "service";
+    private static final String WATCH = "watch";
+    private static final String KEY_SHARED = "KEY_SHARED";
+
+    FilterAlertDialog(FilterDialogListener listener) {
+        this.listener = listener;
+    }
+
+    public interface FilterDialogListener {
+        void onDialogPositiveClick(boolean[] selectedItems);
+    }
+
+    private FilterDialogListener listener;
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Set the dialog title
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences(KEY_SHARED, Context.MODE_PRIVATE);
+
+        boolean[] checkedItems = {
+                sharedPreferences.getBoolean(DATA, true),
+                sharedPreferences.getBoolean(SERVICE, true),
+                sharedPreferences.getBoolean(WATCH, false)
+        };
+
+        builder.setTitle(getString(R.string.choose_cards))
+                // Specify the list array, the items to be selected by default (null for none),
+                // and the listener through which to receive callbacks when items are selected
+                .setMultiChoiceItems(R.array.filters, checkedItems, (dialogInterface, i, b) -> checkedItems[i] = b)
+                .setPositiveButton(R.string.yes, (dialog, id) -> {
+                    listener.onDialogPositiveClick(checkedItems);
+                    sharedPreferences.edit().putBoolean(DATA, checkedItems[0]).apply();
+                    sharedPreferences.edit().putBoolean(SERVICE, checkedItems[1]).apply();
+                    sharedPreferences.edit().putBoolean(WATCH, checkedItems[2]).apply();
+                });
+
+        return builder.create();
+    }
+}

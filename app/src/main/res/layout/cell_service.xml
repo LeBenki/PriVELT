@@ -15,9 +15,25 @@
             android:id="@+id/image_service"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:paddingEnd="5dp"
+            android:paddingTop="5dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_margin="@dimen/activity_vertical_margin" />
+
+        <TextView
+            android:id="@+id/service_value"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_gravity="center"
+            android:paddingBottom="2dp"
+            android:layout_alignEnd="@id/image_service"
+            android:layout_alignTop="@id/image_service"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:textSize="12sp"/>
+
 
         <TextView
             android:id="@+id/title_service"
@@ -51,21 +67,12 @@
                 android:progress="0" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/risk_layout"
-            android:id="@+id/total_metrics"
-            android:layout_marginLeft="@dimen/activity_vertical_margin"
-            android:layout_marginRight="@dimen/activity_vertical_margin"
-            android:textStyle="bold" />
-
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/metric_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/activity_vertical_margin"
-            android:layout_below="@id/total_metrics"/>
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_below="@id/risk_layout"/>
 
         <ImageView
             android:id="@+id/settings"

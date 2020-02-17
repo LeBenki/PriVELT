@@ -20,4 +20,10 @@
         android:title="@string/check"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/filter"
+        android:icon="@drawable/ic_filter"
+        android:title="@string/filter"
+        app:showAsAction="always" />
+
 </menu>

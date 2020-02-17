@@ -28,6 +28,9 @@
     <string name="privacy_value_risk">Privacy-Value risk</string>
     <string name="overlay_permission">Please add display over app permission, it is needed for data extraction while the application is in the background</string>
     <string name="data_extraction">Data Extraction</string>
+    <string name="global_privacy_value">Privacy risk : %1$s</string>
+    <string name="filter">filter</string>
+    <string name="choose_cards">Choose the cards you want on your dashboard</string>
 
     <!--DataMetricsAdapter -->
     <string name="information_found">%1$d different @plural(%1$d,%2$s)@ found</string>

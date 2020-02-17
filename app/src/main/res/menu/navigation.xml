@@ -7,11 +7,6 @@
         android:title="@string/services"/>
 
     <item
-        android:id="@+id/navigation_risk_value"
-        android:icon="@drawable/ic_risk_value"
-        android:title="@string/risk_value"/>
-
-    <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/ic_user"
         android:title="@string/user"/>

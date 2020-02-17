@@ -3,7 +3,7 @@ package com.kent.university.privelt.database.injections;
 import com.kent.university.privelt.repositories.CurrentUserDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
-import com.kent.university.privelt.ui.dashboard.risk_value.RiskValueViewModel;
+import com.kent.university.privelt.ui.risk_value.RiskValueViewModel;
 import com.kent.university.privelt.ui.dashboard.service.ServiceViewModel;
 import com.kent.university.privelt.ui.dashboard.user.UserViewModel;
 import com.kent.university.privelt.ui.data.DataViewModel;
