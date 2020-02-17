@@ -17,7 +17,7 @@ public class FilterAlertDialog extends DialogFragment {
     private static final String DATA = "data";
     private static final String SERVICE = "service";
     private static final String WATCH = "watch";
-    private static final String KEY_SHARED = "KEY_SHARED";
+    public static final String KEY_SHARED = "KEY_SHARED";
 
     FilterAlertDialog(FilterDialogListener listener) {
         this.listener = listener;
@@ -36,11 +36,7 @@ public class FilterAlertDialog extends DialogFragment {
         // Set the dialog title
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences(KEY_SHARED, Context.MODE_PRIVATE);
 
-        boolean[] checkedItems = {
-                sharedPreferences.getBoolean(DATA, true),
-                sharedPreferences.getBoolean(SERVICE, true),
-                sharedPreferences.getBoolean(WATCH, false)
-        };
+        boolean[] checkedItems = getFilters(sharedPreferences);
 
         builder.setTitle(getString(R.string.choose_cards))
                 // Specify the list array, the items to be selected by default (null for none),
@@ -54,5 +50,13 @@ public class FilterAlertDialog extends DialogFragment {
                 });
 
         return builder.create();
+    }
+
+    public static boolean[] getFilters(SharedPreferences sharedPreferences) {
+        return new boolean[]{
+                sharedPreferences.getBoolean(DATA, true),
+                sharedPreferences.getBoolean(SERVICE, true),
+                sharedPreferences.getBoolean(WATCH, false)
+        };
     }
 }

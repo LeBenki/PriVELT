@@ -3,6 +3,7 @@ package com.kent.university.privelt.ui.dashboard.service;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -52,6 +53,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.api.DataExtraction.processDataExtraction;
+import static com.kent.university.privelt.ui.dashboard.service.FilterAlertDialog.KEY_SHARED;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_USER;
@@ -60,6 +62,7 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
 
     private static final int REQUEST_LOGIN = 765;
     private static final int REQUEST_EDIT_LOGIN = 7654;
+    private static final String FILTERS = "filters";
 
     private ServiceViewModel serviceViewModel;
 
@@ -105,6 +108,12 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
 
         progressBar.setOnClickListener((v) -> startActivity(new Intent(getActivity(), RiskValueActivity.class)));
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        filters = FilterAlertDialog.getFilters(getActivity().getSharedPreferences(KEY_SHARED, Context.MODE_PRIVATE));
     }
 
     private void getUserDatas() {
