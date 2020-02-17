@@ -115,6 +115,7 @@ public class RiskValueActivity extends BaseActivity {
     private void getServices() {
         riskValueViewModel.getServices().observe(this, this::updateServices);
     }
+
     private void getUserdatas() {
         riskValueViewModel.getUserDatas().observe(this, this::updateUserDatas);
     }
@@ -148,7 +149,6 @@ public class RiskValueActivity extends BaseActivity {
         xAxis.setTextSize(9f);
         xAxis.setYOffset(0f);
         xAxis.setXOffset(0f);
-
 
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -195,7 +195,7 @@ public class RiskValueActivity extends BaseActivity {
         }
         else {
             for (String type : mActivities) {
-                if (type.equals(this.service) || this.service == null || this.service.isEmpty()) {
+                if (type.equals(this.type) || this.type == null || this.type.isEmpty()) {
                     RadarDataSet set1 = new RadarDataSet(getDataEntriesForEachType(type, services), type);
                     Random rnd = new Random();
                     int color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
@@ -214,7 +214,7 @@ public class RiskValueActivity extends BaseActivity {
         RadarData data = new RadarData(sets);
         data.setValueTextSize(8f);
         data.setDrawValues(false);
-        data.setValueTextColor(Color.WHITE);
+        data.setValueTextColor(Color.RED);
 
         YAxis yAxis = chart.getYAxis();
 
@@ -224,10 +224,10 @@ public class RiskValueActivity extends BaseActivity {
             yAxis.setLabelCount(1, false);
 
         yAxis.setTextSize(9f);
-        yAxis.setAxisMinimum(0f);
+        yAxis.setAxisMinimum(0);
 
         //TODO: 200 HARDCODED (MAX DATA)
-        yAxis.setAxisMaximum(getMaximumValue(sets));
+        yAxis.setAxisMaximum(200);
         yAxis.setDrawLabels(false);
 
         Legend l = chart.getLegend();
@@ -258,8 +258,8 @@ public class RiskValueActivity extends BaseActivity {
 
         ArrayList<RadarEntry> entries = new ArrayList<>();
 
-        for (int i = 0; i < mActivities.length; i++) {
-            int val = countTypeForEachService(mActivities[i], service);
+        for (String mActivity : mActivities) {
+            int val = countTypeForEachService(mActivity, service) + 1;
             entries.add(new RadarEntry(val));
         }
         return entries;
@@ -269,8 +269,8 @@ public class RiskValueActivity extends BaseActivity {
 
         ArrayList<RadarEntry> entries = new ArrayList<>();
 
-        for (int i = 0; i < services.size(); i++) {
-            int val = countServiceForEachType(type, services.get(i));
+        for (Service service : services) {
+            int val = countServiceForEachType(type, service) + 1;
             entries.add(new RadarEntry(val));
         }
         return entries;
