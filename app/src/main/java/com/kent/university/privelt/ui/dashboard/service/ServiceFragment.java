@@ -122,6 +122,7 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
 
     private void updateUserDatas(List<UserData> userData) {
         userDatas = new ArrayList<>(userData);
+        updateOverallRiskValue();
         updateRecyclerView();
     }
 
@@ -143,19 +144,11 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
             serviceAdapter.updateServices(subscribedServices);
             serviceAdapter.updateUserDatas(userDatas, filters);
             serviceAdapter.notifyDataSetChanged();
-            updateOverallRiskValue();
         }
     }
 
     private void updateOverallRiskValue() {
-        LinkedHashMap<Service, List<UserData>>  map =  serviceAdapter.getLinkedCredentials();
-
-        int riskValue = 0;
-        for (Map.Entry<Service, List<UserData>> entry : map.entrySet()) {
-            Service key = entry.getKey();
-            List<UserData> value = entry.getValue();
-            riskValue += value.size();
-        }
+        int riskValue = userDatas.size();
 
         if (riskValue > 100)
             riskValue = 100;
