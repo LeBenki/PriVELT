@@ -31,7 +31,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemViewType(int position) {
-        if (position < linkedCredentials.size())
+        if (position < services.size())
             return TYPE_SERVICE;
         else
             return TYPE_DATA;
@@ -66,7 +66,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return linkedCredentials.size() + linkedTypes.size();
+        return services.size() + linkedTypes.size();
     }
 
     private Service getServiceFromIndex(long id) {

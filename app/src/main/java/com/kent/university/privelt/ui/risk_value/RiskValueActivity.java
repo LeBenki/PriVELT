@@ -212,7 +212,7 @@ public class RiskValueActivity extends BaseActivity {
         }
 
         RadarData data = new RadarData(sets);
-        data.setValueTextSize(8f);
+        data.setValueTextSize(15f);
         data.setDrawValues(false);
         data.setValueTextColor(Color.RED);
 
@@ -227,8 +227,8 @@ public class RiskValueActivity extends BaseActivity {
         yAxis.setAxisMinimum(0);
 
         //TODO: 200 HARDCODED (MAX DATA)
-        yAxis.setAxisMaximum(200);
-        yAxis.setDrawLabels(false);
+        yAxis.setAxisMaximum(getMaximumValue(sets));
+        yAxis.setDrawLabels(true);
 
         Legend l = chart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);

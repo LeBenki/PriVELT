@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kent.university.privelt.R;
@@ -129,6 +131,7 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
 
     private void updateServices(List<Service> services) {
 
+        Log.d("LUCAS", String.valueOf(services.size()));
         subscribedServices = new ArrayList<>(services);
         updateRecyclerView();
     }
@@ -161,7 +164,15 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
     }
 
     private void setupAddButton() {
+
         addService.setOnClickListener(view -> {
+
+            List<String> services = getServiceHelper().getRemainingServices(subscribedServices);
+
+            if (services.isEmpty()) {
+                Toast.makeText(ServiceFragment.this.getContext(), R.string.already_added_all, Toast.LENGTH_LONG).show();
+                return;
+            }
 
             final ArrayAdapter<String> adp = new ArrayAdapter<>(getContext(),
                     android.R.layout.simple_spinner_item, getServiceHelper().getRemainingServices(subscribedServices));

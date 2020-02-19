@@ -8,9 +8,9 @@ public enum UserDataType {
     DEVICE("device", R.drawable.ic_cellphone),
     ADDRESS("address", R.drawable.ic_pin),
     PROFILE("profile", R.drawable.ic_user),
-    BOOKING("booking", R.drawable.ic_user),
+    BOOKING("booking", R.drawable.ic_sleep),
     PASSPORT("passport", R.drawable.ic_user),
-    CB("cb", R.drawable.ic_sleep);
+    CB("cb", R.drawable.ic_visa);
 
     private String type;
 
