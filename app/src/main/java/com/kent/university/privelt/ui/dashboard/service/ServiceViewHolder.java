@@ -12,6 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
+import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
 import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
@@ -22,6 +23,7 @@ import com.kent.university.privelt.utils.ParseUserData;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.kent.university.privelt.ui.risk_value.RiskValueActivity.PARAM_SERVICE;
 
@@ -36,6 +38,9 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.settings)
     ImageView settings;
 
+    @BindView(R.id.watch_icon)
+    ImageView watchIcon;
+
     @BindView(R.id.metric_rv)
     RecyclerView metrics;
 
@@ -47,6 +52,8 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
 
     private DataMetricsAdapter dataMetricsAdapter;
 
+    final AtomicBoolean watch;
+
     ServiceViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
@@ -55,14 +62,26 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
         metrics.setLayoutManager(layoutManager);
         dataMetricsAdapter = new DataMetricsAdapter();
         metrics.setAdapter(dataMetricsAdapter);
+
+        watch = new AtomicBoolean(false);
     }
 
-    void bind(Service service, List<UserData> userDatas) {
+    void bind(Service service, List<UserData> userDatas, boolean watched) {
         title.setText(service.getName());
         PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
         imageService.setImageResource(priVELT.getServiceHelper().getResIdWithName(service.getName()));
         settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent(service)));
+
+        watch.set(watched);
+
+        watchIcon.setOnClickListener(view -> {
+            EventBus.getDefault().post(new ChangeWatchListStatusEvent(service.getName()));
+            watch.set(watch.get());
+            watchIcon.setColorFilter(!watch.get() ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
+        });
         itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service)));
+
+        watchIcon.setColorFilter(watched ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
 
         if (userDatas != null && userDatas.size() != 0) {
             //TODO: 200 HARDCODED (MAX DATA)

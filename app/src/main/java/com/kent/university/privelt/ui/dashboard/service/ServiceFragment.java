@@ -27,6 +27,7 @@ import com.kent.university.privelt.api.ServiceHelper;
 import com.kent.university.privelt.base.BaseFragment;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
 import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
@@ -35,6 +36,7 @@ import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.ui.data.DataActivity;
 import com.kent.university.privelt.ui.login.LoginActivity;
 import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
+import com.kent.university.privelt.utils.WatchListHelper;
 import com.kent.university.privelt.utils.sentence.SentenceAdapter;
 
 import org.greenrobot.eventbus.EventBus;
@@ -84,6 +86,8 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
     @BindView(R.id.risk_progress_overall)
     ProgressBar progressBar;
 
+    WatchListHelper watchListHelper;
+
     private ServiceAdapter serviceAdapter;
 
     private boolean[] filters;
@@ -113,6 +117,7 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         filters = FilterAlertDialog.getFilters(getActivity().getSharedPreferences(KEY_SHARED, Context.MODE_PRIVATE));
+        watchListHelper = new WatchListHelper(getActivity().getSharedPreferences(KEY_SHARED, Context.MODE_PRIVATE));
     }
 
     private void getUserDatas() {
@@ -131,7 +136,6 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
 
     private void updateServices(List<Service> services) {
 
-        Log.d("LUCAS", String.valueOf(services.size()));
         subscribedServices = new ArrayList<>(services);
         updateRecyclerView();
     }
@@ -142,7 +146,7 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
         else {
             noService.setVisibility(View.VISIBLE);
             serviceAdapter.updateServices(subscribedServices);
-            serviceAdapter.updateUserDatas(userDatas, filters);
+            serviceAdapter.updateUserDatas(userDatas, filters, watchListHelper.getWatchList());
             serviceAdapter.notifyDataSetChanged();
         }
     }
@@ -301,6 +305,11 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
         Intent intent = new Intent(getContext(), DataActivity.class);
         intent.putExtra(PARAM_SERVICE, event.service);
         startActivity(intent);
+    }
+
+    @Subscribe
+    public void onCardAddedToWatchList(ChangeWatchListStatusEvent event) {
+        watchListHelper.changeWatchListStatus(event.cardName);
     }
 
     @Override

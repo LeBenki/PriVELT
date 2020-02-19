@@ -20,6 +20,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<Service> services;
     private LinkedHashMap<Service, List<UserData>> linkedCredentials;
+    private List<String> watchList;
 
     private LinkedHashMap<String, LinkedHashMap<Service, List<UserData>>> linkedTypes;
 
@@ -27,11 +28,12 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         this.services = new ArrayList<>();
         this.linkedCredentials = new LinkedHashMap<>();
         this.linkedTypes = new LinkedHashMap<>();
+        this.watchList = new ArrayList<>();
     }
 
     @Override
     public int getItemViewType(int position) {
-        if (position < services.size())
+        if (position < linkedCredentials.size())
             return TYPE_SERVICE;
         else
             return TYPE_DATA;
@@ -51,12 +53,15 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int type = getItemViewType(position);
         if (type == TYPE_SERVICE) {
             ServiceViewHolder serviceViewHolder = (ServiceViewHolder) holder;
-            serviceViewHolder.bind(services.get(position), linkedCredentials.get(services.get(position)));
+            serviceViewHolder.bind(services.get(position), linkedCredentials.get(services.get(position)), watchList.contains(services.get(position).getName()));
         }
         else {
-            DataCentricViewHolder dataCentricViewHolder = (DataCentricViewHolder) holder;
-            String typeData = new ArrayList<>(linkedTypes.keySet()).get(position - linkedCredentials.size());
-            dataCentricViewHolder.bind(typeData, linkedTypes.get(typeData));
+            try {
+                DataCentricViewHolder dataCentricViewHolder = (DataCentricViewHolder) holder;
+                String typeData = new ArrayList<>(linkedTypes.keySet()).get(position - linkedCredentials.size());
+                dataCentricViewHolder.bind(typeData, linkedTypes.get(typeData), watchList.contains(typeData));
+            }
+            catch (Exception e){}
         }
     }
 
@@ -66,7 +71,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public int getItemCount() {
-        return services.size() + linkedTypes.size();
+        return linkedCredentials.size() + linkedTypes.size();
     }
 
     private Service getServiceFromIndex(long id) {
@@ -77,15 +82,16 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return null;
     }
 
-    void updateUserDatas(List<UserData> userDataList, boolean[] filters) {
+    void updateUserDatas(List<UserData> userDataList, boolean[] filters, List<String> watchList) {
         if (userDataList == null)
             return;
+        this.watchList = watchList;
         linkedCredentials.clear();
         linkedTypes.clear();
 
         for (UserData userData : userDataList) {
 
-            if (filters == null || filters[1]) {
+            if ((filters == null || filters[1]) && (filters == null || (!filters[2] || watchList.contains(getServiceFromIndex(userData.getServiceId()).getName())))) {
                 if (!linkedCredentials.containsKey(getServiceFromIndex(userData.getServiceId()))) {
                     linkedCredentials.put(getServiceFromIndex(userData.getServiceId()), new LinkedList<>(Collections.singletonList(userData)));
                 } else {
@@ -96,7 +102,7 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
 
-            if (filters == null || filters[0]) {
+            if ((filters == null || filters[0]) && (filters == null || (!filters[2] || watchList.contains(userData.getType())))) {
                 if (!linkedTypes.containsKey(userData.getType())) {
                     LinkedHashMap<Service, List<UserData>> map = new LinkedHashMap<>();
                     map.put(getServiceFromIndex(userData.getServiceId()), Collections.singletonList(userData));
@@ -114,9 +120,5 @@ public class ServiceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             }
         }
-    }
-
-    LinkedHashMap<Service, List<UserData>> getLinkedCredentials() {
-        return linkedCredentials;
     }
 }

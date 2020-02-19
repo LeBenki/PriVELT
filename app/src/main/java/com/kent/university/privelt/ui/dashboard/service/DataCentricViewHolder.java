@@ -7,6 +7,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.kent.university.privelt.R;
+import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.ui.dashboard.service.data_metrics.ServiceMetricsAdapter;
@@ -14,9 +15,12 @@ import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
 import com.kent.university.privelt.utils.UserDataType;
 
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,6 +41,9 @@ class DataCentricViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.settings)
     ImageView settings;
 
+    @BindView(R.id.watch_icon)
+    ImageView watchIcon;
+
     @BindView(R.id.metric_rv)
     RecyclerView metrics;
 
@@ -45,6 +52,8 @@ class DataCentricViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.risk_progress)
     ProgressBar riskProgress;
+
+    final AtomicBoolean watch;
 
     private ServiceMetricsAdapter dataMetricsAdapter;
 
@@ -56,14 +65,24 @@ class DataCentricViewHolder extends RecyclerView.ViewHolder {
         metrics.setLayoutManager(layoutManager);
         dataMetricsAdapter = new ServiceMetricsAdapter();
         metrics.setAdapter(dataMetricsAdapter);
+
+        watch = new AtomicBoolean(false);
     }
 
-    void bind(String type, LinkedHashMap<Service, List<UserData>> map) {
+    void bind(String type, LinkedHashMap<Service, List<UserData>> map, boolean isWatched) {
         title.setText(type.substring(0, 1).toUpperCase() + type.substring(1).toLowerCase());
         UserDataType userDataType = UserDataType.valueOf(type.toUpperCase());
         imageService.setImageResource(userDataType.getRes());
+        watch.set(isWatched);
+        watchIcon.setOnClickListener(view -> {
+            EventBus.getDefault().post(new ChangeWatchListStatusEvent(type));
+            watch.set(watch.get());
+            watchIcon.setColorFilter(!watch.get() ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
+        });
         settings.setVisibility(View.GONE);
         //itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service)));
+
+        watchIcon.setColorFilter(isWatched ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
 
         //TODO: to double check
         int score = 0;
