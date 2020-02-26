@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard.service;
+package com.kent.university.privelt.ui.dashboard.card;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +35,7 @@ import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.ui.data.DataActivity;
 import com.kent.university.privelt.ui.login.LoginActivity;
 import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
+import com.kent.university.privelt.utils.CardManager;
 import com.kent.university.privelt.utils.WatchListHelper;
 import com.kent.university.privelt.utils.sentence.SentenceAdapter;
 
@@ -55,17 +55,17 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.api.DataExtraction.processDataExtraction;
-import static com.kent.university.privelt.ui.dashboard.service.FilterAlertDialog.KEY_SHARED;
+import static com.kent.university.privelt.ui.dashboard.card.FilterAlertDialog.KEY_SHARED;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_USER;
 
-public class ServiceFragment extends BaseFragment implements FilterAlertDialog.FilterDialogListener {
+public class CardFragment extends BaseFragment implements FilterAlertDialog.FilterDialogListener {
 
     private static final int REQUEST_LOGIN = 765;
     private static final int REQUEST_EDIT_LOGIN = 7654;
 
-    private ServiceViewModel serviceViewModel;
+    private CardViewModel cardViewModel;
 
     private ArrayList<Service> subscribedServices;
 
@@ -86,9 +86,9 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
     @BindView(R.id.risk_progress_overall)
     ProgressBar progressBar;
 
-    WatchListHelper watchListHelper;
+    private WatchListHelper watchListHelper;
 
-    private ServiceAdapter serviceAdapter;
+    private CardAdapter cardAdapter;
 
     private boolean[] filters;
 
@@ -121,7 +121,7 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
     }
 
     private void getUserDatas() {
-        serviceViewModel.getUserDatas().observe(this, this::updateUserDatas);
+        cardViewModel.getUserDatas().observe(this, this::updateUserDatas);
     }
 
     private void updateUserDatas(List<UserData> userData) {
@@ -131,7 +131,7 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
     }
 
     private void getServices() {
-        serviceViewModel.getServices().observe(this, this::updateServices);
+        cardViewModel.getServices().observe(this, this::updateServices);
     }
 
     private void updateServices(List<Service> services) {
@@ -145,9 +145,8 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
             noService.setVisibility(View.GONE);
         else {
             noService.setVisibility(View.VISIBLE);
-            serviceAdapter.updateServices(subscribedServices);
-            serviceAdapter.updateUserDatas(userDatas, filters, watchListHelper.getWatchList());
-            serviceAdapter.notifyDataSetChanged();
+            cardAdapter.updateCards(CardManager.cardsFilter(userDatas, subscribedServices, filters, watchListHelper.getWatchList()));
+            cardAdapter.notifyDataSetChanged();
         }
     }
 
@@ -174,7 +173,7 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
             List<String> services = getServiceHelper().getRemainingServices(subscribedServices);
 
             if (services.isEmpty()) {
-                Toast.makeText(ServiceFragment.this.getContext(), R.string.already_added_all, Toast.LENGTH_LONG).show();
+                Toast.makeText(CardFragment.this.getContext(), R.string.already_added_all, Toast.LENGTH_LONG).show();
                 return;
             }
 
@@ -206,8 +205,8 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
         subscribedServices = new ArrayList<>();
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         servicesList.setLayoutManager(layoutManager);
-        serviceAdapter = new ServiceAdapter();
-        servicesList.setAdapter(serviceAdapter);
+        cardAdapter = new CardAdapter();
+        servicesList.setAdapter(cardAdapter);
     }
 
     private void setUpSwipe() {
@@ -225,9 +224,9 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
                         .setMessage(R.string.unsubscribe_confirmation)
                         .setPositiveButton(R.string.yes, (dialog, which) -> {
                             int position = viewHolder.getAdapterPosition();
-                            serviceViewModel.deleteService(subscribedServices.get(position));
+                            cardViewModel.deleteService(subscribedServices.get(position));
                         })
-                        .setNegativeButton(R.string.no, (dialogInterface, i) -> serviceAdapter.notifyDataSetChanged())
+                        .setNegativeButton(R.string.no, (dialogInterface, i) -> cardAdapter.notifyDataSetChanged())
                         .show();
             }
         };
@@ -237,8 +236,8 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
 
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getContext());
-        serviceViewModel = ViewModelProviders.of(this, viewModelFactory).get(ServiceViewModel.class);
-        serviceViewModel.init();
+        cardViewModel = ViewModelProviders.of(this, viewModelFactory).get(CardViewModel.class);
+        cardViewModel.init();
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -263,9 +262,9 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
                     @Override
                     protected Void doInBackground(Void... voids) {
                         if ((requestCode == REQUEST_LOGIN)) {
-                            serviceViewModel.insertService(service);
+                            cardViewModel.insertService(service);
                         } else {
-                            serviceViewModel.updateService(service);
+                            cardViewModel.updateService(service);
                         }
                         return null;
                     }
@@ -297,7 +296,9 @@ public class ServiceFragment extends BaseFragment implements FilterAlertDialog.F
 
     @Subscribe
     public void onEditCredentials(UpdateCredentialsEvent event) {
-        editCredentials(event.service, REQUEST_EDIT_LOGIN);
+        for (Service service: subscribedServices)
+            if (service.getName().equals(event.service))
+                editCredentials(service, REQUEST_EDIT_LOGIN);
     }
 
     @Subscribe

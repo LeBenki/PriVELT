@@ -1,12 +1,15 @@
-package com.kent.university.privelt.ui.dashboard.service.data_metrics;
+package com.kent.university.privelt.ui.dashboard.card.data_metrics;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.kent.university.privelt.R;
+import com.kent.university.privelt.model.CardItem;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import androidx.annotation.NonNull;
@@ -14,10 +17,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class DataMetricsAdapter extends RecyclerView.Adapter<DataMetricsViewHolder> {
 
-    private LinkedHashMap<String, Integer> dataMetrics;
+    private List<CardItem> dataMetrics;
 
     public DataMetricsAdapter() {
-        this.dataMetrics = new LinkedHashMap<>();
+        this.dataMetrics = new ArrayList<>();
     }
 
     @NonNull
@@ -30,12 +33,7 @@ public class DataMetricsAdapter extends RecyclerView.Adapter<DataMetricsViewHold
 
     @Override
     public void onBindViewHolder(@NonNull DataMetricsViewHolder holder, int position) {
-        int i = 0;
-        for (Map.Entry<String, Integer> entry : dataMetrics.entrySet()) {
-            if (position == i)
-                holder.bind(entry.getKey(), entry.getValue());
-            i++;
-        }
+        holder.bind(dataMetrics.get(position));
     }
 
     @Override
@@ -43,7 +41,7 @@ public class DataMetricsAdapter extends RecyclerView.Adapter<DataMetricsViewHold
         return dataMetrics.size();
     }
 
-    public void setDataMetrics(LinkedHashMap<String, Integer> dataMetrics) {
+    public void setDataMetrics(List<CardItem> dataMetrics) {
         this.dataMetrics = dataMetrics;
     }
 }

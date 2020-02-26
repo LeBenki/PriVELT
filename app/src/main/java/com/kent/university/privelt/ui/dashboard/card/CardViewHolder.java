@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard.service;
+package com.kent.university.privelt.ui.dashboard.card;
 
 import android.content.Intent;
 import android.view.View;
@@ -13,21 +13,17 @@ import butterknife.ButterKnife;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
-import com.kent.university.privelt.events.LaunchDataEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
-import com.kent.university.privelt.model.Service;
-import com.kent.university.privelt.model.UserData;
-import com.kent.university.privelt.ui.dashboard.service.data_metrics.DataMetricsAdapter;
+import com.kent.university.privelt.model.Card;
+import com.kent.university.privelt.ui.dashboard.card.data_metrics.DataMetricsAdapter;
 import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
-import com.kent.university.privelt.utils.ParseUserData;
-import org.greenrobot.eventbus.EventBus;
+import com.kent.university.privelt.utils.UserDataType;
 
-import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
+import org.greenrobot.eventbus.EventBus;
 
 import static com.kent.university.privelt.ui.risk_value.RiskValueActivity.PARAM_SERVICE;
 
-class ServiceViewHolder extends RecyclerView.ViewHolder {
+class CardViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.image_service)
     ImageView imageService;
@@ -52,9 +48,7 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
 
     private DataMetricsAdapter dataMetricsAdapter;
 
-    final AtomicBoolean watch;
-
-    ServiceViewHolder(@NonNull View itemView) {
+    CardViewHolder(@NonNull View itemView) {
         super(itemView);
         ButterKnife.bind(this, itemView);
 
@@ -62,39 +56,49 @@ class ServiceViewHolder extends RecyclerView.ViewHolder {
         metrics.setLayoutManager(layoutManager);
         dataMetricsAdapter = new DataMetricsAdapter();
         metrics.setAdapter(dataMetricsAdapter);
-
-        watch = new AtomicBoolean(false);
     }
 
-    void bind(Service service, List<UserData> userDatas, boolean watched) {
-        title.setText(service.getName());
-        PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
-        imageService.setImageResource(priVELT.getServiceHelper().getResIdWithName(service.getName()));
-        settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent(service)));
+    void bind(Card card) {
+        title.setText(card.getTitle());
 
-        watch.set(watched);
+        if (card.isService()) {
+            PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
+            imageService.setImageResource(priVELT.getServiceHelper().getResIdWithName(card.getTitle()));
+        } else {
+            UserDataType userDataType = UserDataType.valueOf(card.getTitle().toUpperCase());
+            imageService.setImageResource(userDataType.getRes());
+        }
+
+        if (card.isService()) {
+            settings.setVisibility(View.VISIBLE);
+            settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent(card.getTitle())));
+        } else {
+            settings.setVisibility(View.GONE);
+        }
 
         watchIcon.setOnClickListener(view -> {
-            EventBus.getDefault().post(new ChangeWatchListStatusEvent(service.getName()));
-            watch.set(watch.get());
-            watchIcon.setColorFilter(!watch.get() ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
+            EventBus.getDefault().post(new ChangeWatchListStatusEvent(card.getTitle()));
+            card.setWatched(!card.isWatched());
+            watchIcon.setColorFilter(card.isWatched() ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
         });
-        itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service)));
 
-        watchIcon.setColorFilter(watched ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
+        //TODO: disabled click itemview
+        //itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service)));
 
-        if (userDatas != null && userDatas.size() != 0) {
+        watchIcon.setColorFilter(card.isWatched() ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
+
+        if (card.getMetrics().size() != 0) {
             //TODO: 200 HARDCODED (MAX DATA)
-            riskProgress.setProgress(userDatas.size() * 100 / 200);
+            riskProgress.setProgress(card.getMetrics().size() * 100 / 200);
             riskProgress.setOnClickListener((v) -> {
                 Intent intent = new Intent(riskProgress.getContext(), RiskValueActivity.class);
-                intent.putExtra(PARAM_SERVICE, service.getName());
+                intent.putExtra(PARAM_SERVICE, card.getTitle());
                 riskProgress.getContext().startActivity(intent);
             });
             metrics.setVisibility(View.VISIBLE);
             totalMetrics.setVisibility(View.VISIBLE);
-            totalMetrics.setText(String.valueOf(userDatas.size() < 99 ? userDatas.size() : 99));
-            dataMetricsAdapter.setDataMetrics(ParseUserData.parseUserData(userDatas));
+            totalMetrics.setText(String.valueOf(card.getMetrics().size() < 99 ? card.getMetrics().size() : 99));
+            dataMetricsAdapter.setDataMetrics(card.getMetrics());
             dataMetricsAdapter.notifyDataSetChanged();
         }
         else {

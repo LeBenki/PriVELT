@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard.service;
+package com.kent.university.privelt.ui.dashboard.card;
 
 import android.app.Dialog;
 import android.content.Context;

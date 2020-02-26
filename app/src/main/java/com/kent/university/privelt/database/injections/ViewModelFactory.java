@@ -4,7 +4,7 @@ import com.kent.university.privelt.repositories.CurrentUserDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
 import com.kent.university.privelt.ui.risk_value.RiskValueViewModel;
-import com.kent.university.privelt.ui.dashboard.service.ServiceViewModel;
+import com.kent.university.privelt.ui.dashboard.card.CardViewModel;
 import com.kent.university.privelt.ui.dashboard.user.UserViewModel;
 import com.kent.university.privelt.ui.data.DataViewModel;
 
@@ -32,7 +32,7 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         try {
-            if (ServiceViewModel.class.equals(modelClass)) {
+            if (CardViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(ServiceDataRepository.class,
                         UserDataRepository.class,
                         Executor.class)

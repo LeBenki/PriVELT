@@ -14,7 +14,7 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.service.ProcessMainClass;
 import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver;
-import com.kent.university.privelt.ui.dashboard.service.ServiceFragment;
+import com.kent.university.privelt.ui.dashboard.card.CardFragment;
 import com.kent.university.privelt.ui.dashboard.user.UserFragment;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
 
@@ -44,7 +44,7 @@ public class DashboardActivity extends BaseActivity {
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         toolbar.setTitle(R.string.services);
-        loadFragment(new ServiceFragment());
+        loadFragment(new CardFragment());
         launchService();
     }
 
@@ -82,7 +82,7 @@ public class DashboardActivity extends BaseActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_service:
                     toolbar.setTitle(R.string.services);
-                    fragment = new ServiceFragment();
+                    fragment = new CardFragment();
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_user:

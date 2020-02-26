@@ -19,7 +19,7 @@
     <string name="risk_value">Risk value</string>
     <string name="user">User</string>
 
-    <!--ServiceFragment -->
+    <!--CardFragment -->
     <string name="unsubscribe">Unsubscribe</string>
     <string name="unsubscribe_confirmation">Are you sure you want to unsubscribe to this service?</string>
     <string name="choose_service">Choose the service you want to subscribe to</string>

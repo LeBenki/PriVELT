@@ -1,4 +1,4 @@
-package com.kent.university.privelt.ui.dashboard.service;
+package com.kent.university.privelt.ui.dashboard.card;
 
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
@@ -12,7 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
-public class ServiceViewModel extends ViewModel {
+public class CardViewModel extends ViewModel {
     private final ServiceDataRepository mServiceDataSource;
     private final UserDataRepository mUserDataSource;
     private final Executor mExecutor;
@@ -22,7 +22,7 @@ public class ServiceViewModel extends ViewModel {
 
     private LiveData<List<UserData>> mUserDatas;
 
-    public ServiceViewModel(ServiceDataRepository serviceDataRepository, UserDataRepository userDataSource, Executor executor) {
+    public CardViewModel(ServiceDataRepository serviceDataRepository, UserDataRepository userDataSource, Executor executor) {
         mServiceDataSource = serviceDataRepository;
         mUserDataSource = userDataSource;
         mExecutor = executor;
