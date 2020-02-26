@@ -142,9 +142,9 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
 
     private void updateRecyclerView() {
         if (subscribedServices.size() == 0)
-            noService.setVisibility(View.GONE);
-        else {
             noService.setVisibility(View.VISIBLE);
+        else {
+            noService.setVisibility(View.GONE);
             cardAdapter.updateCards(CardManager.cardsFilter(userDatas, subscribedServices, filters, watchListHelper.getWatchList()));
             cardAdapter.notifyDataSetChanged();
         }
