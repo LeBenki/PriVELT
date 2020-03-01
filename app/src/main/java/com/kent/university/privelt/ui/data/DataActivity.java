@@ -1,6 +1,7 @@
 package com.kent.university.privelt.ui.data;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -26,7 +27,10 @@ import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 
 public class DataActivity extends BaseActivity {
 
-    private Service service;
+    public static final String PARAM_TYPE = "PARAM_TYPE";
+    private String service;
+
+    private String type;
 
     @BindView(R.id.recycler_view_userdata)
     RecyclerView recyclerView;
@@ -47,24 +51,27 @@ public class DataActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         if (savedInstanceState != null) {
-            service = (Service) savedInstanceState.getSerializable(PARAM_SERVICE);
+            service = savedInstanceState.getString(PARAM_SERVICE);
+            type = savedInstanceState.getString(PARAM_TYPE);
         } else if (getIntent() != null) {
-            service = (Service) getIntent().getSerializableExtra(PARAM_SERVICE);
+            service = getIntent().getStringExtra(PARAM_SERVICE);
+            type = getIntent().getStringExtra(PARAM_TYPE);
         }
 
-        setTitle(service.getName());
+//        setTitle(service);
 
         configureRecyclerView();
 
         configureViewModel();
 
-        getUserDatas();
+        getServices();
     }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(PARAM_SERVICE, service);
+        outState.putSerializable(PARAM_TYPE, type);
     }
 
     private void configureRecyclerView() {
@@ -74,8 +81,23 @@ public class DataActivity extends BaseActivity {
         recyclerView.setAdapter(dataAdapter);
     }
 
-    private void getUserDatas() {
-        dataViewModel.getUserDatasForService(service.getId()).observe(this, this::updateUserData);
+    private void getServices() {
+        dataViewModel.getServices().observe(this, this::updateServices);
+    }
+
+    private void getUserDatas(long id, String type) {
+        dataViewModel.getUserData(id, type).observe(this, this::updateUserData);
+    }
+
+    private void updateServices(List<Service> services) {
+
+        long id = -1;
+
+        for (Service service : services)
+            if (service.getName().equals(this.service))
+                id = service.getId();
+
+        getUserDatas(id, type);
     }
 
     private void updateUserData(List<UserData> userData) {
@@ -91,6 +113,6 @@ public class DataActivity extends BaseActivity {
     private void configureViewModel() {
         ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
         dataViewModel = ViewModelProviders.of(this, viewModelFactory).get(DataViewModel.class);
-        dataViewModel.init(service.getId());
+        dataViewModel.init();
     }
 }

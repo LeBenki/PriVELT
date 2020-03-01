@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
+import com.kent.university.privelt.events.DetailedCardEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Card;
 import com.kent.university.privelt.ui.dashboard.card.data_metrics.DataMetricsAdapter;
@@ -82,8 +83,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
             watchIcon.setColorFilter(card.isWatched() ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
         });
 
-        //TODO: disabled click itemview
-        //itemView.setOnClickListener(view -> EventBus.getDefault().post(new LaunchDataEvent(service)));
+        itemView.setOnClickListener(view -> EventBus.getDefault().post(new DetailedCardEvent(card)));
 
         watchIcon.setColorFilter(card.isWatched() ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
 
@@ -98,7 +98,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
             metrics.setVisibility(View.VISIBLE);
             totalMetrics.setVisibility(View.VISIBLE);
             totalMetrics.setText(String.valueOf(card.getMetrics().size() < 99 ? card.getMetrics().size() : 99));
-            dataMetricsAdapter.setDataMetrics(card.getMetrics());
+            dataMetricsAdapter.setDataMetrics(card.getMetrics(), !card.isService());
             dataMetricsAdapter.notifyDataSetChanged();
         }
         else {

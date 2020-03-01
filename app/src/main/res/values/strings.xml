@@ -86,4 +86,8 @@
     <string name="personal_data">Personal data</string>
     <string name="personal_data_explain">We need to check if you share your real data</string>
     <string name="edit">edit</string>
+    <string name="overall_risk">Your overall risk for this service is %1$s</string>
+    <string name="found">found</string>
+    <string name="data_found">%1$d different</string>
+    <string name="data_explained">You can click on an item to see the list of data you shared</string>
 </resources>

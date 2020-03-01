@@ -30,7 +30,7 @@ public class UserDataRepository {
         mUserDataDao.deleteUserDatasForAService(id);
     }
 
-    public LiveData<List<UserData>> getUserDatasForAService(long id) {
-        return mUserDataDao.getUserDatasForAService(id);
+    public LiveData<List<UserData>> getUserDatasForAServiceAndType(long service, String type) {
+        return mUserDataDao.getUserDatasForAServiceAndType(service, type);
     }
 }

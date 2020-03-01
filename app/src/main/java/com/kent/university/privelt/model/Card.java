@@ -1,8 +1,9 @@
 package com.kent.university.privelt.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Card {
+public class Card implements Serializable {
     private String title;
     private boolean watched;
     private boolean isService;

@@ -1,6 +1,8 @@
 package com.kent.university.privelt.model;
 
-public class CardItem {
+import java.io.Serializable;
+
+public class CardItem implements Serializable {
     private String name;
     private int number;
 

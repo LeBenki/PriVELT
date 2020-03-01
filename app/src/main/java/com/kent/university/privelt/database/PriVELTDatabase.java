@@ -28,7 +28,6 @@ public abstract class PriVELTDatabase extends RoomDatabase {
         if (INSTANCE == null) {
             synchronized (PriVELTDatabase.class) {
                 if (INSTANCE == null) {
-                    //TODO: Editable may be null
                     SafeHelperFactory factory = SafeHelperFactory.fromUser(PriVELT.getInstance().getIdentityManager().getPassword());
 
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),

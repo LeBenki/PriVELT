@@ -27,12 +27,12 @@ import com.kent.university.privelt.base.BaseFragment;
 import com.kent.university.privelt.database.injections.Injection;
 import com.kent.university.privelt.database.injections.ViewModelFactory;
 import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
-import com.kent.university.privelt.events.LaunchDataEvent;
+import com.kent.university.privelt.events.DetailedCardEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.ui.dashboard.DashboardActivity;
-import com.kent.university.privelt.ui.data.DataActivity;
+import com.kent.university.privelt.ui.detailed.DetailedCardActivity;
 import com.kent.university.privelt.ui.login.LoginActivity;
 import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
 import com.kent.university.privelt.utils.CardManager;
@@ -56,6 +56,7 @@ import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.api.DataExtraction.processDataExtraction;
 import static com.kent.university.privelt.ui.dashboard.card.FilterAlertDialog.KEY_SHARED;
+import static com.kent.university.privelt.ui.detailed.DetailedCardActivity.PARAM_CARD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_USER;
@@ -302,9 +303,9 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
     }
 
     @Subscribe
-    public void onLaunchData(LaunchDataEvent event) {
-        Intent intent = new Intent(getContext(), DataActivity.class);
-        intent.putExtra(PARAM_SERVICE, event.service);
+    public void onDetailedCard(DetailedCardEvent event) {
+        Intent intent = new Intent(getContext(), DetailedCardActivity.class);
+        intent.putExtra(PARAM_CARD, event.card);
         startActivity(intent);
     }
 

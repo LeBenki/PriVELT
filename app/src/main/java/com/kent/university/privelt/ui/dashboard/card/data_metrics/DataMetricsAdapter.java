@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 public class DataMetricsAdapter extends RecyclerView.Adapter<DataMetricsViewHolder> {
 
     private List<CardItem> dataMetrics;
+    private boolean isService;
 
     public DataMetricsAdapter() {
         this.dataMetrics = new ArrayList<>();
@@ -33,7 +34,7 @@ public class DataMetricsAdapter extends RecyclerView.Adapter<DataMetricsViewHold
 
     @Override
     public void onBindViewHolder(@NonNull DataMetricsViewHolder holder, int position) {
-        holder.bind(dataMetrics.get(position));
+        holder.bind(dataMetrics.get(position), isService);
     }
 
     @Override
@@ -41,7 +42,8 @@ public class DataMetricsAdapter extends RecyclerView.Adapter<DataMetricsViewHold
         return dataMetrics.size();
     }
 
-    public void setDataMetrics(List<CardItem> dataMetrics) {
+    public void setDataMetrics(List<CardItem> dataMetrics, boolean isService) {
         this.dataMetrics = dataMetrics;
+        this.isService = isService;
     }
 }

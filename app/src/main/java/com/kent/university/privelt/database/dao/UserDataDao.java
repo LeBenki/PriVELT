@@ -21,8 +21,8 @@ public interface UserDataDao {
     @Query("DELETE FROM user_data WHERE service_id = :serviceId")
     void deleteUserDatasForAService(long serviceId);
 
-    @Query("SELECT * FROM user_data WHERE service_id = :serviceId")
-    LiveData<List<UserData>> getUserDatasForAService(long serviceId);
+    @Query("SELECT * FROM user_data WHERE service_id = :serviceId and type =:type")
+    LiveData<List<UserData>> getUserDatasForAServiceAndType(long serviceId, String type);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertUserDatas(UserData... userData);

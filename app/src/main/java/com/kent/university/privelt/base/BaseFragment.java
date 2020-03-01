@@ -1,9 +1,12 @@
 package com.kent.university.privelt.base;
 
+import android.view.MenuItem;
+
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.api.PasswordManager;
 import com.kent.university.privelt.api.ServiceHelper;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 public class BaseFragment extends Fragment {

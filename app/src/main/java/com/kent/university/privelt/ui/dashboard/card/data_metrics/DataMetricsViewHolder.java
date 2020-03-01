@@ -26,13 +26,13 @@ public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
         ButterKnife.bind(this, itemView);
     }
 
-    public void bind(CardItem cardItem) {
+    public void bind(CardItem cardItem, boolean isService) {
         metrics.setText(cardItem.getNumber() < 98 ? String.valueOf(cardItem.getNumber()) : String.valueOf(99));
-        try {
+        if (!isService) {
             UserDataType userDataType = UserDataType.valueOf(cardItem.getName().toUpperCase());
             type.setImageResource(userDataType.getRes());
         }
-        catch (IllegalArgumentException exception) {
+        else {
             PriVELT priVELT = (PriVELT) type.getContext().getApplicationContext();
             type.setImageResource(priVELT.getServiceHelper().getResIdWithName(cardItem.getName()));
         }

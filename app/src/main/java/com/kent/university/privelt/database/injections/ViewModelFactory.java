@@ -3,6 +3,7 @@ package com.kent.university.privelt.database.injections;
 import com.kent.university.privelt.repositories.CurrentUserDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
+import com.kent.university.privelt.ui.detailed.DetailedCardViewModel;
 import com.kent.university.privelt.ui.risk_value.RiskValueViewModel;
 import com.kent.university.privelt.ui.dashboard.card.CardViewModel;
 import com.kent.university.privelt.ui.dashboard.user.UserViewModel;
@@ -40,8 +41,9 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
             }
             else if (DataViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(UserDataRepository.class,
+                        ServiceDataRepository.class,
                         Executor.class)
-                        .newInstance(mUserDataSource, mExecutor);
+                        .newInstance(mUserDataSource, mServiceDataSource, mExecutor);
             }
             else if (RiskValueViewModel.class.equals(modelClass)) {
                 return modelClass.getConstructor(ServiceDataRepository.class,
@@ -52,6 +54,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
                 return modelClass.getConstructor(CurrentUserDataRepository.class,
                         Executor.class)
                         .newInstance(mCurrentUserDataRepository, mExecutor);
+            }
+            else if (DetailedCardViewModel.class.equals(modelClass)) {
+                return modelClass.getConstructor(UserDataRepository.class,
+                        Executor.class)
+                        .newInstance(mUserDataSource, mExecutor);
             }
             else
                 throw new IllegalArgumentException("Unknown ViewModel class");
