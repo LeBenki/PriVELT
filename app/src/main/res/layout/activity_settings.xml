@@ -20,4 +20,10 @@
         android:layout_gravity="center_horizontal"
         android:text="@string/log_out"/>
 
+    <Button
+        android:id="@+id/drive"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Save data on Google Drive"/>
 </LinearLayout>
