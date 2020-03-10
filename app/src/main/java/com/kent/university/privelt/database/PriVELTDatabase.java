@@ -1,7 +1,9 @@
 package com.kent.university.privelt.database;
 
 import android.content.Context;
+import android.util.Log;
 
+import com.commonsware.cwac.saferoom.SQLCipherUtils;
 import com.commonsware.cwac.saferoom.SafeHelperFactory;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.database.dao.CurrentUserDao;
@@ -36,6 +38,9 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                             .fallbackToDestructiveMigration()
                             .openHelperFactory(factory)
                             .build();
+
+
+                    Log.d("LUCAS", String.valueOf(SQLCipherUtils.getDatabaseState(context, PriVELTDatabaseName)));
                 }
             }
         }

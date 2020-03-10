@@ -9,7 +9,7 @@ import com.kent.university.privelt.api.ServiceHelper;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-public class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     protected PasswordManager getIdentityManager() {
         return ((PriVELT) getContext().getApplicationContext()).getIdentityManager();

@@ -3,7 +3,7 @@ package com.kent.university.privelt.ui.master_password;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,7 +16,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.kent.university.privelt.R;
-import com.kent.university.privelt.base.BaseActivity;
+import com.kent.university.privelt.base.GoogleDriveActivity;
+import com.kent.university.privelt.base.GoogleDriveListener;
 import com.kent.university.privelt.database.PriVELTDatabase;
 import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.utils.PasswordChecker;
@@ -26,10 +27,8 @@ import com.nulabinc.zxcvbn.Zxcvbn;
 import static com.kent.university.privelt.ui.settings.SettingsActivity.ARG_CHANGE_PASSWORD;
 import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
-public class MasterPasswordActivity extends BaseActivity implements View.OnClickListener, TextWatcher {
+public class MasterPasswordActivity extends GoogleDriveActivity implements View.OnClickListener, TextWatcher {
 
-    private static final String KEY_MASTER_PASSWORD_ALREADY_GIVEN = "KEY_MASTER_PASSWORD_ALREADY_GIVEN";
-    private static final String KEY_SP = "KEY_SP";
     private Zxcvbn zxcvbn;
 
     private boolean changePassword;
@@ -67,7 +66,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @BindView(R.id.eye_confirm_password)
     ImageView eyeConfirm;
 
-    private SharedPreferences mSharedPreferences;
     private boolean masterPasswordAlreadyGiven;
 
     @Override
@@ -92,14 +90,22 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
         setTitle("");
 
         if (changePassword) {
-            reset.setVisibility(View.GONE);
+
             start.setText(getString(R.string.change_master_password));
         }
         else
             getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
-        mSharedPreferences = getSharedPreferences(KEY_SP, MODE_PRIVATE);
-        masterPasswordAlreadyGiven = mSharedPreferences.getBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false);
+        masterPasswordAlreadyGiven = getDatabasePath(PriVELTDatabase.PriVELTDatabaseName).exists();
+
+        if (!masterPasswordAlreadyGiven) {
+            reset.setText(R.string.import_your_data);
+            onDataImported();
+        }
+        else {
+            reset.setText(R.string.reset_data);
+            resetMasterPassword();
+        }
 
         if (!(changePassword || !masterPasswordAlreadyGiven)) {
             passwordMeter.setVisibility(View.GONE);
@@ -107,13 +113,42 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
             confirmPassword.setVisibility(View.GONE);
             eyeConfirm.setVisibility(View.GONE);
         }
-        else {
-            reset.setVisibility(View.GONE);
-        }
-        resetMasterPassword();
 
         configureEye(eye, password);
         configureEye(eyeConfirm, confirmPassword);
+
+        listener = new GoogleDriveListener() {
+            @Override
+            public void onSaveSuccess(String fileId) {
+
+            }
+
+            @Override
+            public void onDownloadSuccess() {
+                Toast.makeText(MasterPasswordActivity.this, R.string.data_imported_correctly, Toast.LENGTH_LONG).show();
+                progressBar.setVisibility(View.GONE);
+                reset.setEnabled(true);
+                start.setEnabled(true);
+
+                passwordMeter.setVisibility(View.GONE);
+                hint.setVisibility(View.GONE);
+                confirmPassword.setVisibility(View.GONE);
+
+                eyeConfirm.setVisibility(View.GONE);
+                reset.setText(R.string.reset_data);
+                resetMasterPassword();
+            }
+
+            @Override
+            public void onSaveFailure() {
+
+            }
+
+            @Override
+            public void onDownloadFailure() {
+                Toast.makeText(MasterPasswordActivity.this, R.string.error_occurred, Toast.LENGTH_LONG).show();
+            }
+        };
     }
 
     @Override
@@ -134,7 +169,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
-                            mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, false).apply();
                             masterPasswordAlreadyGiven = false;
                             changePassword = false;
                             MasterPasswordActivity.this.deleteDatabase(PriVELTDatabase.PriVELTDatabaseName);
@@ -151,8 +185,10 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                             passwordMeter.setVisibility(View.VISIBLE);
                             hint.setVisibility(View.VISIBLE);
                             confirmPassword.setVisibility(View.VISIBLE);
-                            reset.setVisibility(View.GONE);
+
                             eyeConfirm.setVisibility(View.VISIBLE);
+                            reset.setText(R.string.import_your_data);
+                            onDataImported();
 
                             Toast.makeText(MasterPasswordActivity.this, R.string.reset_done, Toast.LENGTH_LONG).show();
                         }
@@ -188,8 +224,6 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
                     if (changePassword) {
                         MasterPasswordActivity.this.getIdentityManager().changePassword(password);
                     }
-                    if (!masterPasswordAlreadyGiven)
-                        mSharedPreferences.edit().putBoolean(KEY_MASTER_PASSWORD_ALREADY_GIVEN, true).apply();
                     masterPasswordAlreadyGiven = true;
                     return true;
                 }
@@ -239,6 +273,23 @@ public class MasterPasswordActivity extends BaseActivity implements View.OnClick
     @Override
     public void afterTextChanged(Editable editable) {
         updatePasswordStrengthView(editable.toString());
+    }
+
+    public void onDataImported() {
+        reset.setOnClickListener(v -> {
+            AlertDialog.Builder alert = new AlertDialog.Builder(this);
+            final EditText edittext = new EditText(this);
+            edittext.setTextColor(Color.parseColor("#000000"));
+            alert.setTitle(R.string.enter_file_id);
+
+            alert.setView(edittext);
+
+            alert.setPositiveButton(R.string.yes, (dialog, whichButton) -> {
+                googleDriveConnection(PROCESS_DOWNLOAD, edittext.getText().toString());
+            });
+
+            alert.show();
+        });
     }
 
     private void updatePasswordStrengthView(String password) {

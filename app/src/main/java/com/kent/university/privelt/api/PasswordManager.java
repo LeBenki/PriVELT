@@ -9,10 +9,7 @@ public class PasswordManager {
     private Editable password;
 
     public Editable getPassword() {
-        if (password != null)
-            return Editable.Factory.getInstance().newEditable(password);
-        else
-            return null;
+        return password;
     }
 
     public void setPassword(Editable password) {

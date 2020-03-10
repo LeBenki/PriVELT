@@ -25,5 +25,17 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="Save data on Google Drive"/>
+        android:text="@string/save_data_on_google_drive"/>
+
+
+    <EditText
+        android:id="@+id/fileId"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:hint="@string/here_will_be_the_file_id"
+        android:cursorVisible="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"/>
+
 </LinearLayout>
