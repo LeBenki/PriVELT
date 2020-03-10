@@ -16,6 +16,7 @@ import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
 import com.kent.university.privelt.events.DetailedCardEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Card;
+import com.kent.university.privelt.model.CardItem;
 import com.kent.university.privelt.ui.dashboard.card.data_metrics.DataMetricsAdapter;
 import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
 import com.kent.university.privelt.utils.UserDataType;
@@ -87,9 +88,13 @@ class CardViewHolder extends RecyclerView.ViewHolder {
 
         watchIcon.setColorFilter(card.isWatched() ? itemView.getContext().getResources().getColor(R.color.colorAccent) : itemView.getContext().getResources().getColor(android.R.color.black));
 
+        int total = 0;
+        for (CardItem item : card.getMetrics())
+            total += item.getNumber();
+
         if (card.getMetrics().size() != 0) {
             //TODO: 200 HARDCODED (MAX DATA)
-            riskProgress.setProgress(card.getMetrics().size() * 100 / 200);
+            riskProgress.setProgress(total * 100 / 200);
             riskProgress.setOnClickListener((v) -> {
                 Intent intent = new Intent(riskProgress.getContext(), RiskValueActivity.class);
                 intent.putExtra(PARAM_SERVICE, card.getTitle());
@@ -97,7 +102,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
             });
             metrics.setVisibility(View.VISIBLE);
             totalMetrics.setVisibility(View.VISIBLE);
-            totalMetrics.setText(String.valueOf(card.getMetrics().size() < 99 ? card.getMetrics().size() : 99));
+            totalMetrics.setText(String.valueOf(Math.min(total, 99)));
             dataMetricsAdapter.setDataMetrics(card.getMetrics(), !card.isService());
             dataMetricsAdapter.notifyDataSetChanged();
         }
