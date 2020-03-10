@@ -40,13 +40,9 @@ public abstract class GoogleDriveActivity extends BaseActivity {
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
 
-        Log.d("LUCAS", "1");
         if (account == null) {
-            Log.d("LUCAS", "1.5");
             requestSignIn();
         } else {
-            Log.d("LUCAS", "2");
-
             GoogleAccountCredential credential =
                     GoogleAccountCredential.usingOAuth2(
                             this, Collections.singleton(DriveScopes.DRIVE_FILE));
@@ -76,7 +72,6 @@ public abstract class GoogleDriveActivity extends BaseActivity {
     }
 
     private void saveOrDownloadFile() {
-        Log.d("LUCAS", "3");
         if (process == PROCESS_SAVE)
         mDriveServiceHelper.uploadFile(getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), null)
                 .addOnSuccessListener(s -> listener.onSaveSuccess(s))
@@ -88,7 +83,6 @@ public abstract class GoogleDriveActivity extends BaseActivity {
     }
 
     private void handleSignInResult(Intent result) {
-        Log.d("LUCAS", "3.5");
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener(googleAccount -> {
                     GoogleAccountCredential credential =
@@ -111,11 +105,8 @@ public abstract class GoogleDriveActivity extends BaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
-        Log.d("LUCAS", "3.2");
         if (requestCode == REQUEST_CODE_SIGN_IN) {
-            Log.d("LUCAS", "3.3");
             if (resultCode == Activity.RESULT_OK && resultData != null) {
-                Log.d("LUCAS", "3.4");
                 handleSignInResult(resultData);
             }
         }

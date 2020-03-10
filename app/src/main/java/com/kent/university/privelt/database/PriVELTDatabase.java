@@ -38,9 +38,6 @@ public abstract class PriVELTDatabase extends RoomDatabase {
                             .fallbackToDestructiveMigration()
                             .openHelperFactory(factory)
                             .build();
-
-
-                    Log.d("LUCAS", String.valueOf(SQLCipherUtils.getDatabaseState(context, PriVELTDatabaseName)));
                 }
             }
         }
