@@ -23,6 +23,7 @@ import com.kent.university.privelt.utils.UserDataType;
 
 import org.greenrobot.eventbus.EventBus;
 
+import static com.kent.university.privelt.ui.risk_value.RiskValueActivity.PARAM_DATA;
 import static com.kent.university.privelt.ui.risk_value.RiskValueActivity.PARAM_SERVICE;
 
 class CardViewHolder extends RecyclerView.ViewHolder {
@@ -97,7 +98,10 @@ class CardViewHolder extends RecyclerView.ViewHolder {
             riskProgress.setProgress(total * 100 / 200);
             riskProgress.setOnClickListener((v) -> {
                 Intent intent = new Intent(riskProgress.getContext(), RiskValueActivity.class);
-                intent.putExtra(PARAM_SERVICE, card.getTitle());
+                if (card.isService())
+                    intent.putExtra(PARAM_SERVICE, card.getTitle());
+                else
+                    intent.putExtra(PARAM_DATA, card.getTitle());
                 riskProgress.getContext().startActivity(intent);
             });
             metrics.setVisibility(View.VISIBLE);

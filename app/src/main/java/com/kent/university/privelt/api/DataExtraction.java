@@ -32,7 +32,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Executors;
 
 import static com.kent.university.privelt.database.injections.Injection.provideServiceDataSource;
 import static com.kent.university.privelt.database.injections.Injection.provideSettingsDataSource;
