@@ -170,8 +170,7 @@ public class DataExtraction {
                         service.getId());
                 array.add(userData);
             }
-        } catch (Exception e) {
-            Log.d("LUCAS", e.getMessage());
+        } catch (Exception ignored) {
         }
         return array;
     }

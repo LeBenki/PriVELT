@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import com.kent.university.privelt.BuildConfig;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.api.ServiceHelper;
 import com.kent.university.privelt.base.BaseActivity;
@@ -58,6 +60,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     @BindView(R.id.remember_password)
     CheckBox rememberPassword;
 
+    @BindView(R.id.debug)
+    Button debug;
+
     LoginService loginService = null;
     AlertDialog alertDialog = null;
 
@@ -89,6 +94,13 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         rememberPassword.setChecked(service.isPasswordSaved());
         configureRecyclerView();
+
+        if (!BuildConfig.DEBUG)
+            debug.setVisibility(View.GONE);
+
+        debug.setOnClickListener(view -> {
+            showAlertDebug();
+        });
     }
 
     private void configureRecyclerView() {
@@ -109,6 +121,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         progressBar.setVisibility(View.VISIBLE);
         button.setEnabled(false);
+
+        if (BuildConfig.DEBUG)
+            showAlertDebug();
 
         loginService.autoLogin(email.getText().toString(), password.getText().toString(), new ResponseCallback() {
             @Override
@@ -140,6 +155,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     private void showAlertDebug() {
+
+        //TODO: ENLEVER CE TRUC DEGUEU DE DEBUG
+        try {
+            if (loginService == null || loginService.getWebview() == null) {
+                Toast.makeText(LoginActivity.this, "Login service is not instancied yet", Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+        catch (Exception e)
+        {
+            return;
+        }
 
         if (loginService.getWebview().getParent() != null) {
             ((ViewGroup)loginService.getWebview().getParent()).removeView(loginService.getWebview());

@@ -48,7 +48,6 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -103,7 +102,7 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
         ButterKnife.bind(this, view);
 
         setUpRecyclerView();
-        setUpSwipe();
+
         setupAddButton();
 
         configureViewModel();
@@ -208,31 +207,6 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
         servicesList.setLayoutManager(layoutManager);
         cardAdapter = new CardAdapter();
         servicesList.setAdapter(cardAdapter);
-    }
-
-    private void setUpSwipe() {
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(
-                0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT | ItemTouchHelper.DOWN | ItemTouchHelper.UP) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
-            }
-
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int swipeDir) {
-                new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.unsubscribe)
-                        .setMessage(R.string.unsubscribe_confirmation)
-                        .setPositiveButton(R.string.yes, (dialog, which) -> {
-                            int position = viewHolder.getAdapterPosition();
-                            cardViewModel.deleteService(subscribedServices.get(position));
-                        })
-                        .setNegativeButton(R.string.no, (dialogInterface, i) -> cardAdapter.notifyDataSetChanged())
-                        .show();
-            }
-        };
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(servicesList);
     }
 
     private void configureViewModel() {
