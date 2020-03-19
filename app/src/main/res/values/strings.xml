@@ -58,7 +58,7 @@
     <!--MasterPasswordActivity -->
     <string name="reset_confirmation">Resetting all your stored data</string>
     <string name="process_confirmation">Are you sure you want to proceed?</string>
-    <string name="reset_done">All your data has been deleted please enter a new master password</string>
+    <string name="reset_done">All your data has been deleted you should restart the application</string>
     <string name="different_password">Passwords are not the same</string>
     <string name="not_respect_policy">You did not respect the password policy</string>
     <string name="wrong_password">Wrong password, you can reset all your data to enter a new password</string>
