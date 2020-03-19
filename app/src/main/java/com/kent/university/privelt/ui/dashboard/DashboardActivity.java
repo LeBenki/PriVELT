@@ -141,4 +141,8 @@ public class DashboardActivity extends GoogleDriveActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+    }
 }

@@ -6,7 +6,6 @@ import android.util.Log;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.Tasks;
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
 import com.google.api.client.json.gson.GsonFactory;
@@ -71,24 +70,22 @@ public class DataExtraction {
 
                 List<Service> serviceList = serviceDataRepository.getAllServices();
                 List<Service> oldServices = cloneList(serviceList);
-                for (Service service : serviceList) {
-                    service.setPassword("");
-                    service.setUser("");
-                    service.setPasswordSaved(false);
-                    serviceDataRepository.updateServices(service);
+                for (int i = 0; i < serviceList.size(); i++) {
+                    serviceList.get(i).setPassword("");
+                    serviceList.get(i).setUser("");
+                    serviceList.get(i).setPasswordSaved(false);
+                    serviceDataRepository.updateServices(serviceList.get(i));
                 }
-                mDriveServiceHelper.uploadFile(PriVELT.getInstance().getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), settings.getGoogleDriveFileID()).addOnSuccessListener(s -> {
-                    Tasks.call(Executors.newSingleThreadExecutor(), () -> {
-                        for (Service service : oldServices)
-                            serviceDataRepository.updateServices(service);
+                String s = mDriveServiceHelper.uploadFile(PriVELT.getInstance().getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), settings.getGoogleDriveFileID());
+                for (Service service : oldServices)
+                    serviceDataRepository.updateServices(service);
 
-                        settings.setGoogleDriveFileID(s);
-                        settingsDataRepository.updateSettings(settings);
-                        return null;
-                    });
-                });
+                settings.setGoogleDriveFileID(s);
+                settingsDataRepository.updateSettings(settings);
+
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, "Google drive saved");
+
             }
             catch (Exception ignored) {
 

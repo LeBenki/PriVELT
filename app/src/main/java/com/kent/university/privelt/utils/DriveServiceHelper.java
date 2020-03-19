@@ -21,9 +21,7 @@ public class DriveServiceHelper {
         mDriveService = driveService;
     }
 
-    public Task<String> uploadFile(final java.io.File localFile, String fileId) {
-        return Tasks.call(mExecutor, () -> {
-
+    public String uploadFile(final java.io.File localFile, String fileId) {
             File fileMetadata = new File();
             fileMetadata.setName(localFile.getName());
             FileContent mediaContent = new FileContent("image/jpeg", localFile);
@@ -41,7 +39,6 @@ public class DriveServiceHelper {
                 e.printStackTrace();
             }
             return file.getId();
-        });
     }
 
     public Task<Void> downloadFile(String fileId, String path) {
