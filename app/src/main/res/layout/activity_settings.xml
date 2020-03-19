@@ -1,41 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:orientation="vertical"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="100dp"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:layout_height="100dp"
+                android:src="@drawable/drive_logo" />
+
+            <Switch
+                android:id="@+id/drive"
+                android:layout_width="wrap_content"
+                android:layout_toRightOf="@id/logo"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal"
+                android:text="@string/save_data_on_google_drive" />
+
+            <EditText
+                android:id="@+id/fileId"
+                android:layout_width="match_parent"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/logo"
+                android:focusableInTouchMode="false"
+                android:hint="@string/here_will_be_the_file_id" />
+
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
     <Button
-        android:layout_marginTop="20dp"
         android:id="@+id/change_password"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text="@string/change_master_password"/>
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/button"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="@string/change_master_password"
+        android:textAllCaps="false"
+        android:textColor="#FE5295"
+        android:textSize="17sp" />
 
     <Button
         android:id="@+id/logout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="@dimen/activity_vertical_margin"
         android:layout_marginBottom="8dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/log_out"/>
+        android:background="@drawable/button"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:padding="@dimen/activity_vertical_margin"
+        android:text="@string/log_out"
+        android:textAllCaps="false"
+        android:textColor="#FE5295"
+        android:textSize="17sp" />
 
-    <Button
-        android:id="@+id/drive"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/save_data_on_google_drive"/>
-
-
-    <EditText
-        android:id="@+id/fileId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:hint="@string/here_will_be_the_file_id"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"/>
 
 </LinearLayout>

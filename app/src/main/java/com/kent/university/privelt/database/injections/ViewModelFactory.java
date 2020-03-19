@@ -2,12 +2,14 @@ package com.kent.university.privelt.database.injections;
 
 import com.kent.university.privelt.repositories.CurrentUserDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
+import com.kent.university.privelt.repositories.SettingsDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
 import com.kent.university.privelt.ui.detailed.DetailedCardViewModel;
 import com.kent.university.privelt.ui.risk_value.RiskValueViewModel;
 import com.kent.university.privelt.ui.dashboard.card.CardViewModel;
 import com.kent.university.privelt.ui.dashboard.user.UserViewModel;
 import com.kent.university.privelt.ui.data.DataViewModel;
+import com.kent.university.privelt.ui.settings.SettingsViewModel;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Executor;
@@ -20,12 +22,14 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
     private final UserDataRepository mUserDataSource;
     private final ServiceDataRepository mServiceDataSource;
     private final CurrentUserDataRepository mCurrentUserDataRepository;
+    private final SettingsDataRepository mSettingsDataSource;
     private final Executor mExecutor;
 
-    ViewModelFactory(UserDataRepository userDataSource, ServiceDataRepository serviceSource, CurrentUserDataRepository currentUserDataRepository, Executor executor) {
+    ViewModelFactory(UserDataRepository userDataSource, ServiceDataRepository serviceSource, CurrentUserDataRepository currentUserDataRepository, SettingsDataRepository settingsSource, Executor executor) {
         mUserDataSource = userDataSource;
         mServiceDataSource = serviceSource;
         mCurrentUserDataRepository = currentUserDataRepository;
+        mSettingsDataSource = settingsSource;
         mExecutor = executor;
     }
 
@@ -59,6 +63,11 @@ public class ViewModelFactory implements ViewModelProvider.Factory {
                 return modelClass.getConstructor(UserDataRepository.class,
                         Executor.class)
                         .newInstance(mUserDataSource, mExecutor);
+            }
+            else if (SettingsViewModel.class.equals(modelClass)) {
+                return modelClass.getConstructor(SettingsDataRepository.class,
+                        Executor.class)
+                        .newInstance(mSettingsDataSource, mExecutor);
             }
             else
                 throw new IllegalArgumentException("Unknown ViewModel class");

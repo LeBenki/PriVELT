@@ -118,10 +118,6 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
         configureEye(eyeConfirm, confirmPassword);
 
         listener = new GoogleDriveListener() {
-            @Override
-            public void onSaveSuccess(String fileId) {
-
-            }
 
             @Override
             public void onDownloadSuccess() {
@@ -137,11 +133,6 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
                 eyeConfirm.setVisibility(View.GONE);
                 reset.setText(R.string.reset_data);
                 resetMasterPassword();
-            }
-
-            @Override
-            public void onSaveFailure() {
-
             }
 
             @Override
@@ -285,7 +276,7 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
             alert.setView(edittext);
 
             alert.setPositiveButton(R.string.yes, (dialog, whichButton) -> {
-                googleDriveConnection(PROCESS_DOWNLOAD, edittext.getText().toString());
+                googleDriveConnectionAndDownload(true, edittext.getText().toString());
             });
 
             alert.show();

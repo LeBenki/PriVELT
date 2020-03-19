@@ -8,14 +8,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.Toast;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.GoogleDriveActivity;
 import com.kent.university.privelt.base.GoogleDriveListener;
+import com.kent.university.privelt.database.injections.Injection;
+import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.model.Settings;
 import com.kent.university.privelt.ui.master_password.MasterPasswordActivity;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -30,10 +35,14 @@ public class SettingsActivity extends GoogleDriveActivity {
     Button logout;
 
     @BindView(R.id.drive)
-    Button drive;
+    Switch drive;
 
     @BindView(R.id.fileId)
     EditText fileId;
+
+    SettingsViewModel settingsViewModel;
+
+    private Settings settings;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,29 +68,12 @@ public class SettingsActivity extends GoogleDriveActivity {
                 .setNegativeButton(R.string.no, null)
                 .show());
 
-        listener = new GoogleDriveListener() {
-            @Override
-            public void onSaveSuccess(String fileId) {
-                SettingsActivity.this.fileId.setText(fileId);
-            }
-
-            @Override
-            public void onDownloadSuccess() {
-
-            }
-
-            @Override
-            public void onSaveFailure() {
-                Toast.makeText(SettingsActivity.this, "An error occurred", Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onDownloadFailure() {
-
-            }
-        };
-
-        drive.setOnClickListener(v -> googleDriveConnection(PROCESS_SAVE, ""));
+        drive.setOnCheckedChangeListener((compoundButton, b) -> {
+            settings.setGoogleDriveAutoSave(b);
+            if (b)
+                googleDriveConnection();
+            settingsViewModel.updateSettings(settings);
+        });
 
         fileId.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -89,5 +81,26 @@ public class SettingsActivity extends GoogleDriveActivity {
             clipboard.setPrimaryClip(clip);
             Toast.makeText(SettingsActivity.this, "Text copied to clipboard", Toast.LENGTH_LONG).show();
         });
+
+        configureViewModel();
+        getSettings();
+    }
+
+    private void getSettings() {
+        settingsViewModel.getSettings().observe(this, this::updateSettings);
+    }
+
+    private void updateSettings(Settings settings) {
+        this.settings = settings;
+        if (settings == null)
+            this.settings = new Settings(false, "");
+        drive.setChecked(this.settings.isGoogleDriveAutoSave());
+        fileId.setText(this.settings.getGoogleDriveFileID());
+    }
+
+    private void configureViewModel() {
+        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
+        settingsViewModel = ViewModelProviders.of(this, viewModelFactory).get(SettingsViewModel.class);
+        settingsViewModel.init();
     }
 }

@@ -2,11 +2,12 @@ package com.kent.university.privelt.model;
 
 import java.io.Serializable;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "service")
-public class Service implements Serializable {
+public class Service implements Serializable, Cloneable {
 
     public final static String DELIMITER = "@/:-";
 
@@ -81,5 +82,13 @@ public class Service implements Serializable {
 
     public String getConcatenatedScripts() {
         return concatenatedScripts;
+    }
+
+    @NonNull
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        Service service = new Service(name, isPasswordSaved, concatenatedScripts, user, password);
+        service.setId(id);
+        return service;
     }
 }

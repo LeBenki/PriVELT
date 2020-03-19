@@ -11,7 +11,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.kent.university.privelt.R;
-import com.kent.university.privelt.base.BaseActivity;
+import com.kent.university.privelt.base.GoogleDriveActivity;
 import com.kent.university.privelt.service.ProcessMainClass;
 import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver;
 import com.kent.university.privelt.ui.dashboard.card.CardFragment;
@@ -25,7 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DashboardActivity extends BaseActivity {
+public class DashboardActivity extends GoogleDriveActivity {
 
     private ActionBar toolbar;
 
@@ -59,7 +59,6 @@ public class DashboardActivity extends BaseActivity {
                     this.startActivity(myIntent);
                 }).setNegativeButton(R.string.no, null);
                 alertDialog.show();
-                return;
             }
         }
     }

@@ -24,18 +24,17 @@ public abstract class GoogleDriveActivity extends BaseActivity {
 
     private static final int REQUEST_CODE_SIGN_IN = 1;
 
-    protected static final int PROCESS_SAVE = 2;
-    protected static final int PROCESS_DOWNLOAD = 3;
-
     private DriveServiceHelper mDriveServiceHelper;
 
     protected GoogleDriveListener listener;
 
-    protected int process = 0;
     protected String fileId = "";
 
-    protected void googleDriveConnection(int process, String fileId) {
-        this.process = process;
+    protected void googleDriveConnection() {
+        googleDriveConnectionAndDownload(false, "");
+    }
+
+    protected void googleDriveConnectionAndDownload(boolean download, String fileId) {
         this.fileId = fileId;
 
         GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
@@ -55,7 +54,8 @@ public abstract class GoogleDriveActivity extends BaseActivity {
                             .setApplicationName(getString(R.string.app_name))
                             .build();
             mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-            saveOrDownloadFile();
+            if (download)
+                downloadFile();
         }
     }
 
@@ -71,15 +71,10 @@ public abstract class GoogleDriveActivity extends BaseActivity {
         startActivityForResult(client.getSignInIntent(), REQUEST_CODE_SIGN_IN);
     }
 
-    private void saveOrDownloadFile() {
-        if (process == PROCESS_SAVE)
-        mDriveServiceHelper.uploadFile(getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), null)
-                .addOnSuccessListener(s -> listener.onSaveSuccess(s))
-                .addOnFailureListener(e -> listener.onSaveFailure());
-        else if (process == PROCESS_DOWNLOAD)
-            mDriveServiceHelper.downloadFile(fileId, getDatabasePath(PriVELTDatabase.PriVELTDatabaseName).getPath())
-                    .addOnSuccessListener(s -> listener.onDownloadSuccess())
-                    .addOnFailureListener(e -> listener.onDownloadFailure());
+    private void downloadFile() {
+        mDriveServiceHelper.downloadFile(fileId, getDatabasePath(PriVELTDatabase.PriVELTDatabaseName).getPath())
+                .addOnSuccessListener(s -> listener.onDownloadSuccess())
+                .addOnFailureListener(e -> listener.onDownloadFailure());
     }
 
     private void handleSignInResult(Intent result) {
@@ -98,7 +93,7 @@ public abstract class GoogleDriveActivity extends BaseActivity {
                                     .build();
 
                     mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-                    saveOrDownloadFile();
+                    downloadFile();
                 })
                 .addOnFailureListener(exception -> Log.e("TAG", "Unable to sign in.", exception));
     }

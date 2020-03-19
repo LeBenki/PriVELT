@@ -21,7 +21,7 @@ public class DriveServiceHelper {
         mDriveService = driveService;
     }
 
-    public Task<String> uploadFile(final java.io.File localFile, @Nullable final String folderId) {
+    public Task<String> uploadFile(final java.io.File localFile, String fileId) {
         return Tasks.call(mExecutor, () -> {
 
             File fileMetadata = new File();
@@ -29,9 +29,14 @@ public class DriveServiceHelper {
             FileContent mediaContent = new FileContent("image/jpeg", localFile);
             File file = null;
             try {
-                file = mDriveService.files().create(fileMetadata, mediaContent)
-                        .setFields("id")
-                        .execute();
+                if (fileId != null && !fileId.isEmpty())
+                    file = mDriveService.files().update(fileId, fileMetadata, mediaContent)
+                            .setFields("id")
+                            .execute();
+                else
+                    file = mDriveService.files().create(fileMetadata, mediaContent)
+                            .setFields("id")
+                            .execute();
             } catch (IOException e) {
                 e.printStackTrace();
             }

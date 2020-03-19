@@ -4,12 +4,24 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.tasks.Tasks;
+import com.google.api.client.extensions.android.http.AndroidHttp;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.client.json.gson.GsonFactory;
+import com.google.api.services.drive.DriveScopes;
 import com.kent.university.privelt.BuildConfig;
 import com.kent.university.privelt.PriVELT;
+import com.kent.university.privelt.R;
+import com.kent.university.privelt.database.PriVELTDatabase;
 import com.kent.university.privelt.model.Service;
+import com.kent.university.privelt.model.Settings;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
+import com.kent.university.privelt.repositories.SettingsDataRepository;
 import com.kent.university.privelt.repositories.UserDataRepository;
+import com.kent.university.privelt.utils.DriveServiceHelper;
 import com.kent.university.webviewautologin.response.ResponseCallback;
 import com.kent.university.webviewautologin.response.ResponseEnum;
 import com.kent.university.webviewautologin.services.LoginService;
@@ -19,15 +31,70 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import static com.kent.university.privelt.database.injections.Injection.provideServiceDataSource;
+import static com.kent.university.privelt.database.injections.Injection.provideSettingsDataSource;
 import static com.kent.university.privelt.database.injections.Injection.provideUserDataSource;
 import static com.kent.university.privelt.model.UserData.DELIMITER;
 
 public class DataExtraction {
 
     private static final String TAG = DataExtractor.class.getSimpleName();
+
+    private static void saveToGoogleDrive() {
+
+        ServiceDataRepository serviceDataRepository = provideServiceDataSource(PriVELT.getInstance());
+
+        SettingsDataRepository settingsDataRepository = provideSettingsDataSource(PriVELT.getInstance());
+
+        Settings settings = settingsDataRepository.getInstantSettings();
+
+        if (settings != null && settings.isGoogleDriveAutoSave()) {
+            try {
+                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(PriVELT.getInstance());
+
+                GoogleAccountCredential credential =
+                        GoogleAccountCredential.usingOAuth2(
+                                PriVELT.getInstance(), Collections.singleton(DriveScopes.DRIVE_FILE));
+                credential.setSelectedAccount(account.getAccount());
+                com.google.api.services.drive.Drive googleDriveService =
+                        new com.google.api.services.drive.Drive.Builder(
+                                AndroidHttp.newCompatibleTransport(),
+                                new GsonFactory(),
+                                credential)
+                                .setApplicationName(PriVELT.getInstance().getResources().getString(R.string.app_name))
+                                .build();
+                DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
+
+                List<Service> serviceList = serviceDataRepository.getAllServices();
+                List<Service> oldServices = cloneList(serviceList);
+                for (Service service : serviceList) {
+                    service.setPassword("");
+                    service.setUser("");
+                    service.setPasswordSaved(false);
+                    serviceDataRepository.updateServices(service);
+                }
+                mDriveServiceHelper.uploadFile(PriVELT.getInstance().getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), settings.getGoogleDriveFileID()).addOnSuccessListener(s -> {
+                    Tasks.call(Executors.newSingleThreadExecutor(), () -> {
+                        for (Service service : oldServices)
+                            serviceDataRepository.updateServices(service);
+
+                        settings.setGoogleDriveFileID(s);
+                        settingsDataRepository.updateSettings(settings);
+                        return null;
+                    });
+                });
+                if (BuildConfig.DEBUG)
+                    Log.d(TAG, "Google drive saved");
+            }
+            catch (Exception ignored) {
+
+            }
+        }
+    }
 
     public static void processExtractionForEachService(Context applicationContext) {
 
@@ -41,6 +108,12 @@ public class DataExtraction {
                 continue;
             processDataExtraction(serviceHelper, service, service.getUser(), service.getPassword(), applicationContext);
         }
+     }
+
+    private static List<Service> cloneList(List<Service> list) throws CloneNotSupportedException {
+        List<Service> clone = new ArrayList<>(list.size());
+        for (Service item : list) clone.add((Service) item.clone());
+        return clone;
     }
 
     public static void processDataExtraction(ServiceHelper serviceHelper, com.kent.university.privelt.model.Service service, String email, String password, Context applicationContext) {
@@ -74,6 +147,7 @@ public class DataExtraction {
                             for (UserData userData : allUserData)
                                 userDataRepository.insertUserDatas(userData);
 
+                            saveToGoogleDrive();
                         }
                     });
                 }

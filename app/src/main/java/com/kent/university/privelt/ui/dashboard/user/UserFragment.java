@@ -184,6 +184,8 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
     @Override
     public void afterTextChanged(EditText editText, Editable editable) {
         this.onFieldsAction((pair) -> {
+            if (currentUser == null)
+                return;
             String m = pair.first.getAnnotation(SetterMethod.class).method();
             for (final Method method : currentUser.getClass().getMethods()) {
                 if (method.getName().equalsIgnoreCase(m)) {
