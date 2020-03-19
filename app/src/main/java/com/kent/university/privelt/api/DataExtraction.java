@@ -130,11 +130,11 @@ public class DataExtraction {
                     dataExtractor.injectAll(((PriVELT)applicationContext).getCurrentActivity(), (jsonArray, status) -> {
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, status.toString());
-                        if (status.isFailed() || jsonArray == null)
-                            return;
-                        allUserData.addAll(parseJSON(jsonArray, service));
-                        if (BuildConfig.DEBUG)
-                            Log.d(TAG, jsonArray.toString());
+                        if (jsonArray != null) {
+                            allUserData.addAll(parseJSON(jsonArray, service));
+                            if (BuildConfig.DEBUG)
+                                Log.d(TAG, jsonArray.toString());
+                        }
                         if (status.isDone()) {
                             if (BuildConfig.DEBUG)
                                 Log.d(TAG, "LOGIN SERVICE:" + allUserData.size());
@@ -170,7 +170,8 @@ public class DataExtraction {
                         service.getId());
                 array.add(userData);
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            Log.d("LUCAS", e.getMessage());
         }
         return array;
     }

@@ -111,6 +111,8 @@ class CardViewHolder extends RecyclerView.ViewHolder {
             dataMetricsAdapter.notifyDataSetChanged();
         }
         else {
+            riskProgress.setProgress(0);
+            riskProgress.setOnClickListener(null);
             metrics.setVisibility(View.GONE);
             totalMetrics.setVisibility(View.GONE);
             riskProgress.setOnClickListener(null);
