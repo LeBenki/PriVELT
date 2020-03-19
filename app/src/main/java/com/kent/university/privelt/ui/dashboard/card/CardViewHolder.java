@@ -19,7 +19,7 @@ import com.kent.university.privelt.model.Card;
 import com.kent.university.privelt.model.CardItem;
 import com.kent.university.privelt.ui.dashboard.card.data_metrics.DataMetricsAdapter;
 import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
-import com.kent.university.privelt.utils.UserDataType;
+import com.university.kent.dataextractor.model.UserDataTypes;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -68,7 +68,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
             PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
             imageService.setImageResource(priVELT.getServiceHelper().getResIdWithName(card.getTitle()));
         } else {
-            UserDataType userDataType = UserDataType.valueOf(card.getTitle().toUpperCase());
+            UserDataTypes userDataType = UserDataTypes.valueOf(card.getTitle().toUpperCase());
             imageService.setImageResource(userDataType.getRes());
         }
 

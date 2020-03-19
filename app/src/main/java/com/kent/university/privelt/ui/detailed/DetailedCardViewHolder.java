@@ -1,7 +1,6 @@
 package com.kent.university.privelt.ui.detailed;
 
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,8 +8,8 @@ import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.LaunchListDataEvent;
 import com.kent.university.privelt.model.CardItem;
-import com.kent.university.privelt.utils.UserDataType;
 import com.kent.university.privelt.utils.sentence.SentenceAdapter;
+import com.university.kent.dataextractor.model.UserDataTypes;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -37,7 +36,7 @@ public class DetailedCardViewHolder extends RecyclerView.ViewHolder {
         text.setOnClickListener(view -> EventBus.getDefault().post(new LaunchListDataEvent(cardItem.getName())));
 
         if (!isService) {
-            UserDataType userDataType = UserDataType.valueOf(cardItem.getName().toUpperCase());
+            UserDataTypes userDataType = UserDataTypes.valueOf(cardItem.getName().toUpperCase());
             imageView.setImageResource(userDataType.getRes());
         }
         else {

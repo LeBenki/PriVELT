@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.model.UserData;
-import com.kent.university.privelt.utils.UserDataType;
+import com.university.kent.dataextractor.model.UserDataTypes;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -39,7 +39,7 @@ public class DataViewHolder extends RecyclerView.ViewHolder {
         value.setText(userData.getValue());
         concatenatedData.setText(TextUtils.join("\n", userData.getUnConcatenatedData()));
 
-        UserDataType userDataType = UserDataType.valueOf(userData.getType().toUpperCase());
+        UserDataTypes userDataType = UserDataTypes.valueOf(userData.getType().toUpperCase());
         icon.setImageResource(userDataType.getRes());
     }
 }

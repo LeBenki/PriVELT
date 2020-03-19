@@ -13,8 +13,8 @@ import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.events.LaunchListDataEvent;
 import com.kent.university.privelt.model.Card;
 import com.kent.university.privelt.ui.data.DataActivity;
-import com.kent.university.privelt.utils.UserDataType;
 import com.kent.university.privelt.utils.sentence.SentenceAdapter;
+import com.university.kent.dataextractor.model.UserDataTypes;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -74,7 +74,7 @@ public class DetailedCardActivity extends BaseActivity {
             overallRisk.setText(SentenceAdapter.adapt(getResources().getString(R.string.overall_risk), "High"));
 
         if(!card.isService()) {
-            UserDataType userDataType = UserDataType.valueOf(card.getTitle().toUpperCase());
+            UserDataTypes userDataType = UserDataTypes.valueOf(card.getTitle().toUpperCase());
             logo.setImageResource(userDataType.getRes());
         }
         else {

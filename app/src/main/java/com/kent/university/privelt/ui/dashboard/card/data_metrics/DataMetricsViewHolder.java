@@ -11,7 +11,7 @@ import butterknife.ButterKnife;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.model.CardItem;
-import com.kent.university.privelt.utils.UserDataType;
+import com.university.kent.dataextractor.model.UserDataTypes;
 
 public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
 
@@ -29,7 +29,7 @@ public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
     public void bind(CardItem cardItem, boolean isService) {
         metrics.setText(cardItem.getNumber() < 98 ? String.valueOf(cardItem.getNumber()) : String.valueOf(99));
         if (!isService) {
-            UserDataType userDataType = UserDataType.valueOf(cardItem.getName().toUpperCase());
+            UserDataTypes userDataType = UserDataTypes.valueOf(cardItem.getName().toUpperCase());
             type.setImageResource(userDataType.getRes());
         }
         else {
