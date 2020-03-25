@@ -12,8 +12,8 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.events.LaunchListDataEvent;
 import com.kent.university.privelt.model.Card;
+import com.kent.university.privelt.model.CardItem;
 import com.kent.university.privelt.ui.data.DataActivity;
-import com.kent.university.privelt.utils.sentence.SentenceAdapter;
 import com.university.kent.dataextractor.model.UserDataTypes;
 
 import org.greenrobot.eventbus.EventBus;
@@ -46,8 +46,8 @@ public class DetailedCardActivity extends BaseActivity {
     @BindView(R.id.title)
     TextView title;
 
-    @BindView(R.id.overall_risk)
-    TextView overallRisk;
+    @BindView(R.id.risk_progress)
+    ProgressBar overallRisk;
 
     private DetailedCardAdapter detailedCardAdapter;
 
@@ -66,12 +66,11 @@ public class DetailedCardActivity extends BaseActivity {
 
         title.setText(card.getTitle());
 
-        if (card.getMetrics().size() < 20)
-            overallRisk.setText(SentenceAdapter.adapt(getResources().getString(R.string.overall_risk), "Low"));
-        else if (card.getMetrics().size() < 60)
-            overallRisk.setText(SentenceAdapter.adapt(getResources().getString(R.string.overall_risk), "Medium"));
-        else
-            overallRisk.setText(SentenceAdapter.adapt(getResources().getString(R.string.overall_risk), "High"));
+        int progress = 0;
+        for (CardItem cardItem : card.getMetrics())
+            progress += cardItem.getNumber();
+
+        overallRisk.setProgress(progress * 100 / 200);
 
         if(!card.isService()) {
             UserDataTypes userDataType = UserDataTypes.valueOf(card.getTitle().toUpperCase());

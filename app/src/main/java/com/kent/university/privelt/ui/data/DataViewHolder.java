@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.kent.university.privelt.utils.sentence.SentenceAdapter.capitaliseFirstLetter;
+
 public class DataViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.title)
@@ -35,7 +37,7 @@ public class DataViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(UserData userData) {
-        title.setText(userData.getType());
+        title.setText(capitaliseFirstLetter(userData.getType()));
         value.setText(userData.getValue());
         concatenatedData.setText(TextUtils.join("\n", userData.getUnConcatenatedData()));
 

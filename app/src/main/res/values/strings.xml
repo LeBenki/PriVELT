@@ -96,4 +96,5 @@
     <string name="error_occurred">An error occurred</string>
     <string name="data_imported_correctly">Your data has been imported correctly</string>
     <string name="enter_file_id">Enter your file id</string>
+    <string name="logged_with">Logged as %1$s</string>
 </resources>

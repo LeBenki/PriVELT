@@ -25,20 +25,35 @@
             android:textSize="25sp" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/overall_risk"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/risk_layout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_horizontal_margin"
-        android:textStyle="bold"
-        android:textSize="20sp"
-        android:text="@string/overall_risk" />
+        android:layout_below="@id/image_service"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+            android:text="@string/privacy_value_risk" />
+
+        <ProgressBar
+            android:id="@+id/risk_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+            android:progress="0" />
+    </LinearLayout>
 
     <TextView
         android:layout_margin="@dimen/activity_horizontal_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/data_explained" />
+
 
     <RelativeLayout
         android:layout_width="match_parent"

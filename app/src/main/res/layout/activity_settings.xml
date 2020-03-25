@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,35 +15,56 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <LinearLayout
+                android:id="@+id/googleLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:gravity="center_vertical"
+                android:layout_margin="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:id="@+id/googleId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/disconnect"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:srcCompat="@drawable/ic_close" />
+
+            </LinearLayout>
+
+
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="100dp"
-                android:layout_margin="@dimen/activity_vertical_margin"
                 android:layout_height="100dp"
+                android:layout_margin="@dimen/activity_vertical_margin"
                 android:src="@drawable/drive_logo" />
 
             <Switch
                 android:id="@+id/drive"
                 android:layout_width="wrap_content"
-                android:layout_toRightOf="@id/logo"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_horizontal"
+                android:layout_toRightOf="@id/logo"
                 android:text="@string/save_data_on_google_drive" />
 
             <EditText
                 android:id="@+id/fileId"
                 android:layout_width="match_parent"
-                android:layout_margin="@dimen/activity_vertical_margin"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/logo"
+                android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/activity_vertical_margin"
                 android:cursorVisible="false"
                 android:focusable="false"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/logo"
                 android:focusableInTouchMode="false"
                 android:hint="@string/here_will_be_the_file_id" />
-
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -75,6 +97,4 @@
         android:textAllCaps="false"
         android:textColor="#FE5295"
         android:textSize="17sp" />
-
-
 </LinearLayout>

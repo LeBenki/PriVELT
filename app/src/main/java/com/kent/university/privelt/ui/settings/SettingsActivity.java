@@ -5,12 +5,30 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.signin.SignInOptions;
+import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.GoogleDriveActivity;
 import com.kent.university.privelt.base.GoogleDriveListener;
@@ -40,6 +58,12 @@ public class SettingsActivity extends GoogleDriveActivity {
     @BindView(R.id.fileId)
     EditText fileId;
 
+    @BindView(R.id.googleId)
+    TextView googleId;
+
+    @BindView(R.id.disconnect)
+    ImageView disconnect;
+
     SettingsViewModel settingsViewModel;
 
     private Settings settings;
@@ -68,6 +92,27 @@ public class SettingsActivity extends GoogleDriveActivity {
                 .setNegativeButton(R.string.no, null)
                 .show());
 
+        listener = new GoogleDriveListener() {
+            @Override
+            public void onDownloadSuccess() {
+
+            }
+
+            @Override
+            public void onDownloadFailure() {
+
+            }
+
+            @Override
+            public void onConnectionSuccess() {
+                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(SettingsActivity.this);
+
+                googleId.setText(getResources().getString(R.string.logged_with, account.getDisplayName()));
+                disconnect.setVisibility(View.VISIBLE);
+                googleId.setVisibility(View.VISIBLE);
+            }
+        };
+
         drive.setOnCheckedChangeListener((compoundButton, b) -> {
             settings.setGoogleDriveAutoSave(b);
             if (b)
@@ -82,6 +127,19 @@ public class SettingsActivity extends GoogleDriveActivity {
             Toast.makeText(SettingsActivity.this, "Text copied to clipboard", Toast.LENGTH_LONG).show();
         });
 
+        disconnect.setOnClickListener(view -> {
+
+            GoogleSignInOptions signInOptions =
+                    new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                            .requestEmail()
+                            .requestScopes(new Scope(DriveScopes.DRIVE_FILE))
+                            .build();
+            GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, signInOptions);
+            googleSignInClient.signOut();
+
+            settings.setGoogleDriveAutoSave(false);
+            settingsViewModel.updateSettings(settings);
+        });
         configureViewModel();
         getSettings();
     }
@@ -91,11 +149,23 @@ public class SettingsActivity extends GoogleDriveActivity {
     }
 
     private void updateSettings(Settings settings) {
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
         this.settings = settings;
         if (settings == null)
             this.settings = new Settings(false, "");
         drive.setChecked(this.settings.isGoogleDriveAutoSave());
         fileId.setText(this.settings.getGoogleDriveFileID());
+
+        if (account != null) {
+            googleId.setText(getResources().getString(R.string.logged_with, account.getDisplayName()));
+            disconnect.setVisibility(View.VISIBLE);
+            googleId.setVisibility(View.VISIBLE);
+        } else {
+            this.settings.setGoogleDriveAutoSave(false);
+            disconnect.setVisibility(View.GONE);
+            googleId.setVisibility(View.GONE);
+        }
     }
 
     private void configureViewModel() {

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:layout_marginTop="@dimen/activity_vertical_margin"
     android:layout_marginLeft="@dimen/activity_vertical_margin"
-    android:layout_marginRight="@dimen/activity_vertical_margin">
+    android:layout_marginRight="@dimen/activity_vertical_margin"
+    app:strokeWidth="3dp"
+    android:id="@+id/cardService">
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -24,7 +26,7 @@
 
         <TextView
             android:id="@+id/service_value"
-            android:layout_width="18dp"
+            android:layout_width="22dp"
             android:layout_height="18dp"
             android:layout_gravity="center"
             android:paddingBottom="2dp"
@@ -92,4 +94,4 @@
             android:layout_margin="@dimen/activity_vertical_margin"
             android:src="@drawable/ic_menu_manage"/>
     </RelativeLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

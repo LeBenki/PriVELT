@@ -3,6 +3,6 @@
     <string-array name="filters">
         <item>Data</item>
         <item>Services</item>
-        <item>Supervised</item>
+        <item>Watch list</item>
     </string-array>
 </resources>

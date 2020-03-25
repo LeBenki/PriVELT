@@ -27,7 +27,7 @@ public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(CardItem cardItem, boolean isService) {
-        metrics.setText(cardItem.getNumber() < 98 ? String.valueOf(cardItem.getNumber()) : String.valueOf(99));
+        metrics.setText(String.valueOf(cardItem.getNumber()));
         if (!isService) {
             UserDataTypes userDataType = UserDataTypes.valueOf(cardItem.getName().toUpperCase());
             type.setImageResource(userDataType.getRes());

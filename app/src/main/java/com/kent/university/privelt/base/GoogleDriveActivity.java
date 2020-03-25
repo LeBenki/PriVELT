@@ -93,8 +93,9 @@ public abstract class GoogleDriveActivity extends BaseActivity {
                                     .build();
 
                     mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
-                    downloadFile();
-                })
+                    if (listener != null)
+                        downloadFile();
+                }).addOnSuccessListener(runnable -> listener.onConnectionSuccess())
                 .addOnFailureListener(exception -> Log.e("TAG", "Unable to sign in.", exception));
     }
 

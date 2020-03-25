@@ -41,4 +41,9 @@ public class SentenceAdapter {
         return stringBuilder.toString();
     }
 
+    public static String capitaliseFirstLetter(String str) {
+        if (str == null)
+            return "";
+        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    }
 }

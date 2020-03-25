@@ -139,6 +139,11 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
             public void onDownloadFailure() {
                 Toast.makeText(MasterPasswordActivity.this, R.string.error_occurred, Toast.LENGTH_LONG).show();
             }
+
+            @Override
+            public void onConnectionSuccess() {
+
+            }
         };
     }
 

@@ -1,15 +1,20 @@
 package com.kent.university.privelt.ui.dashboard.card;
 
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import com.google.android.material.card.MaterialCardView;
 import com.kent.university.privelt.PriVELT;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
@@ -25,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import static com.kent.university.privelt.ui.risk_value.RiskValueActivity.PARAM_DATA;
 import static com.kent.university.privelt.ui.risk_value.RiskValueActivity.PARAM_SERVICE;
+import static com.kent.university.privelt.utils.sentence.SentenceAdapter.capitaliseFirstLetter;
 
 class CardViewHolder extends RecyclerView.ViewHolder {
 
@@ -49,6 +55,9 @@ class CardViewHolder extends RecyclerView.ViewHolder {
     @BindView(R.id.risk_progress)
     ProgressBar riskProgress;
 
+    @BindView(R.id.cardService)
+    MaterialCardView cardView;
+
     private DataMetricsAdapter dataMetricsAdapter;
 
     CardViewHolder(@NonNull View itemView) {
@@ -61,8 +70,9 @@ class CardViewHolder extends RecyclerView.ViewHolder {
         metrics.setAdapter(dataMetricsAdapter);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.P)
     void bind(Card card) {
-        title.setText(card.getTitle());
+        title.setText(capitaliseFirstLetter(card.getTitle()));
 
         if (card.isService()) {
             PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
@@ -75,6 +85,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
         if (card.isService()) {
             settings.setVisibility(View.VISIBLE);
             settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent(card.getTitle())));
+            cardView.setStrokeColor(itemView.getContext().getColor(R.color.colorAccent));
         } else {
             settings.setVisibility(View.GONE);
         }
@@ -106,7 +117,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
             });
             metrics.setVisibility(View.VISIBLE);
             totalMetrics.setVisibility(View.VISIBLE);
-            totalMetrics.setText(String.valueOf(Math.min(total, 99)));
+            totalMetrics.setText(String.valueOf(total));
             dataMetricsAdapter.setDataMetrics(card.getMetrics(), !card.isService());
             dataMetricsAdapter.notifyDataSetChanged();
         }

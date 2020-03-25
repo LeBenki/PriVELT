@@ -3,9 +3,11 @@ package com.kent.university.privelt.ui.login;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -101,6 +103,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         debug.setOnClickListener(view -> {
             showAlertDebug();
         });
+
+        debug.setVisibility(View.GONE);
     }
 
     private void configureRecyclerView() {
