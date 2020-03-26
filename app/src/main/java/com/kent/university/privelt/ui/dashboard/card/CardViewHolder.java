@@ -23,6 +23,7 @@ import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Card;
 import com.kent.university.privelt.model.CardItem;
 import com.kent.university.privelt.ui.dashboard.card.data_metrics.DataMetricsAdapter;
+import com.kent.university.privelt.ui.risk_value.BarActivity;
 import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
 import com.university.kent.dataextractor.model.UserDataTypes;
 
@@ -108,7 +109,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
             //TODO: 200 HARDCODED (MAX DATA)
             riskProgress.setProgress(total * 100 / 200);
             riskProgress.setOnClickListener((v) -> {
-                Intent intent = new Intent(riskProgress.getContext(), RiskValueActivity.class);
+                Intent intent = new Intent(riskProgress.getContext(), BarActivity.class);
                 if (card.isService())
                     intent.putExtra(PARAM_SERVICE, card.getTitle());
                 else

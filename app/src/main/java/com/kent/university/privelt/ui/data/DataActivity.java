@@ -1,14 +1,13 @@
 package com.kent.university.privelt.ui.data;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
-import com.kent.university.privelt.database.injections.Injection;
-import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.injections.Injection;
+import com.kent.university.privelt.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 

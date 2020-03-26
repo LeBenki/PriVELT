@@ -1,6 +1,9 @@
 package com.kent.university.privelt.model;
 
+import com.google.api.services.drive.model.User;
+
 import java.io.Serializable;
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;

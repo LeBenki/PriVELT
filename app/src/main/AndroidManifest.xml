@@ -73,6 +73,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
         </activity>
+        <activity
+            android:name=".ui.risk_value.BarActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
+        </activity>
 
         <service
             android:name=".service.restarter.JobService"
@@ -95,6 +102,7 @@
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
                 <action android:name="uk.ac.shef.oak.activity_recognition.sensor_service.RestartSensor" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>

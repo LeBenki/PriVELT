@@ -18,8 +18,8 @@ import android.widget.TextView;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseFragment;
-import com.kent.university.privelt.database.injections.Injection;
-import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.injections.Injection;
+import com.kent.university.privelt.injections.ViewModelFactory;
 import com.kent.university.privelt.model.CurrentUser;
 
 import java.lang.annotation.ElementType;

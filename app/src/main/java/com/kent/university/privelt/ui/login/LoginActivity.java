@@ -104,7 +104,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             showAlertDebug();
         });
 
-        debug.setVisibility(View.GONE);
+        //debug.setVisibility(View.GONE);
     }
 
     private void configureRecyclerView() {

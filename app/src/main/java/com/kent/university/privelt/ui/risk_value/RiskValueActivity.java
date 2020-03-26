@@ -18,8 +18,8 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
-import com.kent.university.privelt.database.injections.Injection;
-import com.kent.university.privelt.database.injections.ViewModelFactory;
+import com.kent.university.privelt.injections.Injection;
+import com.kent.university.privelt.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 

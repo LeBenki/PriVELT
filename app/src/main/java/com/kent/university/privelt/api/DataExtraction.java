@@ -33,9 +33,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.kent.university.privelt.database.injections.Injection.provideServiceDataSource;
-import static com.kent.university.privelt.database.injections.Injection.provideSettingsDataSource;
-import static com.kent.university.privelt.database.injections.Injection.provideUserDataSource;
+import static com.kent.university.privelt.injections.Injection.provideServiceDataSource;
+import static com.kent.university.privelt.injections.Injection.provideSettingsDataSource;
+import static com.kent.university.privelt.injections.Injection.provideUserDataSource;
 import static com.kent.university.privelt.model.UserData.DELIMITER;
 
 public class DataExtraction {

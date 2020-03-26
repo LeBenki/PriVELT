@@ -1,4 +1,4 @@
-package com.kent.university.privelt.database.injections;
+package com.kent.university.privelt.injections;
 
 import android.content.Context;
 

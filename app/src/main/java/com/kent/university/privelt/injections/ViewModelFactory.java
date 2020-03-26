@@ -1,4 +1,4 @@
-package com.kent.university.privelt.database.injections;
+package com.kent.university.privelt.injections;
 
 import com.kent.university.privelt.repositories.CurrentUserDataRepository;
 import com.kent.university.privelt.repositories.ServiceDataRepository;
