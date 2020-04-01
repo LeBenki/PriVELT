@@ -7,12 +7,12 @@ import com.kent.university.privelt.api.ServiceHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class PriVELT extends Application {
+public class PriVELTApplication extends Application{
 
     private PasswordManager identityManager;
     private ServiceHelper serviceManager;
     private AppCompatActivity activity;
-    private static volatile PriVELT INSTANCE;
+    private static volatile PriVELTApplication INSTANCE;
 
     @Override
     public void onCreate() {
@@ -22,7 +22,7 @@ public class PriVELT extends Application {
         identityManager = new PasswordManager();
     }
 
-    public static PriVELT getInstance() {
+    public static PriVELTApplication getInstance() {
         return INSTANCE;
     }
 

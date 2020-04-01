@@ -56,11 +56,7 @@ public class RiskValueActivity extends BaseActivity {
     private boolean isDataCentric;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_risk_value);
-
-        ButterKnife.bind(this);
+    protected void configureDesign(@Nullable Bundle savedInstanceState) {
 
         services = new ArrayList<>();
         userDatas = new ArrayList<>();
@@ -79,8 +75,6 @@ public class RiskValueActivity extends BaseActivity {
         chart.setVisibility(View.GONE);
         noData.setVisibility(View.VISIBLE);
 
-        configureViewModel();
-
         getServices();
 
         getUserdatas();
@@ -94,9 +88,14 @@ public class RiskValueActivity extends BaseActivity {
         outState.putString(PARAM_DATA, type);
     }
 
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        riskValueViewModel = ViewModelProviders.of(this, viewModelFactory).get(RiskValueViewModel.class);
+    @Override
+    protected int getActivityLayout() {
+        return R.layout.activity_risk_value;
+    }
+
+    @Override
+    protected void configureViewModel() {
+        riskValueViewModel = getViewModel(RiskValueViewModel.class);
         riskValueViewModel.init();
     }
 

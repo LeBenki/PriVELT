@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.IBinder;
 
-import com.kent.university.privelt.PriVELT;
+import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.service.utilities.Notification;
 
@@ -117,7 +117,7 @@ public class Service extends android.app.Service {
 
         timerTask = new TimerTask() {
             public void run() {
-                if (((PriVELT)getApplicationContext()).getIdentityManager().getPassword() != null)
+                if (((PriVELTApplication)getApplicationContext()).getIdentityManager().getPassword() != null)
                     processExtractionForEachService(getApplicationContext());
             }
         };

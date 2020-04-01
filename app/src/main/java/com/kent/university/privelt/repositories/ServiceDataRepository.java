@@ -5,11 +5,14 @@ import com.kent.university.privelt.model.Service;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.LiveData;
 
 public class ServiceDataRepository {
     private final ServiceDao mServiceDao;
 
+    @Inject
     public ServiceDataRepository(ServiceDao projectDao) {
         mServiceDao = projectDao;
     }

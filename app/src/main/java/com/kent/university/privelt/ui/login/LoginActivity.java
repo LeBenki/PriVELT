@@ -3,11 +3,9 @@ package com.kent.university.privelt.ui.login;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
@@ -29,7 +27,6 @@ import com.university.kent.dataextractor.DataExtractor;
 
 import java.util.Arrays;
 
-import static com.kent.university.privelt.api.DataExtraction.processDataExtraction;
 import static com.kent.university.privelt.utils.EyePassword.configureEye;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
@@ -71,12 +68,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private ScriptsAdapter adapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getActivityLayout() {
+        return R.layout.activity_login;
+    }
 
-        setContentView(R.layout.activity_login);
+    @Override
+    protected void configureViewModel() {
 
-        ButterKnife.bind(this);
+    }
+
+    @Override
+    protected void configureDesign(Bundle savedInstanceState) {
+
         button.setOnClickListener(this);
 
         if (getIntent() != null) {

@@ -4,7 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProviders;
+import butterknife.BindView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
@@ -17,8 +17,6 @@ import com.github.mikephil.charting.formatter.LargeValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
-import com.kent.university.privelt.injections.Injection;
-import com.kent.university.privelt.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 
@@ -34,7 +32,8 @@ import static com.kent.university.privelt.utils.sentence.SentenceAdapter.capital
 
 public class BarActivity extends BaseActivity {
 
-    private BarChart chart;
+    @BindView(R.id.chart1)
+    BarChart chart;
 
     private RiskValueViewModel riskValueViewModel;
 
@@ -46,10 +45,7 @@ public class BarActivity extends BaseActivity {
     private boolean isDataCentric;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_barchart);
+    protected void configureDesign(Bundle savedInstanceState) {
 
         services = new ArrayList<>();
         userDatas = new ArrayList<>();
@@ -69,8 +65,6 @@ public class BarActivity extends BaseActivity {
             setTitle(capitaliseFirstLetter(type));
         else
             setTitle(service);
-
-        chart = findViewById(R.id.chart1);
 
         chart.getDescription().setEnabled(false);
 
@@ -114,9 +108,14 @@ public class BarActivity extends BaseActivity {
         outState.putString(PARAM_DATA, type);
     }
 
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        riskValueViewModel = ViewModelProviders.of(this, viewModelFactory).get(RiskValueViewModel.class);
+    @Override
+    protected int getActivityLayout() {
+        return R.layout.activity_barchart;
+    }
+
+    @Override
+    protected void configureViewModel() {
+        riskValueViewModel = getViewModel(RiskValueViewModel.class);
         riskValueViewModel.init();
     }
 

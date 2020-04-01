@@ -7,12 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -24,8 +22,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.api.ServiceHelper;
 import com.kent.university.privelt.base.BaseFragment;
-import com.kent.university.privelt.injections.Injection;
-import com.kent.university.privelt.injections.ViewModelFactory;
 import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
 import com.kent.university.privelt.events.DetailedCardEvent;
 import com.kent.university.privelt.events.UpdateCredentialsEvent;
@@ -47,11 +43,9 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.api.DataExtraction.processDataExtraction;
 import static com.kent.university.privelt.ui.dashboard.card.FilterAlertDialog.KEY_SHARED;
@@ -91,27 +85,6 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
     private CardAdapter cardAdapter;
 
     private boolean[] filters;
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        View view = inflater.inflate(R.layout.fragment_service, container, false);
-
-        ButterKnife.bind(this, view);
-
-        setUpRecyclerView();
-
-        setupAddButton();
-
-        configureViewModel();
-        getServices();
-        getUserDatas();
-
-        progressBar.setOnClickListener((v) -> startActivity(new Intent(getActivity(), RiskValueActivity.class)));
-        return view;
-    }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -209,10 +182,27 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
         servicesList.setAdapter(cardAdapter);
     }
 
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getContext());
-        cardViewModel = ViewModelProviders.of(this, viewModelFactory).get(CardViewModel.class);
+    @Override
+    protected int getFragmentLayout() {
+        return R.layout.fragment_service;
+    }
+
+    @Override
+    protected void configureViewModel() {
+        cardViewModel = getViewModel(CardViewModel.class);
         cardViewModel.init();
+    }
+
+    @Override
+    protected void configureDesign() {
+        setUpRecyclerView();
+
+        setupAddButton();
+
+        getServices();
+        getUserDatas();
+
+        progressBar.setOnClickListener((v) -> startActivity(new Intent(getActivity(), RiskValueActivity.class)));
     }
 
     @SuppressLint("StaticFieldLeak")

@@ -3,11 +3,14 @@ package com.kent.university.privelt.repositories;
 import com.kent.university.privelt.database.dao.SettingsDao;
 import com.kent.university.privelt.model.Settings;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.LiveData;
 
 public class SettingsDataRepository {
     private final SettingsDao mSettingsDao;
 
+    @Inject
     public SettingsDataRepository(SettingsDao settingsDao) {
         mSettingsDao = settingsDao;
     }

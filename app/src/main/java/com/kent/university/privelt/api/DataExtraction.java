@@ -11,7 +11,7 @@ import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccoun
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.drive.DriveScopes;
 import com.kent.university.privelt.BuildConfig;
-import com.kent.university.privelt.PriVELT;
+import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.database.PriVELTDatabase;
 import com.kent.university.privelt.model.Service;
@@ -44,26 +44,26 @@ public class DataExtraction {
 
     private static void saveToGoogleDrive() {
 
-        ServiceDataRepository serviceDataRepository = provideServiceDataSource(PriVELT.getInstance());
+        ServiceDataRepository serviceDataRepository = provideServiceDataSource(PriVELTApplication.getInstance());
 
-        SettingsDataRepository settingsDataRepository = provideSettingsDataSource(PriVELT.getInstance());
+        SettingsDataRepository settingsDataRepository = provideSettingsDataSource(PriVELTApplication.getInstance());
 
         Settings settings = settingsDataRepository.getInstantSettings();
 
         if (settings != null && settings.isGoogleDriveAutoSave()) {
             try {
-                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(PriVELT.getInstance());
+                GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(PriVELTApplication.getInstance());
 
                 GoogleAccountCredential credential =
                         GoogleAccountCredential.usingOAuth2(
-                                PriVELT.getInstance(), Collections.singleton(DriveScopes.DRIVE_FILE));
+                                PriVELTApplication.getInstance(), Collections.singleton(DriveScopes.DRIVE_FILE));
                 credential.setSelectedAccount(account.getAccount());
                 com.google.api.services.drive.Drive googleDriveService =
                         new com.google.api.services.drive.Drive.Builder(
                                 AndroidHttp.newCompatibleTransport(),
                                 new GsonFactory(),
                                 credential)
-                                .setApplicationName(PriVELT.getInstance().getResources().getString(R.string.app_name))
+                                .setApplicationName(PriVELTApplication.getInstance().getResources().getString(R.string.app_name))
                                 .build();
                 DriveServiceHelper mDriveServiceHelper = new DriveServiceHelper(googleDriveService);
 
@@ -75,7 +75,7 @@ public class DataExtraction {
                     serviceList.get(i).setPasswordSaved(false);
                     serviceDataRepository.updateServices(serviceList.get(i));
                 }
-                String s = mDriveServiceHelper.uploadFile(PriVELT.getInstance().getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), settings.getGoogleDriveFileID());
+                String s = mDriveServiceHelper.uploadFile(PriVELTApplication.getInstance().getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), settings.getGoogleDriveFileID());
                 for (Service service : oldServices)
                     serviceDataRepository.updateServices(service);
 
@@ -94,7 +94,7 @@ public class DataExtraction {
 
     public static void processExtractionForEachService(Context applicationContext) {
 
-        ServiceHelper serviceHelper = new ServiceHelper(((PriVELT) (applicationContext)).getCurrentActivity());
+        ServiceHelper serviceHelper = new ServiceHelper(((PriVELTApplication) (applicationContext)).getCurrentActivity());
 
         ServiceDataRepository serviceDataRepository = provideServiceDataSource(applicationContext);
 
@@ -121,13 +121,13 @@ public class DataExtraction {
         DataExtractor dataExtractor = new DataExtractor(loginService);
         final ArrayList<UserData> allUserData = new ArrayList<>();
 
-        ((PriVELT) (applicationContext)).getCurrentActivity().runOnUiThread(() -> loginService.autoLogin(email, password, new ResponseCallback() {
+        ((PriVELTApplication) (applicationContext)).getCurrentActivity().runOnUiThread(() -> loginService.autoLogin(email, password, new ResponseCallback() {
             @Override
             public void getResponse(ResponseEnum responseEnum, String data) {
                 if (BuildConfig.DEBUG)
                     Log.d(TAG, responseEnum.toString());
                 if (responseEnum == ResponseEnum.SUCCESS) {
-                    dataExtractor.injectAll(((PriVELT)applicationContext).getCurrentActivity(), (jsonArray, status) -> {
+                    dataExtractor.injectAll(((PriVELTApplication)applicationContext).getCurrentActivity(), (jsonArray, status) -> {
                         if (BuildConfig.DEBUG)
                             Log.d(TAG, status.toString());
                         if (jsonArray != null) {

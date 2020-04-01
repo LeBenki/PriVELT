@@ -3,7 +3,7 @@ package com.kent.university.privelt.database;
 import android.content.Context;
 
 import com.commonsware.cwac.saferoom.SafeHelperFactory;
-import com.kent.university.privelt.PriVELT;
+import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.database.dao.CurrentUserDao;
 import com.kent.university.privelt.database.dao.ServiceDao;
 import com.kent.university.privelt.database.dao.SettingsDao;
@@ -25,14 +25,14 @@ public abstract class PriVELTDatabase extends RoomDatabase {
     public static final String PriVELTDatabaseName = "PriVELTDatabase.db";
 
     public static void changeMasterPassword() {
-        SafeHelperFactory.rekey(INSTANCE.mDatabase, PriVELT.getInstance().getIdentityManager().getPassword());
+        SafeHelperFactory.rekey(INSTANCE.mDatabase, PriVELTApplication.getInstance().getIdentityManager().getPassword());
     }
 
     public static PriVELTDatabase getInstance(Context context) {
         if (INSTANCE == null) {
             synchronized (PriVELTDatabase.class) {
                 if (INSTANCE == null) {
-                    SafeHelperFactory factory = SafeHelperFactory.fromUser(PriVELT.getInstance().getIdentityManager().getPassword());
+                    SafeHelperFactory factory = SafeHelperFactory.fromUser(PriVELTApplication.getInstance().getIdentityManager().getPassword());
 
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             PriVELTDatabase.class,

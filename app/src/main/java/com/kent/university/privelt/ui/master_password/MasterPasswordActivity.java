@@ -8,12 +8,12 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.GoogleDriveActivity;
@@ -69,11 +69,17 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
     private boolean masterPasswordAlreadyGiven;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_password);
+    protected int getActivityLayout() {
+        return R.layout.activity_main_password;
+    }
 
-        ButterKnife.bind(this);
+    @Override
+    protected void configureViewModel() {
+
+    }
+
+    @Override
+    protected void configureDesign(@Nullable Bundle savedInstanceState) {
 
         start.setOnClickListener(this);
         password.addTextChangedListener(this);
@@ -226,7 +232,7 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
                 else {
                     PriVELTDatabase dbHelperObj = PriVELTDatabase.getInstance(MasterPasswordActivity.this);
                     try {
-                        dbHelperObj.getOpenHelper().getReadableDatabase();
+                        dbHelperObj.serviceDao().getAllServices();
                     } catch (Exception e) {
                         dbHelperObj.close();
                         PriVELTDatabase.nullDatabase();

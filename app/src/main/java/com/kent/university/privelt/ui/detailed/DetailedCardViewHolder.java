@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.kent.university.privelt.PriVELT;
+import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.LaunchListDataEvent;
 import com.kent.university.privelt.model.CardItem;
@@ -40,8 +40,8 @@ public class DetailedCardViewHolder extends RecyclerView.ViewHolder {
             imageView.setImageResource(userDataType.getRes());
         }
         else {
-            PriVELT priVELT = (PriVELT) imageView.getContext().getApplicationContext();
-            imageView.setImageResource(priVELT.getServiceHelper().getResIdWithName(cardItem.getName()));
+            PriVELTApplication priVELTApplication = (PriVELTApplication) imageView.getContext().getApplicationContext();
+            imageView.setImageResource(priVELTApplication.getServiceHelper().getResIdWithName(cardItem.getName()));
         }
     }
 }

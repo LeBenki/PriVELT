@@ -3,11 +3,14 @@ package com.kent.university.privelt.repositories;
 import com.kent.university.privelt.database.dao.CurrentUserDao;
 import com.kent.university.privelt.model.CurrentUser;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.LiveData;
 
 public class CurrentUserDataRepository {
     private final CurrentUserDao mCurrentUserDao;
 
+    @Inject
     public CurrentUserDataRepository(CurrentUserDao currentUserDao) {
         mCurrentUserDao = currentUserDao;
     }

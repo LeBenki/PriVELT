@@ -5,11 +5,14 @@ import com.kent.university.privelt.model.UserData;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import androidx.lifecycle.LiveData;
 
 public class UserDataRepository {
     private final UserDataDao mUserDataDao;
 
+    @Inject
     public UserDataRepository(UserDataDao projectDao) {
         mUserDataDao = projectDao;
     }

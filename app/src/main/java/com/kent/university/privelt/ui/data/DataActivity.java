@@ -42,12 +42,12 @@ public class DataActivity extends BaseActivity {
     private DataAdapter dataAdapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected int getActivityLayout() {
+        return R.layout.activity_data;
+    }
 
-        setContentView(R.layout.activity_data);
-
-        ButterKnife.bind(this);
+    @Override
+    protected void configureDesign(@Nullable Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
             service = savedInstanceState.getString(PARAM_SERVICE);
@@ -57,11 +57,7 @@ public class DataActivity extends BaseActivity {
             type = getIntent().getStringExtra(PARAM_TYPE);
         }
 
-//        setTitle(service);
-
         configureRecyclerView();
-
-        configureViewModel();
 
         getServices();
     }
@@ -109,9 +105,9 @@ public class DataActivity extends BaseActivity {
         }
     }
 
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        dataViewModel = ViewModelProviders.of(this, viewModelFactory).get(DataViewModel.class);
+    @Override
+    protected void configureViewModel() {
+        dataViewModel = getViewModel(DataViewModel.class);
         dataViewModel.init();
     }
 }

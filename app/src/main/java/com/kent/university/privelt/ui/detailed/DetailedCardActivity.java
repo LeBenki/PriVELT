@@ -7,7 +7,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.kent.university.privelt.PriVELT;
+import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.events.LaunchListDataEvent;
@@ -52,11 +52,17 @@ public class DetailedCardActivity extends BaseActivity {
     private DetailedCardAdapter detailedCardAdapter;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detailed_card);
+    protected int getActivityLayout() {
+        return R.layout.activity_detailed_card;
+    }
 
-        ButterKnife.bind(this);
+    @Override
+    protected void configureViewModel() {
+        //TODO use viewmodel
+    }
+
+    @Override
+    protected void configureDesign(@Nullable Bundle savedInstanceState) {
 
         if (savedInstanceState != null) {
             card = (Card) savedInstanceState.getSerializable(PARAM_CARD);
@@ -77,8 +83,8 @@ public class DetailedCardActivity extends BaseActivity {
             logo.setImageResource(userDataType.getRes());
         }
         else {
-            PriVELT priVELT = (PriVELT) logo.getContext().getApplicationContext();
-            logo.setImageResource(priVELT.getServiceHelper().getResIdWithName(card.getTitle()));
+            PriVELTApplication priVELTApplication = (PriVELTApplication) logo.getContext().getApplicationContext();
+            logo.setImageResource(priVELTApplication.getServiceHelper().getResIdWithName(card.getTitle()));
         }
         setTitle(card.getTitle());
 

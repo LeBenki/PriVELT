@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import com.kent.university.privelt.PriVELT;
+import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.model.CardItem;
 import com.university.kent.dataextractor.model.UserDataTypes;
@@ -33,8 +33,8 @@ public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
             type.setImageResource(userDataType.getRes());
         }
         else {
-            PriVELT priVELT = (PriVELT) type.getContext().getApplicationContext();
-            type.setImageResource(priVELT.getServiceHelper().getResIdWithName(cardItem.getName()));
+            PriVELTApplication priVELTApplication = (PriVELTApplication) type.getContext().getApplicationContext();
+            type.setImageResource(priVELTApplication.getServiceHelper().getResIdWithName(cardItem.getName()));
         }
     }
 }

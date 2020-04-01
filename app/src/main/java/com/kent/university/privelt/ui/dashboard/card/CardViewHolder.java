@@ -8,14 +8,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import com.google.android.material.card.MaterialCardView;
-import com.kent.university.privelt.PriVELT;
+import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.ChangeWatchListStatusEvent;
 import com.kent.university.privelt.events.DetailedCardEvent;
@@ -24,7 +23,6 @@ import com.kent.university.privelt.model.Card;
 import com.kent.university.privelt.model.CardItem;
 import com.kent.university.privelt.ui.dashboard.card.data_metrics.DataMetricsAdapter;
 import com.kent.university.privelt.ui.risk_value.BarActivity;
-import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
 import com.university.kent.dataextractor.model.UserDataTypes;
 
 import org.greenrobot.eventbus.EventBus;
@@ -76,8 +74,8 @@ class CardViewHolder extends RecyclerView.ViewHolder {
         title.setText(capitaliseFirstLetter(card.getTitle()));
 
         if (card.isService()) {
-            PriVELT priVELT = (PriVELT) title.getContext().getApplicationContext();
-            imageService.setImageResource(priVELT.getServiceHelper().getResIdWithName(card.getTitle()));
+            PriVELTApplication priVELTApplication = (PriVELTApplication) title.getContext().getApplicationContext();
+            imageService.setImageResource(priVELTApplication.getServiceHelper().getResIdWithName(card.getTitle()));
         } else {
             UserDataTypes userDataType = UserDataTypes.valueOf(card.getTitle().toUpperCase());
             imageService.setImageResource(userDataType.getRes());

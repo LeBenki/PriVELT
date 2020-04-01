@@ -23,15 +23,11 @@ import com.google.api.services.drive.DriveScopes;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.GoogleDriveActivity;
 import com.kent.university.privelt.base.GoogleDriveListener;
-import com.kent.university.privelt.injections.Injection;
-import com.kent.university.privelt.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Settings;
 import com.kent.university.privelt.ui.master_password.MasterPasswordActivity;
 
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class SettingsActivity extends GoogleDriveActivity {
 
@@ -60,12 +56,7 @@ public class SettingsActivity extends GoogleDriveActivity {
     private Settings settings;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        setContentView(R.layout.activity_settings);
-
-        ButterKnife.bind(this);
+    protected void configureDesign(@Nullable Bundle savedInstanceState) {
 
         button.setOnClickListener(view -> {
             Intent intent = new Intent(this, MasterPasswordActivity.class);
@@ -159,9 +150,14 @@ public class SettingsActivity extends GoogleDriveActivity {
         }
     }
 
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(this);
-        settingsViewModel = ViewModelProviders.of(this, viewModelFactory).get(SettingsViewModel.class);
+    @Override
+    protected int getActivityLayout() {
+        return R.layout.activity_settings;
+    }
+
+    @Override
+    protected void configureViewModel() {
+        settingsViewModel = getViewModel(SettingsViewModel.class);
         settingsViewModel.init();
     }
 }

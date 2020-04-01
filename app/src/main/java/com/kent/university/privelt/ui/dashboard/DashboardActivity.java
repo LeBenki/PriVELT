@@ -33,11 +33,17 @@ public class DashboardActivity extends GoogleDriveActivity {
     BottomNavigationView navigation;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_dashboard);
+    protected int getActivityLayout() {
+        return R.layout.activity_dashboard;
+    }
 
-        ButterKnife.bind(this);
+    @Override
+    protected void configureViewModel() {
+
+    }
+
+    @Override
+    protected void configureDesign(Bundle savedInstanceState) {
 
         toolbar = getSupportActionBar();
 

@@ -4,12 +4,10 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Pair;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.ValueCallback;
 
 import android.widget.EditText;
@@ -18,8 +16,6 @@ import android.widget.TextView;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseFragment;
-import com.kent.university.privelt.injections.Injection;
-import com.kent.university.privelt.injections.ViewModelFactory;
 import com.kent.university.privelt.model.CurrentUser;
 
 import java.lang.annotation.ElementType;
@@ -33,10 +29,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 @Retention(RetentionPolicy.RUNTIME)
@@ -106,22 +99,6 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
     private CurrentUser currentUser;
     private Menu mOptionsMenu;
 
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_user, container, false);
-        ButterKnife.bind(this, view);
-
-        configureViewModel();
-
-        getCurrentUser();
-
-        configureEditTexts();
-
-        return view;
-    }
-
-
     @OnClick(R.id.birthday)
     public void onBirthdayClick(View view) {
 
@@ -147,10 +124,22 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
         });
     }
 
-    private void configureViewModel() {
-        ViewModelFactory viewModelFactory = Injection.provideViewModelFactory(getContext());
-        userViewModel = ViewModelProviders.of(this, viewModelFactory).get(UserViewModel.class);
+    @Override
+    protected int getFragmentLayout() {
+        return R.layout.fragment_user;
+    }
+
+    @Override
+    protected void configureViewModel() {
+        userViewModel = getViewModel(UserViewModel.class);
         userViewModel.init();
+    }
+
+    @Override
+    protected void configureDesign() {
+        getCurrentUser();
+
+        configureEditTexts();
     }
 
     private void getCurrentUser() {
