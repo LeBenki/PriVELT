@@ -14,12 +14,12 @@ import com.kent.university.privelt.BuildConfig;
 import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.database.PriVELTDatabase;
+import com.kent.university.privelt.database.dao.ServiceDao;
+import com.kent.university.privelt.database.dao.SettingsDao;
+import com.kent.university.privelt.database.dao.UserDataDao;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.Settings;
 import com.kent.university.privelt.model.UserData;
-import com.kent.university.privelt.repositories.ServiceDataRepository;
-import com.kent.university.privelt.repositories.SettingsDataRepository;
-import com.kent.university.privelt.repositories.UserDataRepository;
 import com.kent.university.privelt.utils.DriveServiceHelper;
 import com.kent.university.webviewautologin.response.ResponseCallback;
 import com.kent.university.webviewautologin.response.ResponseEnum;
@@ -33,20 +33,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.kent.university.privelt.injections.Injection.provideServiceDataSource;
-import static com.kent.university.privelt.injections.Injection.provideSettingsDataSource;
-import static com.kent.university.privelt.injections.Injection.provideUserDataSource;
 import static com.kent.university.privelt.model.UserData.DELIMITER;
 
 public class DataExtraction {
 
     private static final String TAG = DataExtractor.class.getSimpleName();
 
-    private static void saveToGoogleDrive() {
+    private static void saveToGoogleDrive(Context applicationContext) {
 
-        ServiceDataRepository serviceDataRepository = provideServiceDataSource(PriVELTApplication.getInstance());
+        ServiceDao serviceDataRepository = PriVELTDatabase.getInstance(applicationContext).serviceDao();
 
-        SettingsDataRepository settingsDataRepository = provideSettingsDataSource(PriVELTApplication.getInstance());
+        SettingsDao settingsDataRepository = PriVELTDatabase.getInstance(applicationContext).settingsDao();
 
         Settings settings = settingsDataRepository.getInstantSettings();
 
@@ -96,7 +93,7 @@ public class DataExtraction {
 
         ServiceHelper serviceHelper = new ServiceHelper(((PriVELTApplication) (applicationContext)).getCurrentActivity());
 
-        ServiceDataRepository serviceDataRepository = provideServiceDataSource(applicationContext);
+        ServiceDao serviceDataRepository = PriVELTDatabase.getInstance(applicationContext).serviceDao();
 
         List<Service> services = serviceDataRepository.getAllServices();
         for (com.kent.university.privelt.model.Service service : services) {
@@ -114,7 +111,7 @@ public class DataExtraction {
 
     public static void processDataExtraction(ServiceHelper serviceHelper, com.kent.university.privelt.model.Service service, String email, String password, Context applicationContext) {
 
-        UserDataRepository userDataRepository = provideUserDataSource(applicationContext);
+        UserDataDao userDataRepository = PriVELTDatabase.getInstance(applicationContext).userDataDao();
 
         LoginService loginService = serviceHelper.getServiceWithName(service.getName());
 
@@ -143,7 +140,7 @@ public class DataExtraction {
                             for (UserData userData : allUserData)
                                 userDataRepository.insertUserDatas(userData);
 
-                            saveToGoogleDrive();
+                            saveToGoogleDrive(applicationContext);
                         }
                     });
                 }

@@ -6,8 +6,6 @@ import android.widget.LinearLayout;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.BaseActivity;
-import com.kent.university.privelt.injections.Injection;
-import com.kent.university.privelt.injections.ViewModelFactory;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 
@@ -16,11 +14,9 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 
