@@ -1,6 +1,6 @@
 # PriVELT
 
-Android application to centralise known concatenatedData from different services.
+Android application to centralise known data from different services.
 The project is funded by PriVELT (https://privelt.ac.uk/).
 
 To test the app you will need a github.properties file with :
