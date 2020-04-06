@@ -22,7 +22,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_below="@id/title"
         android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:gravity="center_horizontal"
         android:text="@string/personal_data_explain" />
 
     <LinearLayout

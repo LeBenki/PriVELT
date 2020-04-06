@@ -19,7 +19,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import com.kent.university.privelt.BuildConfig;
 import com.kent.university.privelt.R;
@@ -198,7 +197,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.check_menu, menu);
-
         return true;
     }
 

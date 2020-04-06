@@ -63,13 +63,16 @@
     <string name="not_respect_policy">You did not respect the password policy</string>
     <string name="wrong_password">Wrong password, you can reset all your data to enter a new password</string>
     <string name="same_password">The password is the same as before</string>
-    <string name="title_master_password">Please enter your main password it will be used to encrypt all your data in this app</string>
-    <string name="reset_data">Click here to reset all your data</string>
+    <string name="title_master_password">Please enter your main password it will be used to encrypt locally all your data in this app</string>
+    <string name="reset_data">Click here to delete your local account</string>
     <string name="password_policy">Your password must be at least 8 characters. With at least 1 number, 1 upper letter, 1 lower letter, 1 special character and should be at least strong</string>
     <string name="master_password">Master password</string>
     <string name="confirm_master_password">Confirm master password</string>
     <string name="start_master_button">Start using the app</string>
     <string name="import_your_data">Click here to import your data</string>
+    <string name="enter_file_id">Enter your Google Drive file id</string>
+    <string name="data_imported_correctly">Your data has been imported correctly</string>
+    <string name="error_occurred">An error occurred</string>
 
     <!--SettingsActivity-->
     <string name="log_out">Log out</string>
@@ -78,6 +81,8 @@
     <string name="no_data_extracted_yet">No data extracted yet</string>
     <string name="save_data_on_google_drive">Save data on Google Drive</string>
     <string name="here_will_be_the_file_id">Here will be the file id</string>
+    <string name="save_data">Saving your data on one of the following service can be useful to retrieve your database on another device.</string>
+    <string name="logged_with">Logged as %1$s</string>
 
     <!--UserFragment-->
     <string name="mail">Mail</string>
@@ -87,14 +92,12 @@
     <string name="last_name">Last name</string>
     <string name="first_name">First name</string>
     <string name="personal_data">Personal data</string>
-    <string name="personal_data_explain">We need to check if you share your real data</string>
+    <string name="personal_data_explain">To better evaluate your risk-value score, we need to check if the data collected correspond to your real data.</string>
     <string name="edit">edit</string>
     <string name="overall_risk">Your overall risk for this service is %1$s</string>
     <string name="found">found</string>
     <string name="data_found">%1$d different</string>
+
+    <!--DetailedCardActivity-->
     <string name="data_explained">You can click on an item to see the list of data you shared</string>
-    <string name="error_occurred">An error occurred</string>
-    <string name="data_imported_correctly">Your data has been imported correctly</string>
-    <string name="enter_file_id">Enter your file id</string>
-    <string name="logged_with">Logged as %1$s</string>
 </resources>

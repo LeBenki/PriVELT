@@ -12,6 +12,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.api.services.drive.DriveScopes;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.base.GoogleDriveActivity;
@@ -32,6 +36,7 @@ import com.kent.university.privelt.base.GoogleDriveListener;
 import com.kent.university.privelt.model.Settings;
 import com.kent.university.privelt.ui.master_password.MasterPasswordActivity;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import butterknife.BindView;
 
@@ -165,5 +170,21 @@ public class SettingsActivity extends GoogleDriveActivity {
     protected void configureViewModel() {
         settingsViewModel = getViewModel(SettingsViewModel.class);
         settingsViewModel.init();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.help_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.help) {
+            Snackbar.make(logout, R.string.save_data, Snackbar.LENGTH_LONG).show();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
