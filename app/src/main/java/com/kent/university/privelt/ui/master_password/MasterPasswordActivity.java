@@ -83,6 +83,32 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
 
     }
 
+    private void configureLoginScreen() {
+        reset.setText(R.string.reset_data);
+        resetMasterPassword();
+        passwordMeter.setVisibility(View.GONE);
+        hint.setVisibility(View.GONE);
+        confirmPassword.setVisibility(View.GONE);
+        eyeConfirm.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
+        reset.setEnabled(true);
+        start.setEnabled(true);
+    }
+
+    private void configureNewPasswordScreen() {
+        reset.setText(R.string.import_your_data);
+        progressBar.setVisibility(View.GONE);
+        reset.setEnabled(true);
+        start.setEnabled(true);
+        passwordMeter.setVisibility(View.VISIBLE);
+        hint.setVisibility(View.VISIBLE);
+        confirmPassword.setVisibility(View.VISIBLE);
+        eyeConfirm.setVisibility(View.VISIBLE);
+        reset.setText(R.string.import_your_data);
+        onDataImported();
+        onDataImported();
+    }
+
     @Override
     protected void configureDesign(@Nullable Bundle savedInstanceState) {
         start.setOnClickListener(this);
@@ -100,7 +126,6 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
         setTitle("");
 
         if (changePassword) {
-
             start.setText(getString(R.string.change_master_password));
         }
         else
@@ -108,20 +133,11 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
 
         masterPasswordAlreadyGiven = getDatabasePath(PriVELTDatabase.PriVELTDatabaseName).exists();
 
-        if (!masterPasswordAlreadyGiven) {
-            reset.setText(R.string.import_your_data);
-            onDataImported();
+        if (!masterPasswordAlreadyGiven || changePassword) {
+            configureNewPasswordScreen();
         }
         else {
-            reset.setText(R.string.reset_data);
-            resetMasterPassword();
-        }
-
-        if (!(changePassword || !masterPasswordAlreadyGiven)) {
-            passwordMeter.setVisibility(View.GONE);
-            hint.setVisibility(View.GONE);
-            confirmPassword.setVisibility(View.GONE);
-            eyeConfirm.setVisibility(View.GONE);
+            configureLoginScreen();
         }
 
         configureEye(eye, password);
@@ -132,16 +148,7 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
             @Override
             public void onDownloadSuccess() {
                 Toast.makeText(MasterPasswordActivity.this, R.string.data_imported_correctly, Toast.LENGTH_LONG).show();
-                progressBar.setVisibility(View.GONE);
-                reset.setEnabled(true);
-                start.setEnabled(true);
-
-                passwordMeter.setVisibility(View.GONE);
-                hint.setVisibility(View.GONE);
-                confirmPassword.setVisibility(View.GONE);
-
-                eyeConfirm.setVisibility(View.GONE);
-                reset.setText(R.string.reset_data);
+                configureLoginScreen();
                 resetMasterPassword();
             }
 
@@ -184,18 +191,7 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
                         @Override
                         protected void onPostExecute(Void aVoid) {
                             super.onPostExecute(aVoid);
-                            progressBar.setVisibility(View.GONE);
-                            reset.setEnabled(true);
-                            start.setEnabled(true);
-
-                            passwordMeter.setVisibility(View.VISIBLE);
-                            hint.setVisibility(View.VISIBLE);
-                            confirmPassword.setVisibility(View.VISIBLE);
-
-                            eyeConfirm.setVisibility(View.VISIBLE);
-                            reset.setText(R.string.import_your_data);
-                            onDataImported();
-
+                            configureNewPasswordScreen();
                             Toast.makeText(MasterPasswordActivity.this, R.string.reset_done, Toast.LENGTH_LONG).show();
                         }
                     }.execute();

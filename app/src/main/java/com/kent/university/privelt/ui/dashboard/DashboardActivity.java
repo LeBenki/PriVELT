@@ -33,6 +33,7 @@ import butterknife.BindView;
 public class DashboardActivity extends GoogleDriveActivity {
 
     private ActionBar toolbar;
+    private static final int REQUEST_SETTINGS = 7654;
 
     @BindView(R.id.navigation_view)
     BottomNavigationView navigation;
@@ -147,10 +148,18 @@ public class DashboardActivity extends GoogleDriveActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.settings) {
-            startActivity(new Intent(this, SettingsActivity.class));
+            startActivityForResult(new Intent(this, SettingsActivity.class), REQUEST_SETTINGS);
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent resultData) {
+        if (requestCode == REQUEST_SETTINGS && resultCode == RESULT_OK) {
+            finish();
+        }
+        super.onActivityResult(requestCode, resultCode, resultData);
     }
 
     @Override

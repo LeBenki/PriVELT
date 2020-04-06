@@ -45,7 +45,7 @@ public class SettingsActivity extends GoogleDriveActivity {
     public static final String ARG_CHANGE_PASSWORD = "ARG_CHANGE_PASSWORD";
 
     @BindView(R.id.change_password)
-    Button button;
+    Button changePassword;
 
     @BindView(R.id.logout)
     Button logout;
@@ -69,7 +69,7 @@ public class SettingsActivity extends GoogleDriveActivity {
     @Override
     protected void configureDesign(@Nullable Bundle savedInstanceState) {
 
-        button.setOnClickListener(view -> {
+        changePassword.setOnClickListener(view -> {
             Intent intent = new Intent(this, MasterPasswordActivity.class);
             intent.putExtra(ARG_CHANGE_PASSWORD, true);
             startActivity(intent);
@@ -80,6 +80,7 @@ public class SettingsActivity extends GoogleDriveActivity {
                 .setMessage(R.string.log_out_confirmation)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     startActivity(new Intent(this, MasterPasswordActivity.class));
+                    setResult(RESULT_OK);
                     this.finish();
                 })
                 .setNegativeButton(R.string.no, null)
