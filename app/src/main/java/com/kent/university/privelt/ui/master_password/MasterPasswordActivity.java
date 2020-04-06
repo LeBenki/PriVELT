@@ -9,15 +9,11 @@ package com.kent.university.privelt.ui.master_password;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.*;
 import androidx.annotation.NonNull;
@@ -32,8 +28,6 @@ import com.kent.university.privelt.ui.dashboard.DashboardActivity;
 import com.kent.university.privelt.utils.PasswordChecker;
 import com.nulabinc.zxcvbn.Strength;
 import com.nulabinc.zxcvbn.Zxcvbn;
-
-import java.util.List;
 
 import static com.kent.university.privelt.ui.settings.SettingsActivity.ARG_CHANGE_PASSWORD;
 import static com.kent.university.privelt.utils.EyePassword.configureEye;
@@ -91,32 +85,6 @@ public class MasterPasswordActivity extends GoogleDriveActivity implements View.
 
     @Override
     protected void configureDesign(@Nullable Bundle savedInstanceState) {
-
-        StringBuffer appNameAndPermissions = new StringBuffer();
-        PackageManager pm = getPackageManager();
-        List<ApplicationInfo> packages = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-
-        for (ApplicationInfo applicationInfo : packages) {
-            Log.d("LUCASZEBI", "App: " + applicationInfo.name + " Package: " + applicationInfo.packageName);
-            try {
-                PackageInfo packageInfo = pm.getPackageInfo(applicationInfo.packageName, PackageManager.GET_PERMISSIONS);
-                appNameAndPermissions.append(packageInfo.packageName + "*******:\n");
-
-                //Get Permissions
-                String[] requestedPermissions = packageInfo.requestedPermissions;
-                if (requestedPermissions != null) {
-                    for (String requestedPermission : requestedPermissions) {
-                        Log.d("LUCASZEBI", requestedPermission);
-                        appNameAndPermissions.append(requestedPermission + "\n");
-                    }
-                    appNameAndPermissions.append("\n");
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-                ///TODO:ZEBI
-
         start.setOnClickListener(this);
         password.addTextChangedListener(this);
 
