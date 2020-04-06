@@ -24,22 +24,22 @@ public class UserDataRepository {
     }
 
     public LiveData<List<UserData>> getUserDatas() {
-        return mUserDataDao.getUserDatas();
+        return mUserDataDao.getUserData();
     }
 
     public void deleteAllUserDatas() {
-        mUserDataDao.deleteAllUserDatas();
+        mUserDataDao.deleteAllUserData();
     }
 
     public void insertUserDatas(UserData... userData) {
-        mUserDataDao.insertUserDatas(userData);
+        mUserDataDao.insertUserData(userData);
     }
 
     public void deleteUserDatasForAService(long id) {
-        mUserDataDao.deleteUserDatasForAService(id);
+        mUserDataDao.deleteUserDataForAService(id);
     }
 
     public LiveData<List<UserData>> getUserDatasForAServiceAndType(long service, String type) {
-        return mUserDataDao.getUserDatasForAServiceAndType(service, type);
+        return mUserDataDao.getUserDataForAServiceAndType(service, type);
     }
 }

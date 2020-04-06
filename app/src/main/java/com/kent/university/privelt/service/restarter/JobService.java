@@ -53,21 +53,18 @@ public class JobService extends android.app.job.JobService {
             // not registered
         }
         // give the time to run
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // we register the  receiver that will restart the background service if it is killed
-                // see onDestroy of Service
-                IntentFilter filter = new IntentFilter();
-                filter.addAction(RESTART_INTENT);
+        new Handler().postDelayed(() -> {
+            // we register the  receiver that will restart the background service if it is killed
+            // see onDestroy of Service
+            IntentFilter filter = new IntentFilter();
+            filter.addAction(RESTART_INTENT);
+            try {
+               registerReceiver(restartSensorServiceReceiver, filter);
+            } catch (Exception e) {
                 try {
-                   registerReceiver(restartSensorServiceReceiver, filter);
-                } catch (Exception e) {
-                    try {
-                        getApplicationContext().registerReceiver(restartSensorServiceReceiver, filter);
-                    } catch (Exception ex) {
+                    getApplicationContext().registerReceiver(restartSensorServiceReceiver, filter);
+                } catch (Exception ex) {
 
-                    }
                 }
             }
         }, 1000);
@@ -85,12 +82,7 @@ public class JobService extends android.app.job.JobService {
         Intent broadcastIntent = new Intent(RESTART_INTENT);
         sendBroadcast(broadcastIntent);
         // give the time to run
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                unregisterReceiver(restartSensorServiceReceiver);
-            }
-        }, 1000);
+        new Handler().postDelayed(() -> unregisterReceiver(restartSensorServiceReceiver), 1000);
 
         return false;
     }

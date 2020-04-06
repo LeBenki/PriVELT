@@ -69,7 +69,7 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
 
     private ArrayList<Service> subscribedServices;
 
-    private ArrayList<UserData> userDatas;
+    private ArrayList<UserData> userData;
 
     @BindView(R.id.recycler_view_services)
     RecyclerView servicesList;
@@ -99,12 +99,12 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
         watchListHelper = new WatchListHelper(getActivity().getSharedPreferences(KEY_SHARED, Context.MODE_PRIVATE));
     }
 
-    private void getUserDatas() {
-        cardViewModel.getUserDatas().observe(this, this::updateUserDatas);
+    private void getUserData() {
+        cardViewModel.getUserData().observe(this, this::updateUserData);
     }
 
-    private void updateUserDatas(List<UserData> userData) {
-        userDatas = new ArrayList<>(userData);
+    private void updateUserData(List<UserData> userData) {
+        this.userData = new ArrayList<>(userData);
         updateOverallRiskValue();
         updateRecyclerView();
     }
@@ -124,13 +124,13 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
             noService.setVisibility(View.VISIBLE);
         else {
             noService.setVisibility(View.GONE);
-            cardAdapter.updateCards(CardManager.cardsFilter(userDatas, subscribedServices, filters, watchListHelper.getWatchList()));
+            cardAdapter.updateCards(CardManager.cardsFilter(userData, subscribedServices, filters, watchListHelper.getWatchList()));
             cardAdapter.notifyDataSetChanged();
         }
     }
 
     private void updateOverallRiskValue() {
-        int riskValue = userDatas.size();
+        int riskValue = userData.size();
 
         if (riskValue > 100)
             riskValue = 100;
@@ -206,7 +206,7 @@ public class CardFragment extends BaseFragment implements FilterAlertDialog.Filt
         setupAddButton();
 
         getServices();
-        getUserDatas();
+        getUserData();
 
         progressBar.setOnClickListener((v) -> startActivity(new Intent(getActivity(), RiskValueActivity.class)));
     }

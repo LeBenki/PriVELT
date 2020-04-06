@@ -11,7 +11,6 @@ import android.view.MenuItem;
 
 import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.api.PasswordManager;
-import com.kent.university.privelt.api.ServiceHelper;
 import com.kent.university.privelt.di.DaggerPriVELTComponent;
 import com.kent.university.privelt.di.PriVELTComponent;
 import com.kent.university.privelt.di.RoomModule;
@@ -59,10 +58,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected PasswordManager getIdentityManager() {
         return ((PriVELTApplication) getApplication()).getIdentityManager();
-    }
-
-    protected ServiceHelper getServiceHelper() {
-        return ((PriVELTApplication)getApplicationContext()).getServiceHelper();
     }
 
     @Override

@@ -19,17 +19,17 @@ import androidx.room.Query;
 @Dao
 public interface UserDataDao {
     @Query("SELECT * FROM user_data")
-    LiveData<List<UserData>> getUserDatas();
+    LiveData<List<UserData>> getUserData();
 
     @Query("DELETE FROM user_data")
-    void deleteAllUserDatas();
+    void deleteAllUserData();
 
     @Query("DELETE FROM user_data WHERE service_id = :serviceId")
-    void deleteUserDatasForAService(long serviceId);
+    void deleteUserDataForAService(long serviceId);
 
     @Query("SELECT * FROM user_data WHERE service_id = :serviceId and type =:type")
-    LiveData<List<UserData>> getUserDatasForAServiceAndType(long serviceId, String type);
+    LiveData<List<UserData>> getUserDataForAServiceAndType(long serviceId, String type);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insertUserDatas(UserData... userData);
+    void insertUserData(UserData... userData);
 }

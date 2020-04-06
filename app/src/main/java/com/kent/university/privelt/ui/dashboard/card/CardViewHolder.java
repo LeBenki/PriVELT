@@ -7,13 +7,11 @@
 package com.kent.university.privelt.ui.dashboard.card;
 
 import android.content.Intent;
-import android.os.Build;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -75,7 +73,6 @@ class CardViewHolder extends RecyclerView.ViewHolder {
         metrics.setAdapter(dataMetricsAdapter);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     void bind(Card card) {
         title.setText(capitaliseFirstLetter(card.getTitle()));
 
@@ -90,7 +87,7 @@ class CardViewHolder extends RecyclerView.ViewHolder {
         if (card.isService()) {
             settings.setVisibility(View.VISIBLE);
             settings.setOnClickListener(view -> EventBus.getDefault().post(new UpdateCredentialsEvent(card.getTitle())));
-            cardView.setStrokeColor(itemView.getContext().getColor(R.color.colorAccent));
+            cardView.setStrokeColor(itemView.getContext().getResources().getColor(R.color.colorAccent));
         } else {
             settings.setVisibility(View.GONE);
         }

@@ -141,11 +141,9 @@ public class DataExtraction {
                         if (status.isDone()) {
                             if (BuildConfig.DEBUG)
                                 Log.d(TAG, "LOGIN SERVICE:" + allUserData.size());
-                            userDataRepository.deleteUserDatasForAService(service.getId());
-
+                            userDataRepository.deleteAllUserData();
                             for (UserData userData : allUserData)
-                                userDataRepository.insertUserDatas(userData);
-
+                                userDataRepository.insertUserData(userData);
                             saveToGoogleDrive(applicationContext);
                         }
                     });

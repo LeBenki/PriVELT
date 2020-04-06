@@ -14,9 +14,7 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.model.CardItem;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

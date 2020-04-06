@@ -9,7 +9,6 @@ package com.kent.university.privelt.service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 public class ProcessMainClass {
     private static final String TAG = ProcessMainClass.class.getSimpleName();

@@ -30,7 +30,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 import static com.kent.university.privelt.ui.data.DataActivity.PARAM_TYPE;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
@@ -54,8 +53,6 @@ public class DetailedCardActivity extends BaseActivity {
 
     @BindView(R.id.risk_progress)
     ProgressBar overallRisk;
-
-    private DetailedCardAdapter detailedCardAdapter;
 
     @Override
     protected int getActivityLayout() {
@@ -110,7 +107,7 @@ public class DetailedCardActivity extends BaseActivity {
         }
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        detailedCardAdapter = new DetailedCardAdapter(card.getMetrics(), !card.isService());
+        DetailedCardAdapter detailedCardAdapter = new DetailedCardAdapter(card.getMetrics(), !card.isService());
         recyclerView.setAdapter(detailedCardAdapter);
     }
 

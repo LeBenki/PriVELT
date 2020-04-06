@@ -8,7 +8,6 @@ package com.kent.university.privelt.utils;
 
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Arrays;

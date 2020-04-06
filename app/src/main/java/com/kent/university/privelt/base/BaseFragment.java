@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.kent.university.privelt.PriVELTApplication;
-import com.kent.university.privelt.api.PasswordManager;
 import com.kent.university.privelt.api.ServiceHelper;
 import com.kent.university.privelt.di.DaggerPriVELTComponent;
 import com.kent.university.privelt.di.PriVELTComponent;
@@ -59,10 +58,6 @@ public abstract class BaseFragment extends Fragment {
         final PriVELTViewModelFactory factory = component.getViewModelFactory();
 
         return new ViewModelProvider(this, factory).get(className);
-    }
-
-    protected PasswordManager getIdentityManager() {
-        return ((PriVELTApplication) getContext().getApplicationContext()).getIdentityManager();
     }
 
     protected ServiceHelper getServiceHelper() {

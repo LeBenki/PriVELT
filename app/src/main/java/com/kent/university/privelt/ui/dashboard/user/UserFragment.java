@@ -106,13 +106,11 @@ public class UserFragment extends BaseFragment implements UserTextWatcher.MyText
     private Menu mOptionsMenu;
 
     @OnClick(R.id.birthday)
-    public void onBirthdayClick(View view) {
+    void onBirthdayClick() {
 
 
-        DatePickerDialog.OnDateSetListener listener = (datePicker, dayOfMonth, monthOfYear, year) -> {
-            birthday.setText(new StringBuilder()
-                    .append(dayOfMonth).append("/").append(monthOfYear + 1).append("/").append(year).append(" "));
-        };
+        DatePickerDialog.OnDateSetListener listener = (datePicker, dayOfMonth, monthOfYear, year) -> birthday.setText(new StringBuilder()
+                .append(dayOfMonth).append("/").append(monthOfYear + 1).append("/").append(year).append(" "));
 
         Calendar calendar = Calendar.getInstance(TimeZone.getDefault());
 

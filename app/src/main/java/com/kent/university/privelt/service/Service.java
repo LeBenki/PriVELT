@@ -34,7 +34,6 @@ public class Service extends android.app.Service {
      * static to avoid multiple timers to be created when the service is called several times
      */
     private static Timer timer;
-    private static TimerTask timerTask;
 
     @Override
     public void onCreate() {
@@ -121,9 +120,9 @@ public class Service extends android.app.Service {
         stoptimertask();
         timer = new Timer();
 
-        timerTask = new TimerTask() {
+        TimerTask timerTask = new TimerTask() {
             public void run() {
-                if (((PriVELTApplication)getApplicationContext()).getIdentityManager().getPassword() != null)
+                if (((PriVELTApplication) getApplicationContext()).getIdentityManager().getPassword() != null)
                     processExtractionForEachService(getApplicationContext());
             }
         };

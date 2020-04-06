@@ -33,10 +33,6 @@ public class ServiceHelper {
         }
     }
 
-    public ServiceManager getServiceManager() {
-        return serviceManager;
-    }
-
     public ArrayList<String> getRemainingServices(ArrayList<Service> subscribedServices) {
         ArrayList<String> notSubscribed = new ArrayList<>(this.getServiceNames());
 
@@ -48,10 +44,6 @@ public class ServiceHelper {
 
     private ArrayList<String> getServiceNames() {
         return serviceNames;
-    }
-
-    public ArrayList<Integer> getServiceResIds() {
-        return serviceResIds;
     }
 
     public int getResIdWithName(String name) {

@@ -108,9 +108,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         if (!BuildConfig.DEBUG)
             debug.setVisibility(View.GONE);
 
-        debug.setOnClickListener(view -> {
-            showAlertDebug();
-        });
+        debug.setOnClickListener(view -> showAlertDebug());
 
         //debug.setVisibility(View.GONE);
     }

@@ -26,7 +26,7 @@ public class CardViewModel extends ViewModel {
     @Nullable
     private LiveData<List<Service>> mServices;
 
-    private LiveData<List<UserData>> mUserDatas;
+    private LiveData<List<UserData>> mUserData;
 
     public CardViewModel(ServiceDataRepository serviceDataRepository, UserDataRepository userDataSource, Executor executor) {
         mServiceDataSource = serviceDataRepository;
@@ -37,8 +37,8 @@ public class CardViewModel extends ViewModel {
     void init() {
         if (mServices == null)
             mServices = mServiceDataSource.getServices();
-        if (mUserDatas == null)
-            mUserDatas = mUserDataSource.getUserDatas();
+        if (mUserData == null)
+            mUserData = mUserDataSource.getUserDatas();
     }
 
     @Nullable
@@ -58,7 +58,7 @@ public class CardViewModel extends ViewModel {
          mServiceDataSource.updateServices(services);
     }
 
-    LiveData<List<UserData>> getUserDatas() {
-        return mUserDatas;
+    LiveData<List<UserData>> getUserData() {
+        return mUserData;
     }
 }
