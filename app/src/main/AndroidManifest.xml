@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
 
     <application
         android:name=".PriVELTApplication"
@@ -57,7 +59,7 @@
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.kent.university.privelt.ui.detailed.DetailedCardActivity" />
+                android:value=".ui.dashboard.card.detailed.DetailedCardActivity" />
         </activity>
         <activity
             android:name=".ui.risk_value.RiskValueActivity"
@@ -67,7 +69,7 @@
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
         </activity>
         <activity
-            android:name=".ui.detailed.DetailedCardActivity"
+            android:name=".ui.dashboard.card.detailed.DetailedCardActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -75,6 +77,13 @@
         </activity>
         <activity
             android:name=".ui.risk_value.BarActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
+        </activity>
+        <activity
+            android:name=".ui.dashboard.sensors.detailed.DetailedSensorActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

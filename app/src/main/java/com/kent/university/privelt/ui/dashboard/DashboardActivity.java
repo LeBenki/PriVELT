@@ -21,6 +21,7 @@ import com.kent.university.privelt.base.GoogleDriveActivity;
 import com.kent.university.privelt.service.ProcessMainClass;
 import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver;
 import com.kent.university.privelt.ui.dashboard.card.CardFragment;
+import com.kent.university.privelt.ui.dashboard.sensors.SensorFragment;
 import com.kent.university.privelt.ui.dashboard.user.UserFragment;
 import com.kent.university.privelt.ui.settings.SettingsActivity;
 
@@ -96,6 +97,11 @@ public class DashboardActivity extends GoogleDriveActivity {
                     fragment = new CardFragment();
                     loadFragment(fragment);
                     return true;
+                case R.id.navigation_sensors:
+                    toolbar.setTitle(R.string.applications);
+                    fragment = new SensorFragment();
+                    loadFragment(fragment);
+                    return true;
                 case R.id.navigation_user:
                     toolbar.setTitle(R.string.user);
                     fragment = new UserFragment();
@@ -133,7 +139,10 @@ public class DashboardActivity extends GoogleDriveActivity {
             settings.setVisible(false);
             edit.setVisible(false);
             check.setVisible(false);
-            filter.setVisible(true);
+            if (fragment instanceof CardFragment)
+                filter.setVisible(true);
+            else
+                filter.setVisible(false);
         }
         return true;
     }

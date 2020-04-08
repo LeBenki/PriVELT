@@ -34,7 +34,7 @@ import com.kent.university.privelt.events.UpdateCredentialsEvent;
 import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.ui.dashboard.DashboardActivity;
-import com.kent.university.privelt.ui.detailed.DetailedCardActivity;
+import com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardActivity;
 import com.kent.university.privelt.ui.login.LoginActivity;
 import com.kent.university.privelt.ui.risk_value.RiskValueActivity;
 import com.kent.university.privelt.utils.CardManager;
@@ -55,7 +55,7 @@ import butterknife.BindView;
 
 import static com.kent.university.privelt.api.DataExtraction.processDataExtraction;
 import static com.kent.university.privelt.ui.dashboard.card.FilterAlertDialog.KEY_SHARED;
-import static com.kent.university.privelt.ui.detailed.DetailedCardActivity.PARAM_CARD;
+import static com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardActivity.PARAM_CARD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_PASSWORD;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_SERVICE;
 import static com.kent.university.privelt.ui.login.LoginActivity.PARAM_USER;

@@ -7,6 +7,11 @@
         android:title="@string/services"/>
 
     <item
+        android:id="@+id/navigation_sensors"
+        android:icon="@drawable/ic_applications"
+        android:title="@string/applications"/>
+
+    <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/ic_user"
         android:title="@string/user"/>

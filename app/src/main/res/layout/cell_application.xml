@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ /* This Source Code Form is subject to the terms of the Mozilla Public
+  ~  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+  -->
+
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardService"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="@dimen/activity_vertical_margin"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:layout_marginRight="@dimen/activity_vertical_margin"
+    android:orientation="vertical"
+    app:strokeWidth="3dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/image_sensor"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:paddingTop="5dp"
+            android:src="@drawable/drive_logo"
+            android:paddingEnd="5dp" />
+
+        <TextView
+            android:id="@+id/sensor_value"
+            android:layout_width="22dp"
+            android:layout_height="18dp"
+            android:layout_alignTop="@id/image_sensor"
+            android:layout_alignEnd="@id/image_sensor"
+            android:layout_gravity="center"
+            android:background="@drawable/circle"
+            android:gravity="center"
+            android:text="12"
+            android:paddingBottom="2dp"
+            android:textColor="@android:color/white"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_alignParentEnd="true"
+            android:layout_margin="@dimen/activity_vertical_margin"
+            android:layout_centerVertical="true">
+            <TextView
+                android:id="@+id/sensor_status_name"
+                android:layout_width="wrap_content"
+                android:text="On"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="5dp"/>
+            <View
+                android:id="@+id/sensor_status_image"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:background="@drawable/circle"/>
+        </LinearLayout>
+    </RelativeLayout>
+</com.google.android.material.card.MaterialCardView>

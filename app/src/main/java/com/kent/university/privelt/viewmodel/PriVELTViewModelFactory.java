@@ -13,7 +13,7 @@ import com.kent.university.privelt.repositories.UserDataRepository;
 import com.kent.university.privelt.ui.dashboard.card.CardViewModel;
 import com.kent.university.privelt.ui.dashboard.user.UserViewModel;
 import com.kent.university.privelt.ui.data.DataViewModel;
-import com.kent.university.privelt.ui.detailed.DetailedCardViewModel;
+import com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardViewModel;
 import com.kent.university.privelt.ui.risk_value.RiskValueViewModel;
 import com.kent.university.privelt.ui.settings.SettingsViewModel;
 

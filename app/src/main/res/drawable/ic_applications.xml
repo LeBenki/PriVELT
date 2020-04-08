@@ -1,0 +1,57 @@
+<!--
+  ~ /* This Source Code Form is subject to the terms of the Mozilla Public
+  ~  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  ~  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+  -->
+
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512dp"
+    android:height="512dp"
+    android:viewportWidth="512"
+    android:viewportHeight="512">
+  <path
+      android:pathData="M104,64L104,64A40,40 0,0 1,144 104L144,104A40,40 0,0 1,104 144L104,144A40,40 0,0 1,64 104L64,104A40,40 0,0 1,104 64z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+  <path
+      android:pathData="M256,64L256,64A40,40 0,0 1,296 104L296,104A40,40 0,0 1,256 144L256,144A40,40 0,0 1,216 104L216,104A40,40 0,0 1,256 64z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+  <path
+      android:pathData="M408,64L408,64A40,40 0,0 1,448 104L448,104A40,40 0,0 1,408 144L408,144A40,40 0,0 1,368 104L368,104A40,40 0,0 1,408 64z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+  <path
+      android:pathData="M104,216L104,216A40,40 0,0 1,144 256L144,256A40,40 0,0 1,104 296L104,296A40,40 0,0 1,64 256L64,256A40,40 0,0 1,104 216z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+  <path
+      android:pathData="M256,216L256,216A40,40 0,0 1,296 256L296,256A40,40 0,0 1,256 296L256,296A40,40 0,0 1,216 256L216,256A40,40 0,0 1,256 216z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+  <path
+      android:pathData="M408,216L408,216A40,40 0,0 1,448 256L448,256A40,40 0,0 1,408 296L408,296A40,40 0,0 1,368 256L368,256A40,40 0,0 1,408 216z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+  <path
+      android:pathData="M104,368L104,368A40,40 0,0 1,144 408L144,408A40,40 0,0 1,104 448L104,448A40,40 0,0 1,64 408L64,408A40,40 0,0 1,104 368z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+  <path
+      android:pathData="M256,368L256,368A40,40 0,0 1,296 408L296,408A40,40 0,0 1,256 448L256,448A40,40 0,0 1,216 408L216,408A40,40 0,0 1,256 368z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+  <path
+      android:pathData="M408,368L408,368A40,40 0,0 1,448 408L448,408A40,40 0,0 1,408 448L408,448A40,40 0,0 1,368 408L368,408A40,40 0,0 1,408 368z"
+      android:strokeWidth="32"
+      android:fillColor="#00000000"
+      android:strokeColor="#000"/>
+</vector>

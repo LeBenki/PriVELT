@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.kent.university.privelt.ui.detailed;
+package com.kent.university.privelt.ui.dashboard.card.detailed;
 
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.repositories.UserDataRepository;

@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.kent.university.privelt.ui.detailed;
+package com.kent.university.privelt.ui.dashboard.card.detailed;
 
 import android.content.Intent;
 import android.os.Bundle;
