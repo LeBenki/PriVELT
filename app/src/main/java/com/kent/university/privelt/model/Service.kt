@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey
 import java.io.Serializable
 
 @Entity(tableName = "service")
-class Service(var name: String, var isPasswordSaved: Boolean, var concatenatedScripts: String, var user: String, var password: String) : Serializable, Cloneable {
+data class Service(var name: String, var isPasswordSaved: Boolean, var concatenatedScripts: String, var user: String, var password: String) : Serializable, Cloneable {
 
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

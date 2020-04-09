@@ -3,8 +3,8 @@
  *  * License, v. 2.0. If a copy of the MPL was not distributed with this
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
-package com.kent.university.privelt.model
+package com.kent.university.privelt.events
 
-import java.io.Serializable
+import com.kent.university.privelt.model.Sensor
 
-data class CardItem(var name: String, var number: Int) : Serializable
+class LaunchDetailedSensorEvent(var sensor: Sensor)

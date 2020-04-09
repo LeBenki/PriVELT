@@ -9,7 +9,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "settings")
-class Settings(var isGoogleDriveAutoSave: Boolean, var googleDriveFileID: String) {
+data class Settings(var isGoogleDriveAutoSave: Boolean, var googleDriveFileID: String) {
     @PrimaryKey
     var id: Long = 0
 }

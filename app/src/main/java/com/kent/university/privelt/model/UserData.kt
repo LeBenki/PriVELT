@@ -11,7 +11,7 @@ import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "user_data", foreignKeys = [ForeignKey(entity = Service::class, parentColumns = "id", childColumns = "service_id", onDelete = ForeignKey.CASCADE)])
-class UserData(var title: String, var type: String, var value: String, var concatenatedData: String, @field:ColumnInfo(name = "service_id", index = true) var serviceId: Long) {
+data class UserData(var title: String, var type: String, var value: String, var concatenatedData: String, @field:ColumnInfo(name = "service_id", index = true) var serviceId: Long) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 

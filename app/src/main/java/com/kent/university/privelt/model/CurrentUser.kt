@@ -9,7 +9,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "current_user")
-class CurrentUser(var firstName: String, var lastName: String, var birthday: String, var address: String, var phoneNumber: String, var mail: String) {
+data class CurrentUser(var firstName: String, var lastName: String, var birthday: String, var address: String, var phoneNumber: String, var mail: String) {
     @PrimaryKey
     var id: Long = 0
 

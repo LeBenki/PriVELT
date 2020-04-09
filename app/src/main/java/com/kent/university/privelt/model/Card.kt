@@ -7,7 +7,7 @@ package com.kent.university.privelt.model
 
 import java.io.Serializable
 
-class Card(var title: String, var isWatched: Boolean, var isService: Boolean, var metrics: List<CardItem>) : Serializable {
+data class Card(var title: String, var isWatched: Boolean, var isService: Boolean, var metrics: MutableList<CardItem>) : Serializable {
 
     fun getCardItemWithCardIemTitle(title: String): CardItem? {
         for (i in metrics.indices) {
