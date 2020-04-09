@@ -108,7 +108,8 @@ public class DataExtraction {
                 continue;
             processDataExtraction(serviceHelper, service, service.getUser(), service.getPassword(), applicationContext);
         }
-     }
+        saveToGoogleDrive(applicationContext);
+    }
 
     private static List<Service> cloneList(List<Service> list) throws CloneNotSupportedException {
         List<Service> clone = new ArrayList<>(list.size());
@@ -129,23 +130,22 @@ public class DataExtraction {
             @Override
             public void getResponse(ResponseEnum responseEnum, String data) {
                 if (BuildConfig.DEBUG)
-                    Log.d(TAG, responseEnum.toString());
+                    Log.d(TAG, responseEnum.toString()+ " FOR SERVICE : " + service.getName());
                 if (responseEnum == ResponseEnum.SUCCESS) {
                     dataExtractor.injectAll(((PriVELTApplication)applicationContext).getCurrentActivity(), (jsonArray, status) -> {
                         if (BuildConfig.DEBUG)
-                            Log.d(TAG, status.toString());
+                            Log.d(TAG, status.toString()+ " FOR SERVICE : " + service.getName());
                         if (jsonArray != null) {
                             allUserData.addAll(parseJSON(jsonArray, service));
                             if (BuildConfig.DEBUG)
-                                Log.d(TAG, jsonArray.toString());
+                                Log.d(TAG, jsonArray.toString()+ " FOR SERVICE : " + service.getName());
                         }
                         if (status.isDone()) {
                             if (BuildConfig.DEBUG)
-                                Log.d(TAG, "LOGIN SERVICE:" + allUserData.size());
+                                Log.d(TAG, "DONE:" + allUserData.size() + " FOR SERVICE : " + service.getName());
                             userDataRepository.deleteAllUserData();
                             for (UserData userData : allUserData)
                                 userDataRepository.insertUserData(userData);
-                            saveToGoogleDrive(applicationContext);
                         }
                     });
                 }
