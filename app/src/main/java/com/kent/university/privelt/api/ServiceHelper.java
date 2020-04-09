@@ -36,10 +36,11 @@ public class ServiceHelper {
 
     public ArrayList<String> getRemainingServices(ArrayList<Service> subscribedServices) {
         ArrayList<String> notSubscribed = new ArrayList<>(this.getServiceNames());
-
+        //Avoid not working services
+        notSubscribed.remove("Strava");
+        notSubscribed.remove("Trainline");
         for (Service service : subscribedServices)
             notSubscribed.remove(service.getName());
-
         return notSubscribed;
     }
 
