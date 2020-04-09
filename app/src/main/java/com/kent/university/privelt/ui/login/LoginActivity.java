@@ -123,9 +123,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         progressBar.setVisibility(View.VISIBLE);
         button.setEnabled(false);
 
-        if (BuildConfig.DEBUG)
-            showAlertDebug();
-
         loginService.autoLogin(email.getText().toString(), password.getText().toString(), new ResponseCallback() {
             @Override
             public void getResponse(ResponseEnum responseEnum, String data) {
