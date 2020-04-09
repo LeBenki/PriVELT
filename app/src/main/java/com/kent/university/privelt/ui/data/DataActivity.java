@@ -92,7 +92,7 @@ public class DataActivity extends BaseActivity {
 
         for (Service service : services)
             if (service.getName().equals(this.service))
-                id = service.getId();
+                id = service.id;
 
         getUserDatas(id, type);
     }

@@ -1,12 +1,12 @@
 apply plugin: 'com.android.application'
-
-def githubProperties = new Properties()
-githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
 
 repositories {
     maven {
         url "https://s3.amazonaws.com/repo.commonsware.com"
     }
+    mavenCentral()
 }
 
 android {
@@ -83,4 +83,7 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    implementation "androidx.core:core-ktx:+"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }

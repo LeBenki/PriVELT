@@ -280,7 +280,7 @@ public class RiskValueActivity extends BaseActivity {
     private int countTypeForEachService(String mActivity, Service service) {
         int count = 0;
         for (UserData userData : userDatas) {
-            if (userData.getServiceId() == service.getId() && userData.getType().equals(mActivity))
+            if (userData.getServiceId() == service.id && userData.getType().equals(mActivity))
                 count += 1;
         }
         return count;
@@ -289,7 +289,7 @@ public class RiskValueActivity extends BaseActivity {
     private int countServiceForEachType(String mActivity, Service service) {
         int count = 0;
         for (UserData userData : userDatas) {
-            if (userData.getServiceId() == service.getId() && userData.getType().equals(mActivity) && mActivity.equals(userData.getType()))
+            if (userData.getServiceId() == service.id && userData.getType().equals(mActivity) && mActivity.equals(userData.getType()))
                 count += 1;
         }
         return count;

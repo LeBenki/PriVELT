@@ -76,7 +76,7 @@ public class CardManager {
 
     private static Service getServiceFromIndex(long id, List<Service> services) {
         for (Service service : services)
-            if (service.getId() == id)
+            if (service.id == id)
                 return service;
         return null;
     }
