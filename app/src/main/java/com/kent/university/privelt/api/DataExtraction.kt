@@ -36,15 +36,15 @@ object DataExtraction {
         val settings = settingsDataRepository.instantSettings
         if (settings != null && settings.isGoogleDriveAutoSave) {
             try {
-                val account = GoogleSignIn.getLastSignedInAccount(PriVELTApplication.getInstance())
+                val account = GoogleSignIn.getLastSignedInAccount(PriVELTApplication.instance)
                 val credential = GoogleAccountCredential.usingOAuth2(
-                        PriVELTApplication.getInstance(), setOf(DriveScopes.DRIVE_FILE))
+                        PriVELTApplication.instance, setOf(DriveScopes.DRIVE_FILE))
                 credential.selectedAccount = account!!.account
                 val googleDriveService = Drive.Builder(
                                 AndroidHttp.newCompatibleTransport(),
                                 GsonFactory(),
                                 credential)
-                        .setApplicationName(PriVELTApplication.getInstance().resources.getString(R.string.app_name))
+                        .setApplicationName(PriVELTApplication.instance.resources.getString(R.string.app_name))
                         .build()
                 val mDriveServiceHelper = DriveServiceHelper(googleDriveService)
                 val serviceList = serviceDataRepository.allServices
@@ -55,7 +55,7 @@ object DataExtraction {
                     serviceList[i].isPasswordSaved = false
                     serviceDataRepository.updateServices(serviceList[i])
                 }
-                val s = mDriveServiceHelper.uploadFile(PriVELTApplication.getInstance().getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), settings.googleDriveFileID)
+                val s = mDriveServiceHelper.uploadFile(PriVELTApplication.instance.getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), settings.googleDriveFileID)
                 for (service in oldServices) serviceDataRepository.updateServices(service)
                 settings.googleDriveFileID = s
                 settingsDataRepository.updateSettings(settings)
