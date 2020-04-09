@@ -17,7 +17,8 @@ import butterknife.ButterKnife;
 import com.kent.university.privelt.PriVELTApplication;
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.model.CardItem;
-import com.university.kent.dataextractor.model.UserDataTypes;
+
+import net.neferett.webviewsextractor.model.UserDataTypes;
 
 public class DataMetricsViewHolder extends RecyclerView.ViewHolder {
 

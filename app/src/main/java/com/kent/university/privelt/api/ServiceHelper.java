@@ -9,8 +9,9 @@ package com.kent.university.privelt.api;
 import android.content.Context;
 
 import com.kent.university.privelt.model.Service;
-import com.kent.university.webviewautologin.services.LoginService;
-import com.kent.university.webviewautologin.services.ServiceManager;
+
+import net.neferett.webviewsinjector.services.LoginService;
+import net.neferett.webviewsinjector.services.ServiceManager;
 
 import java.util.ArrayList;
 

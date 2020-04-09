@@ -27,10 +27,11 @@ import com.kent.university.privelt.model.Service;
 import com.kent.university.privelt.model.Settings;
 import com.kent.university.privelt.model.UserData;
 import com.kent.university.privelt.utils.DriveServiceHelper;
-import com.kent.university.webviewautologin.response.ResponseCallback;
-import com.kent.university.webviewautologin.response.ResponseEnum;
-import com.kent.university.webviewautologin.services.LoginService;
-import com.university.kent.dataextractor.DataExtractor;
+
+import net.neferett.webviewsextractor.DataExtractor;
+import net.neferett.webviewsinjector.response.ResponseCallback;
+import net.neferett.webviewsinjector.response.ResponseEnum;
+import net.neferett.webviewsinjector.services.LoginService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

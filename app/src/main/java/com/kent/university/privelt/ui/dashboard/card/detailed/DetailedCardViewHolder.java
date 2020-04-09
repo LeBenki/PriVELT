@@ -15,7 +15,8 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.events.LaunchListDataEvent;
 import com.kent.university.privelt.model.CardItem;
 import com.kent.university.privelt.utils.sentence.SentenceAdapter;
-import com.university.kent.dataextractor.model.UserDataTypes;
+
+import net.neferett.webviewsextractor.model.UserDataTypes;
 
 import org.greenrobot.eventbus.EventBus;
 

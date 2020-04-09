@@ -13,7 +13,8 @@ import android.widget.TextView;
 
 import com.kent.university.privelt.R;
 import com.kent.university.privelt.model.UserData;
-import com.university.kent.dataextractor.model.UserDataTypes;
+
+import net.neferett.webviewsextractor.model.UserDataTypes;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

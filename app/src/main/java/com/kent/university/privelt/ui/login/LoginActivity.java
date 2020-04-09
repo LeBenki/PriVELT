@@ -25,10 +25,11 @@ import com.kent.university.privelt.R;
 import com.kent.university.privelt.api.ServiceHelper;
 import com.kent.university.privelt.base.BaseActivity;
 import com.kent.university.privelt.model.Service;
-import com.kent.university.webviewautologin.response.ResponseCallback;
-import com.kent.university.webviewautologin.response.ResponseEnum;
-import com.kent.university.webviewautologin.services.LoginService;
-import com.university.kent.dataextractor.DataExtractor;
+
+import net.neferett.webviewsextractor.DataExtractor;
+import net.neferett.webviewsinjector.response.ResponseCallback;
+import net.neferett.webviewsinjector.response.ResponseEnum;
+import net.neferett.webviewsinjector.services.LoginService;
 
 import java.util.Arrays;
 

@@ -27,7 +27,8 @@ import com.kent.university.privelt.model.Card;
 import com.kent.university.privelt.model.CardItem;
 import com.kent.university.privelt.ui.dashboard.card.data_metrics.DataMetricsAdapter;
 import com.kent.university.privelt.ui.risk_value.BarActivity;
-import com.university.kent.dataextractor.model.UserDataTypes;
+
+import net.neferett.webviewsextractor.model.UserDataTypes;
 
 import org.greenrobot.eventbus.EventBus;
 

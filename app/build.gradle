@@ -5,24 +5,6 @@ githubProperties.load(new FileInputStream(rootProject.file("github.properties"))
 
 repositories {
     maven {
-        name = "GitHubPackages"
-
-        url = uri("https://maven.pkg.github.com/jordanbonaldi/WebviewAutoLogin")
-        credentials {
-            username = githubProperties['gpr.usr']
-            password = githubProperties['gpr.key']
-        }
-    }
-    maven {
-        name = "GitHubPackages"
-
-        url = uri("https://maven.pkg.github.com/jordanbonaldi/DataExtractor")
-        credentials {
-            username = githubProperties['gpr.usr']
-            password = githubProperties['gpr.key']
-        }
-    }
-    maven {
         url "https://s3.amazonaws.com/repo.commonsware.com"
     }
 }
@@ -93,8 +75,8 @@ dependencies {
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'
     implementation 'com.google.api-client:google-api-client-android:1.26.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
-    implementation 'com.kent.university:webviewautologin:1.55.6'
-    implementation 'com.kent.university:dataextractor:1.68.5'
+    implementation 'net.neferett:webviewsinjector:2.0.1'
+    implementation 'net.neferett:webviewsextractor:2.0.1'
     implementation 'com.android.support:multidex:1.0.3'
     def daggerVersion = "2.27"
     implementation "com.google.dagger:dagger:$daggerVersion"
