@@ -47,10 +47,12 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         itemView.watch_icon!!.setOnClickListener {
             EventBus.getDefault().post(ChangeWatchListStatusEvent(card.title))
             card.isWatched = !card.isWatched
-            itemView.watch_icon!!.setColorFilter(if (card.isWatched) itemView.context.resources.getColor(R.color.colorAccent) else ContextCompat.getColor(itemView.context, android.R.color.black))
+            itemView.watch_icon!!.setColorFilter(if (card.isWatched) ContextCompat.getColor(itemView.context, R.color.colorAccent) else ContextCompat.getColor(itemView.context, android.R.color.black))
         }
+
         itemView.setOnClickListener { EventBus.getDefault().post(DetailedCardEvent(card)) }
-        itemView.watch_icon!!.setColorFilter(if (card.isWatched) itemView.context.resources.getColor(R.color.colorAccent) else ContextCompat.getColor(itemView.context, android.R.color.black))
+        itemView.watch_icon!!.setColorFilter(if (card.isWatched) ContextCompat.getColor(itemView.context, R.color.colorAccent) else ContextCompat.getColor(itemView.context, android.R.color.black))
+
         var total = 0
         for (item in card.metrics) total += item.number
         if (card.metrics.size != 0) {

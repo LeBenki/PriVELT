@@ -5,9 +5,6 @@
  */
 package com.kent.university.privelt.utils.sentence
 
-import lombok.AllArgsConstructor
-
-@AllArgsConstructor
 enum class RuleEnum(private val ruleReplacements: Array<RuleReplacement>) {
     REGULAR(arrayOf<RuleReplacement>(
             RuleReplacement("", "s", true)

@@ -5,9 +5,6 @@
  */
 package com.kent.university.privelt.utils.sentence
 
-import lombok.Data
-
-@Data
 class RuleReplacement(val ending: String, private val replacement: String, private val adding: Boolean) {
     fun apply(word: String): String {
         return if (adding) word + replacement else replacement
