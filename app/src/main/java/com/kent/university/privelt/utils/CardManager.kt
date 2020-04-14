@@ -19,8 +19,8 @@ object CardManager {
         }
         if (userDataList == null) return cards
         for ((_, type, _, _, serviceId) in userDataList) {
-            val service = getServiceFromIndex(serviceId, services)
-            if (containsCard(cards, service!!.name)) {
+            val service = getServiceFromIndex(serviceId, services) ?: continue
+            if (containsCard(cards, service.name)) {
                 val card = getCardWithTitle(cards, service.name)
                 var cardItems = card!!.getCardItemWithCardIemTitle(type)
                 if (cardItems == null) {

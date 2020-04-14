@@ -22,7 +22,7 @@ enum class Sensor(var title: String, val resId: Int, val isSensor: Boolean) {
 
     private val applications: MutableList<Application>
 
-    fun getApplications(): List<Application> {
+    fun getApplications(): MutableList<Application> {
         return applications
     }
 

@@ -35,6 +35,7 @@ object SensorHelper {
         val applications = getApplicationsInformation(context)
         val sensors = listOf(*Sensor.values())
         for (sensor in sensors) {
+            sensor.getApplications().clear()
             for (application in applications) {
                 if (checkIfApplicationHasPermission(application, sensor.title)) {
                     sensor.addApplication(application)

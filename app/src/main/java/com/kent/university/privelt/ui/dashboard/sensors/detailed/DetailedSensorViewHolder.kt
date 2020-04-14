@@ -6,14 +6,14 @@
 package com.kent.university.privelt.ui.dashboard.sensors.detailed
 
 import android.view.View
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.kent.university.privelt.model.Application
+import kotlinx.android.synthetic.main.cell_detailed_sensor.view.*
 
 internal class DetailedSensorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    var title: TextView? = null
+
     fun bind(application: Application) {
-        title!!.text = application.name
+        itemView.title!!.text = application.name
     }
 
 }
