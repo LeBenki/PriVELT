@@ -9,6 +9,7 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.common.util.CollectionUtils.setOf
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.json.gson.GsonFactory
@@ -29,81 +30,80 @@ import org.json.JSONArray
 import java.util.*
 
 object DataExtraction {
-    private val TAG = DataExtractor::class.java.simpleName
+    private val TAG = DataExtractor::class.simpleName
     private fun saveToGoogleDrive(applicationContext: Context) {
-        val serviceDataRepository = PriVELTDatabase.getInstance(applicationContext).serviceDao()
-        val settingsDataRepository = PriVELTDatabase.getInstance(applicationContext).settingsDao()
-        val settings = settingsDataRepository.instantSettings
+        val serviceDataRepository = PriVELTDatabase.getInstance(applicationContext)?.serviceDao()
+        val settingsDataRepository = PriVELTDatabase.getInstance(applicationContext)?.settingsDao()
+        val settings = settingsDataRepository?.instantSettings
         if (settings != null && settings.isGoogleDriveAutoSave) {
             try {
-                val account = GoogleSignIn.getLastSignedInAccount(PriVELTApplication.instance)
+                val account = GoogleSignIn.getLastSignedInAccount(PriVELTApplication.getInstance())
                 val credential = GoogleAccountCredential.usingOAuth2(
-                        PriVELTApplication.instance, setOf(DriveScopes.DRIVE_FILE))
+                        PriVELTApplication.getInstance(), setOf(DriveScopes.DRIVE_FILE))
                 credential.selectedAccount = account!!.account
                 val googleDriveService = Drive.Builder(
                                 AndroidHttp.newCompatibleTransport(),
                                 GsonFactory(),
                                 credential)
-                        .setApplicationName(PriVELTApplication.instance.resources.getString(R.string.app_name))
+                        .setApplicationName(PriVELTApplication.getInstance().resources.getString(R.string.app_name))
                         .build()
                 val mDriveServiceHelper = DriveServiceHelper(googleDriveService)
-                val serviceList = serviceDataRepository.allServices
-                val oldServices = cloneList(serviceList)
+                val serviceList = serviceDataRepository?.allServices
+                val oldServices = cloneList(serviceList!!)
                 for (i in serviceList.indices) {
                     serviceList[i].password = ""
                     serviceList[i].user = ""
                     serviceList[i].isPasswordSaved = false
                     serviceDataRepository.updateServices(serviceList[i])
                 }
-                val s = mDriveServiceHelper.uploadFile(PriVELTApplication.instance.getDatabasePath(PriVELTDatabase.PriVELTDatabaseName), settings.googleDriveFileID)
+                val s = mDriveServiceHelper.uploadFile(PriVELTApplication.getInstance().getDatabasePath(PriVELTDatabase.PriVELTDatabaseName)!!, settings.googleDriveFileID)
                 for (service in oldServices) serviceDataRepository.updateServices(service)
                 settings.googleDriveFileID = s
                 settingsDataRepository.updateSettings(settings)
                 if (BuildConfig.DEBUG) Log.d(TAG, "Google drive saved")
-            } catch (ignored: Exception) {
+            } catch (e: Exception) {
+                if (BuildConfig.DEBUG) Log.d(TAG, "Google drive not saved " + e.message)
             }
         }
     }
 
-    @JvmStatic
     fun processExtractionForEachService(applicationContext: Context) {
         val serviceHelper = ServiceHelper((applicationContext as PriVELTApplication).currentActivity)
-        val serviceDataRepository = PriVELTDatabase.getInstance(applicationContext).serviceDao()
-        val services = serviceDataRepository.allServices
-        for (service in services) {
-            if (!service.isPasswordSaved) continue
-            processDataExtraction(serviceHelper, service, service.user, service.password, applicationContext)
+        val serviceDataRepository = PriVELTDatabase.getInstance(applicationContext)?.serviceDao()
+        val services = serviceDataRepository?.allServices
+        for (service in services!!) {
+            if (service.isPasswordSaved)
+                processDataExtraction(serviceHelper, service, service.user, service.password, applicationContext)
         }
     }
 
-    @Throws(CloneNotSupportedException::class)
     private fun cloneList(list: List<Service>): List<Service> {
         val clone: MutableList<Service> = ArrayList(list.size)
         for (item in list) clone.add(item.clone() as Service)
         return clone
     }
 
-    @JvmStatic
     fun processDataExtraction(serviceHelper: ServiceHelper, service: Service, email: String?, password: String?, applicationContext: Context) {
-        val userDataRepository = PriVELTDatabase.getInstance(applicationContext).userDataDao()
+        val userDataRepository = PriVELTDatabase.getInstance(applicationContext)?.userDataDao()
         val loginService = serviceHelper.getServiceWithName(service.name)
         val dataExtractor = DataExtractor(loginService)
         val allUserData = ArrayList<UserData>()
-        (applicationContext as PriVELTApplication).currentActivity.runOnUiThread {
-            loginService.autoLogin(email, password, object : ResponseCallback() {
+        (applicationContext as PriVELTApplication).currentActivity?.runOnUiThread {
+            loginService?.autoLogin(email, password, object : ResponseCallback() {
                 override fun getResponse(responseEnum: ResponseEnum, data: String) {
-                    if (BuildConfig.DEBUG) Log.d(TAG, responseEnum.toString())
+                    if (BuildConfig.DEBUG) Log.d(TAG + " FOR SERVICE=" + service.name, responseEnum.toString())
                     if (responseEnum == ResponseEnum.SUCCESS) {
                         dataExtractor.injectAll(applicationContext.currentActivity) { jsonArray: JSONArray?, status: Status ->
-                            if (BuildConfig.DEBUG) Log.d(TAG, status.toString())
+                            if (BuildConfig.DEBUG) Log.d(TAG + " FOR SERVICE=" + service.name, status.toString())
                             if (jsonArray != null) {
                                 allUserData.addAll(parseJSON(jsonArray, service))
-                                if (BuildConfig.DEBUG) Log.d(TAG, jsonArray.toString())
+                                if (BuildConfig.DEBUG) Log.d(TAG + " FOR SERVICE=" + service.name, jsonArray.toString())
                             }
                             if (status.isDone) {
-                                if (BuildConfig.DEBUG) Log.d(TAG, "LOGIN SERVICE:" + allUserData.size)
-                                userDataRepository.deleteAllUserData()
-                                for (userData in allUserData) userDataRepository.insertUserData(userData)
+                                if (BuildConfig.DEBUG) Log.d(TAG + " FOR SERVICE=" + service.name, "LOGIN SERVICE:" + allUserData.size)
+                                    userDataRepository?.deleteUserDataForAService(service.id)
+                                for (userData in allUserData)
+                                    userDataRepository?.insertUserData(userData)
                                 saveToGoogleDrive(applicationContext)
                             }
                         }
@@ -118,10 +118,10 @@ object DataExtraction {
         try {
             for (i in 0 until jsonArray.length()) {
                 val obj = jsonArray.getJSONObject(i)
-                val datas = obj.getJSONArray("data")
+                val data = obj.getJSONArray("data")
                 val td: MutableList<String?> = ArrayList()
-                for (j in 0 until datas.length()) {
-                    td.add(datas.getString(j))
+                for (j in 0 until data.length()) {
+                    td.add(data.getString(j))
                 }
                 val userData = UserData(
                         obj.getString("title"),

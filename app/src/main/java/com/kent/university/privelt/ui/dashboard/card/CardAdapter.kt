@@ -12,8 +12,9 @@ import com.kent.university.privelt.R
 import com.kent.university.privelt.model.Card
 import java.util.*
 
+
 internal class CardAdapter internal constructor() : RecyclerView.Adapter<CardViewHolder>() {
-    private var cards: List<Card>
+    private var cards: MutableList<Card>
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.cell_service, parent, false)
@@ -29,7 +30,21 @@ internal class CardAdapter internal constructor() : RecyclerView.Adapter<CardVie
     }
 
     fun updateCards(cards: List<Card>) {
-        this.cards = cards
+        this.cards = cards.toMutableList()
+    }
+
+    fun removeItem(position: Int) {
+        cards.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
+    fun restoreItem(item: Card, position: Int) {
+        cards.add(position, item)
+        notifyItemInserted(position)
+    }
+
+    fun getData(): MutableList<Card> {
+        return cards
     }
 
     init {

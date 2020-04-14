@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class UserDataRepository @Inject constructor(private val mUserDataDao: UserDataDao) {
     val userDatas: LiveData<List<UserData>>
-        get() = mUserDataDao.userData
+        get() = mUserDataDao.userData!!
 
     fun deleteAllUserDatas() {
         mUserDataDao.deleteAllUserData()
@@ -27,7 +27,7 @@ class UserDataRepository @Inject constructor(private val mUserDataDao: UserDataD
     }
 
     fun getUserDatasForAServiceAndType(service: Long, type: String?): LiveData<List<UserData>> {
-        return mUserDataDao.getUserDataForAServiceAndType(service, type)
+        return mUserDataDao.getUserDataForAServiceAndType(service, type)!!
     }
 
 }

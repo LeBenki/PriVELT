@@ -6,33 +6,19 @@
 package com.kent.university.privelt.ui.dashboard.sensors.detailed
 
 import android.os.Bundle
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.model.Sensor
 import com.kent.university.privelt.ui.dashboard.sensors.SensorFragment
+import kotlinx.android.synthetic.main.activity_detailed_sensor.*
 
 class DetailedSensorActivity : BaseActivity() {
-    var sensor: Sensor? = null
+    private var sensor: Sensor? = null
 
-    @JvmField
-    @BindView(R.id.image_logo)
-    var logo: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.title)
-    var title: TextView? = null
-
-    @JvmField
-    @BindView(R.id.recycler_view_applications)
-    var applications: RecyclerView? = null
-    override fun getActivityLayout(): Int {
-        return R.layout.activity_detailed_sensor
-    }
+    override val activityLayout: Int
+        get() = R.layout.activity_detailed_sensor
 
     override fun configureViewModel() {}
     override fun configureDesign(savedInstanceState: Bundle?) {
@@ -42,7 +28,7 @@ class DetailedSensorActivity : BaseActivity() {
             sensor = intent.extras!!.getSerializable(SensorFragment.PARAM_SENSOR) as Sensor?
         }
         logo!!.setImageResource(sensor!!.resId)
-        title!!.text = sensor!!.title
+        titleTV!!.text = sensor!!.title
         setUpRecyclerView()
     }
 

@@ -6,36 +6,34 @@
 package com.kent.university.privelt.ui.dashboard.sensors
 
 import android.content.Intent
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseFragment
 import com.kent.university.privelt.events.LaunchDetailedSensorEvent
 import com.kent.university.privelt.ui.dashboard.sensors.detailed.DetailedSensorActivity
 import com.kent.university.privelt.utils.sensors.SensorHelper
+import kotlinx.android.synthetic.main.fragment_sensors.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 
 class SensorFragment : BaseFragment() {
-    @JvmField
-    @BindView(R.id.sensors)
-    var sensors: RecyclerView? = null
-    override fun getFragmentLayout(): Int {
-        return R.layout.fragment_sensors
-    }
 
+    override val fragmentLayout: Int
+        get() = R.layout.fragment_sensors
+    
     override fun configureViewModel() {}
-    override fun configureDesign() {
+    override fun configureDesign(view: View) {
         setUpRecyclerView()
     }
 
     private fun setUpRecyclerView() {
-        val sensorsList = SensorHelper.getSensorsInformation(context)
+        val sensorsList = SensorHelper.getSensorsInformation(context!!)
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        sensors!!.layoutManager = layoutManager
+        baseView.sensors?.layoutManager = layoutManager
         val cardAdapter = SensorAdapter(sensorsList)
-        sensors!!.adapter = cardAdapter
+        baseView.sensors?.adapter = cardAdapter
     }
 
     override fun onStart() {

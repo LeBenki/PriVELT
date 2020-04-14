@@ -12,10 +12,10 @@ import com.kent.university.privelt.model.Service
 @Dao
 interface ServiceDao {
     @get:Query("SELECT * FROM service")
-    val services: LiveData<List<Service?>?>?
+    val services: LiveData<List<Service>>?
 
     @get:Query("SELECT * FROM service")
-    val allServices: List<Service?>?
+    val allServices: List<Service>?
 
     @Insert
     fun insertServices(vararg service: Service?)

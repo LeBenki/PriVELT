@@ -24,7 +24,7 @@ class DriveServiceHelper(private val mDriveService: Drive) {
         val mediaContent = FileContent("image/jpeg", localFile)
         var file: com.google.api.services.drive.model.File? = null
         try {
-            file = if (fileId != null && !fileId.isEmpty()) mDriveService.files().update(fileId, fileMetadata, mediaContent)
+            file = if (fileId != null && fileId.isNotEmpty()) mDriveService.files().update(fileId, fileMetadata, mediaContent)
                     .setFields("id")
                     .execute() else mDriveService.files().create(fileMetadata, mediaContent)
                     .setFields("id")
@@ -35,9 +35,9 @@ class DriveServiceHelper(private val mDriveService: Drive) {
         return file!!.id
     }
 
-    fun downloadFile(fileId: String?, path: String?): Task<Void?> {
+    fun downloadFile(fileId: String?, path: String?): Task<Nothing?> {
         return Tasks.call(mExecutor, Callable {
-            val file = File(path)
+            val file = File(path!!)
             val outputStream = FileOutputStream(file)
             mDriveService.files()[fileId].executeMediaAndDownloadTo(outputStream)
             null

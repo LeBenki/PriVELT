@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class CurrentUserDataRepository @Inject constructor(private val mCurrentUserDao: CurrentUserDao) {
     val currentUser: LiveData<CurrentUser>
-        get() = mCurrentUserDao.currentUser
+        get() = mCurrentUserDao.currentUser!!
 
     fun updateCurrentUser(vararg currentUsers: CurrentUser?) {
         mCurrentUserDao.updateCurrentUser(*currentUsers)

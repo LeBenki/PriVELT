@@ -10,13 +10,10 @@ import android.text.TextUtils
 import java.util.*
 
 class WatchListHelper(private val sharedPreferences: SharedPreferences) {
-    private val watchList: MutableList<String?>
-    fun getWatchList(): List<String?> {
-        return watchList
-    }
+    internal val watchList: MutableList<String>
 
     fun changeWatchListStatus(cardTitle: String?) {
-        if (watchList.contains(cardTitle)) watchList.remove(cardTitle) else watchList.add(cardTitle)
+        if (watchList.contains(cardTitle)) watchList.remove(cardTitle) else watchList.add(cardTitle!!)
         saveWatchList()
     }
 

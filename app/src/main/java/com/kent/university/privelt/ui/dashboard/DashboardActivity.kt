@@ -16,7 +16,6 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
-import butterknife.BindView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.GoogleDriveActivity
@@ -26,21 +25,16 @@ import com.kent.university.privelt.ui.dashboard.card.CardFragment
 import com.kent.university.privelt.ui.dashboard.sensors.SensorFragment
 import com.kent.university.privelt.ui.dashboard.user.UserFragment
 import com.kent.university.privelt.ui.settings.SettingsActivity
+import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : GoogleDriveActivity() {
     private var toolbar: ActionBar? = null
 
-    @JvmField
-    @BindView(R.id.navigation_view)
-    var navigation: BottomNavigationView? = null
-    override fun getActivityLayout(): Int {
-        return R.layout.activity_dashboard
-    }
-
     override fun configureViewModel() {}
+
     override fun configureDesign(savedInstanceState: Bundle?) {
         toolbar = supportActionBar
-        navigation!!.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        navigation_view!!.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
         toolbar!!.setTitle(R.string.services)
         loadFragment(CardFragment())
         launchService()
@@ -51,7 +45,7 @@ class DashboardActivity : GoogleDriveActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
                 val alertDialog = AlertDialog.Builder(this)
-                alertDialog.setTitle(R.string.data_extraction).setMessage(R.string.overlay_permission).setPositiveButton(R.string.yes) { dialogInterface: DialogInterface?, i: Int ->
+                alertDialog.setTitle(R.string.data_extraction).setMessage(R.string.overlay_permission).setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
                     val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
                     this.startActivity(myIntent)
                 }.setNegativeButton(R.string.no, null)
@@ -103,20 +97,14 @@ class DashboardActivity : GoogleDriveActivity() {
 
     override fun onPrepareOptionsMenu(menu: Menu): Boolean {
         val settings = menu.findItem(R.id.settings)
-        val edit = menu.findItem(R.id.edit)
-        val check = menu.findItem(R.id.check)
         val filter = menu.findItem(R.id.filter)
         val fragment = supportFragmentManager.findFragmentById(R.id.container)
         if (fragment is UserFragment) {
             settings.isVisible = true
-            edit.isVisible = true
-            check.isVisible = false
             filter.isVisible = false
         } else {
             settings.isVisible = false
-            edit.isVisible = false
-            check.isVisible = false
-            if (fragment is CardFragment) filter.isVisible = true else filter.isVisible = false
+            filter.isVisible = fragment is CardFragment
         }
         return true
     }
@@ -141,6 +129,9 @@ class DashboardActivity : GoogleDriveActivity() {
         }
         super.onActivityResult(requestCode, resultCode, resultData)
     }
+
+    override val activityLayout: Int
+        get() = R.layout.activity_dashboard
 
     override fun onBackPressed() {}
 

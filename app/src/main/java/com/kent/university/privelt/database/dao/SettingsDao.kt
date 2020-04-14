@@ -15,10 +15,10 @@ import com.kent.university.privelt.model.Settings
 @Dao
 interface SettingsDao {
     @get:Query("SELECT * FROM settings WHERE id = 0")
-    val settings: LiveData<Settings?>?
+    val settings: LiveData<Settings>?
 
     @get:Query("SELECT * FROM settings WHERE id = 0")
-    val instantSettings: Settings?
+    val instantSettings: Settings
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateSettings(vararg user: Settings?)

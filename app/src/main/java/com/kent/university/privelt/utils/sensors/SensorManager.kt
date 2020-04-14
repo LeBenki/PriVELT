@@ -15,7 +15,9 @@ import java.util.*
 
 object SensorManager {
     private fun isBluetoothEnabled(context: Context): Boolean {
-        return context.getSystemService(Context.BLUETOOTH_SERVICE) != null && (Objects.requireNonNull(context.getSystemService(Context.BLUETOOTH_SERVICE)) as BluetoothManager).adapter.isEnabled
+        return context.getSystemService(Context.BLUETOOTH_SERVICE) != null
+                && (Objects.requireNonNull(context.getSystemService(Context.BLUETOOTH_SERVICE)) as BluetoothManager).adapter != null
+                && (Objects.requireNonNull(context.getSystemService(Context.BLUETOOTH_SERVICE)) as BluetoothManager).adapter.isEnabled
     }
 
     private fun isWIFIEnabled(context: Context): Boolean {
@@ -23,7 +25,9 @@ object SensorManager {
     }
 
     private fun isNFCEnabled(context: Context): Boolean {
-        return context.getSystemService(Context.NFC_SERVICE) != null && (Objects.requireNonNull(context.getSystemService(Context.NFC_SERVICE)) as NfcManager).defaultAdapter.isEnabled
+        return context.getSystemService(Context.NFC_SERVICE) != null
+                && (Objects.requireNonNull(context.getSystemService(Context.NFC_SERVICE)) as NfcManager).defaultAdapter != null
+                && (Objects.requireNonNull(context.getSystemService(Context.NFC_SERVICE)) as NfcManager).defaultAdapter.isEnabled
     }
 
     private fun isLocationEnabled(context: Context): Boolean {

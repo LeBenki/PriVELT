@@ -1,152 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="30dp">
+    android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/personal_data"
-        android:textSize="20sp"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_below="@id/title"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
-        android:text="@string/personal_data_explain" />
-
-    <LinearLayout
-        android:id="@+id/edit_texts"
-        android:layout_below="@id/description"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <EditText
-            android:id="@+id/first_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/first_name"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-        <EditText
-            android:id="@+id/last_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/last_name"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-        <EditText
-            android:id="@+id/birthday"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:focusable="false"
-            android:hint="@string/birthday"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-        <EditText
-            android:id="@+id/address"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/address"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-        <EditText
-            android:id="@+id/phone_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/phone_number"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true" />
-
-        <EditText
-            android:id="@+id/mail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/mail"
-            android:lines="1"
-            android:maxLines="1"
-            android:singleLine="true" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/text_views"
-        android:layout_below="@id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="30dp">
 
         <TextView
-            android:id="@+id/first_name_tv"
-            android:layout_width="match_parent"
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/first_name"
-            android:textSize="20sp"/>
+            android:text="@string/personal_data"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/last_name_tv"
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/title"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/activity_vertical_margin"
+            android:text="@string/personal_data_explain" />
+
+        <LinearLayout
+            android:id="@+id/editTexts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/last_name"
-            android:textSize="20sp"/>
+            android:layout_below="@id/description"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/birthday_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/birthday"
-            android:textSize="20sp"/>
+            <EditText
+                android:id="@+id/first_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:hint="@string/first_name"
+                android:inputType="textPersonName"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true" />
 
-        <TextView
-            android:id="@+id/address_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/address"
-            android:textSize="20sp"/>
+            <EditText
+                android:id="@+id/last_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:hint="@string/last_name"
+                android:inputType="textPersonName"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true" />
 
-        <TextView
-            android:id="@+id/phone_number_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/phone_number"
-            android:textSize="20sp"/>
+            <EditText
+                android:id="@+id/birthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:focusable="false"
+                android:hint="@string/birthday"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true" />
 
-        <TextView
-            android:id="@+id/mail_tv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:hint="@string/mail"
-            android:textSize="20sp"/>
-    </LinearLayout>
+            <EditText
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:hint="@string/address"
+                android:inputType="textPostalAddress"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true" />
 
-</RelativeLayout>
+            <EditText
+                android:id="@+id/phone_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:hint="@string/phone_number"
+                android:inputType="phone"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:hint="@string/mail"
+                android:lines="1"
+                android:maxLines="1"
+                android:singleLine="true" />
+        </LinearLayout>
+    </RelativeLayout>
+</ScrollView>

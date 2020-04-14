@@ -15,8 +15,9 @@ class ServiceHelper(context: Context?) {
     private val serviceManager: ServiceManager = ServiceManager(context)
     private val serviceNames: ArrayList<String>
     private val serviceResIds: ArrayList<Int>
-    fun getRemainingServices(subscribedServices: ArrayList<Service>): ArrayList<String> {
-        val notSubscribed = ArrayList(serviceNames)
+    fun getRemainingServices(subscribedServices: List<Service>): List<String> {
+        val notSubscribed = ArrayList<String>()
+        notSubscribed.addAll(serviceNames)
         //Avoid not working services
         notSubscribed.remove("Strava")
         notSubscribed.remove("Trainline")
@@ -25,14 +26,14 @@ class ServiceHelper(context: Context?) {
     }
 
     fun getResIdWithName(name: String): Int {
-        for (i in serviceNames.indices) {
+        for (i in 0 .. serviceNames.size) {
             if (serviceNames[i] == name) return serviceResIds[i]
         }
         return -1
     }
 
     fun getServiceWithName(name: String): LoginService? {
-        for (i in serviceNames.indices) {
+        for (i in 0 .. serviceNames.size) {
             if (serviceNames[i] == name) {
                 return serviceManager.serviceList[i]
             }

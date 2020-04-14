@@ -10,7 +10,6 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import butterknife.ButterKnife
 import com.kent.university.privelt.PriVELTApplication
 import com.kent.university.privelt.R
 import com.kent.university.privelt.api.PasswordManager
@@ -27,13 +26,11 @@ abstract class BaseActivity : AppCompatActivity() {
         // Associates the layout file to this class
         this.setContentView(activityLayout)
 
-        // Using the ButterKnife library
-        ButterKnife.bind(this)
         configureViewModel()
         configureDesign(savedInstanceState)
     }
 
-    protected fun <T : ViewModel?> getViewModel(className: Class<T>?): T {
+    protected fun <T : ViewModel?> getViewModel(className: Class<T>): T {
         // Component
         val component = DaggerPriVELTComponent.builder().roomModule(RoomModule(this)).build()
 
@@ -51,7 +48,7 @@ abstract class BaseActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.home) {
+        if (item.itemId == android.R.id.home) {
             finish()
             return true
         }

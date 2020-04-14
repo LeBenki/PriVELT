@@ -80,7 +80,7 @@
     <string name="log_out_confirmation">Are you sure you want to log out?</string>
     <string name="script_title">Select the different data you particularly care about :</string>
     <string name="no_data_extracted_yet">No data extracted yet</string>
-    <string name="save_data_on_google_drive">Save data on Google Drive</string>
+    <string name="save_data_on_google_drive">Auto-save on Google Drive</string>
     <string name="here_will_be_the_file_id">Here will be the file id</string>
     <string name="save_data">Saving your data on one of the following service can be useful to retrieve your database on another device.</string>
     <string name="logged_with">Logged as %1$s</string>

@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import butterknife.ButterKnife
 import com.kent.university.privelt.PriVELTApplication
 import com.kent.university.privelt.api.ServiceHelper
 import com.kent.university.privelt.di.DaggerPriVELTComponent
@@ -21,23 +20,21 @@ import com.kent.university.privelt.di.RoomModule
 abstract class BaseFragment : Fragment() {
     protected abstract val fragmentLayout: Int
     protected abstract fun configureViewModel()
-    protected abstract fun configureDesign()
+    protected abstract fun configureDesign(view: View)
+    lateinit var baseView: View
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(fragmentLayout, container, false)
-
-        // Using the ButterKnife library
-        ButterKnife.bind(this, view)
+        baseView = inflater.inflate(fragmentLayout, container, false)
 
         // ViewModel
         configureViewModel()
-        configureDesign()
-        return view
+        configureDesign(baseView)
+        return baseView
     }
 
-    protected fun <T : ViewModel?> getViewModel(className: Class<T>?): T {
+    protected fun <T : ViewModel?> getViewModel(className: Class<T>): T {
         // Component
         val component = DaggerPriVELTComponent.builder().roomModule(RoomModule(context!!)).build()
 
@@ -47,5 +44,5 @@ abstract class BaseFragment : Fragment() {
     }
 
     protected val serviceHelper: ServiceHelper?
-        protected get() = (context!!.applicationContext as PriVELTApplication).serviceHelper
+        get() = (context!!.applicationContext as PriVELTApplication).serviceHelper
 }

@@ -8,7 +8,6 @@ package com.kent.university.privelt.ui.risk_value
 import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import butterknife.BindView
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
@@ -25,9 +24,7 @@ import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import java.util.*
 
 class BarActivity : BaseActivity() {
-    @JvmField
-    @BindView(R.id.chart1)
-    var chart: BarChart? = null
+    private var chart: BarChart? = null
     private var riskValueViewModel: RiskValueViewModel? = null
     private var services: List<Service>? = null
     private var userDatas: List<UserData>? = null
@@ -79,9 +76,8 @@ class BarActivity : BaseActivity() {
         outState.putString(RiskValueActivity.PARAM_DATA, type)
     }
 
-    override fun getActivityLayout(): Int {
-        return R.layout.activity_barchart
-    }
+    override val activityLayout: Int
+        get() = R.layout.activity_barchart
 
     override fun configureViewModel() {
         riskValueViewModel = getViewModel(RiskValueViewModel::class.java)
@@ -90,26 +86,26 @@ class BarActivity : BaseActivity() {
 
     private fun updateUserDatas(userData: List<UserData>) {
         userDatas = userData
-        if (!userDatas!!.isEmpty() && !services!!.isEmpty()) loadData()
+        if (userDatas!!.isNotEmpty() && services!!.isNotEmpty()) loadData()
     }
 
     private fun updateServices(services: List<Service>) {
         this.services = services
-        if (!userDatas!!.isEmpty() && !services.isEmpty()) loadData()
+        if (userDatas!!.isNotEmpty() && services.isNotEmpty()) loadData()
     }
 
     //TODO: refactor les requêtes SQL
     private fun getServices() {
-        riskValueViewModel!!.services!!.observe(this, Observer { services: List<Service> -> updateServices(services) })
+        riskValueViewModel!!.services?.observe(this, Observer { services: List<Service> -> updateServices(services) })
     }
 
     private val userdatas: Unit
-        private get() {
-            riskValueViewModel!!.userDatas.observe(this, Observer { userData: List<UserData> -> updateUserDatas(userData) })
+        get() {
+            riskValueViewModel!!.userDatas?.observe(this, Observer { userData: List<UserData> -> updateUserDatas(userData) })
         }
 
     private val numberOfTypes: Array<String>
-        private get() {
+        get() {
             val types: MutableSet<String> = HashSet()
             for ((_, type1) in userDatas!!) {
                 types.add(type1)
@@ -117,33 +113,33 @@ class BarActivity : BaseActivity() {
             return types.toTypedArray()
         }
 
-    private fun countTypeForEachService(mActivity: String, service: Service): Int {
-        var count = 0
+    private fun countTypeForEachService(mActivity: String, service: Service): Float {
+        var count = 0F
         for ((_, type1, _, _, serviceId) in userDatas!!) {
             if (serviceId == service.id && type1 == mActivity) count += 1
         }
         return count
     }
 
-    private fun countServiceForEachType(mActivity: String, service: Service): Int {
-        var count = 0
+    private fun countServiceForEachType(mActivity: String, service: Service): Float {
+        var count = 0F
         for ((_, type1, _, _, serviceId) in userDatas!!) {
             if (serviceId == service.id && type1 == mActivity && mActivity == type1) count += 1
         }
         return count
     }
 
-    fun loadData() {
+    private fun loadData() {
         val allValues: MutableList<ArrayList<BarEntry>> = ArrayList()
         val mActivities = numberOfTypes
-        var i = 0
+        var i = 0F
         if (!isDataCentric) {
             for (service in services!!) {
                 if (service.name == this.service) {
                     for (mActivity in mActivities) {
-                        val `val` = countTypeForEachService(mActivity, service)
+                        val value = countTypeForEachService(mActivity, service)
                         val values = ArrayList<BarEntry>()
-                        values.add(BarEntry(i++, `val`))
+                        values.add(BarEntry(i++, value))
                         allValues.add(values)
                     }
                     break
@@ -153,9 +149,9 @@ class BarActivity : BaseActivity() {
             for (type in mActivities) {
                 if (type == this.type) {
                     for (service in services!!) {
-                        val `val` = countServiceForEachType(type, service)
+                        val value = countServiceForEachType(type, service)
                         val values = ArrayList<BarEntry>()
-                        values.add(BarEntry(i++, `val`))
+                        values.add(BarEntry(i++, value))
                         allValues.add(values)
                     }
                     break
@@ -163,14 +159,12 @@ class BarActivity : BaseActivity() {
             }
         }
         val sets: MutableList<IBarDataSet> = ArrayList()
-        var j = 0
-        for (values in allValues) {
+        for ((j, values) in allValues.withIndex()) {
             val set = BarDataSet(values, if (isDataCentric) services!![j].name else mActivities[j])
             val rnd = Random()
             val color = Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
             set.color = color
             sets.add(set)
-            j++
         }
         val data = BarData(sets)
         data.setValueFormatter(LargeValueFormatter())

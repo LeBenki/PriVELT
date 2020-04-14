@@ -15,7 +15,7 @@ import com.kent.university.privelt.model.CurrentUser
 @Dao
 interface CurrentUserDao {
     @get:Query("SELECT * FROM current_user WHERE id = 0")
-    val currentUser: LiveData<CurrentUser?>?
+    val currentUser: LiveData<CurrentUser>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateCurrentUser(vararg user: CurrentUser?)

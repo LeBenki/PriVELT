@@ -8,11 +8,8 @@ package com.kent.university.privelt.ui.risk_value
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.lifecycle.Observer
-import butterknife.BindView
 import com.github.mikephil.charting.animation.Easing
-import com.github.mikephil.charting.charts.RadarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.RadarData
@@ -24,16 +21,11 @@ import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.model.UserData
+import kotlinx.android.synthetic.main.activity_risk_value.*
 import java.util.*
 
 class RiskValueActivity : BaseActivity() {
-    @JvmField
-    @BindView(R.id.chart)
-    var chart: RadarChart? = null
 
-    @JvmField
-    @BindView(R.id.no_data)
-    var noData: TextView? = null
     private var riskValueViewModel: RiskValueViewModel? = null
     private var services: List<Service>? = null
     private var userDatas: List<UserData>? = null
@@ -53,7 +45,7 @@ class RiskValueActivity : BaseActivity() {
         }
         isDataCentric = !(type == null || type!!.isEmpty())
         chart!!.visibility = View.GONE
-        noData!!.visibility = View.VISIBLE
+        no_data!!.visibility = View.VISIBLE
         getServices()
         userdatas
     }
@@ -64,9 +56,8 @@ class RiskValueActivity : BaseActivity() {
         outState.putString(PARAM_DATA, type)
     }
 
-    override fun getActivityLayout(): Int {
-        return R.layout.activity_risk_value
-    }
+    override val activityLayout: Int
+        get() = R.layout.activity_risk_value
 
     override fun configureViewModel() {
         riskValueViewModel = getViewModel(RiskValueViewModel::class.java)
@@ -89,12 +80,12 @@ class RiskValueActivity : BaseActivity() {
 
     private val userdatas: Unit
         get() {
-            riskValueViewModel!!.userDatas.observe(this, Observer { userData: List<UserData> -> updateUserDatas(userData) })
+            riskValueViewModel!!.userDatas?.observe(this, Observer { userData: List<UserData> -> updateUserDatas(userData) })
         }
 
     private fun configureChart() {
         chart!!.visibility = View.VISIBLE
-        noData!!.visibility = View.GONE
+        no_data!!.visibility = View.GONE
         chart!!.description.isEnabled = false
         chart!!.webLineWidth = 1f
         chart!!.webColor = Color.LTGRAY

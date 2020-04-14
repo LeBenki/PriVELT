@@ -13,7 +13,7 @@ import com.kent.university.privelt.model.Service
 import java.util.*
 
 class ScriptsAdapter internal constructor(scripts: List<String>, alreadyChecked: List<String>) : RecyclerView.Adapter<ScriptViewHolder>() {
-    private val scripts: LinkedHashMap<String, Boolean> = LinkedHashMap()
+    private val scripts: LinkedHashMap<String?, Boolean> = LinkedHashMap()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScriptViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.cell_script, parent, false)

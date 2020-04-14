@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class SettingsDataRepository @Inject constructor(private val mSettingsDao: SettingsDao) {
     val settings: LiveData<Settings>
-        get() = mSettingsDao.settings
+        get() = mSettingsDao.settings!!
 
     val instantSettings: Settings
         get() = mSettingsDao.instantSettings

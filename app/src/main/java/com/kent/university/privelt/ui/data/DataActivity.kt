@@ -7,16 +7,15 @@ package com.kent.university.privelt.ui.data
 
 import android.os.Bundle
 import android.view.View
-import android.widget.LinearLayout
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.model.UserData
 import com.kent.university.privelt.ui.login.LoginActivity
+import kotlinx.android.synthetic.main.activity_data.*
 import java.util.*
 
 class DataActivity : BaseActivity() {
@@ -24,21 +23,9 @@ class DataActivity : BaseActivity() {
 
     private var type: String? = null
 
-    @JvmField
-    @BindView(R.id.recycler_view_userdata)
-    var recyclerView: RecyclerView? = null
-
-    @JvmField
-    @BindView(R.id.progress_layout)
-    var progressLayout: LinearLayout? = null
-
     private var dataViewModel: DataViewModel? = null
 
     private var dataAdapter: DataAdapter? = null
-
-    override fun getActivityLayout(): Int {
-        return R.layout.activity_data
-    }
 
     override fun configureDesign(savedInstanceState: Bundle?) {
         if (savedInstanceState != null) {
@@ -60,13 +47,13 @@ class DataActivity : BaseActivity() {
 
     private fun configureRecyclerView() {
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        recyclerView!!.layoutManager = layoutManager
+        recycler_view_userdata!!.layoutManager = layoutManager
         dataAdapter = DataAdapter(ArrayList())
-        recyclerView!!.adapter = dataAdapter
+        recycler_view_userdata!!.adapter = dataAdapter
     }
 
     private fun getServices() {
-        dataViewModel!!.services.observe(this, Observer { services: List<Service> -> updateServices(services) })
+        dataViewModel!!.services?.observe(this, Observer { services: List<Service> -> updateServices(services) })
     }
 
     private fun getUserDatas(id: Long, type: String?) {
@@ -81,13 +68,16 @@ class DataActivity : BaseActivity() {
 
     private fun updateUserData(userData: List<UserData>) {
         if (userData.isEmpty()) {
-            progressLayout!!.visibility = View.VISIBLE
+            progress_layout!!.visibility = View.VISIBLE
         } else {
             dataAdapter!!.setUserData(userData)
             dataAdapter!!.notifyDataSetChanged()
-            progressLayout!!.visibility = View.GONE
+            progress_layout!!.visibility = View.GONE
         }
     }
+
+    override val activityLayout: Int
+        get() = R.layout.activity_data
 
     override fun configureViewModel() {
         dataViewModel = getViewModel(DataViewModel::class.java)

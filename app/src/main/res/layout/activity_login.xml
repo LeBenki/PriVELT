@@ -39,7 +39,7 @@
 
 
             <EditText
-                android:id="@+id/mail"
+                android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_top"
@@ -82,7 +82,7 @@
                 android:textColor="#ffffff" />
 
             <Button
-                android:id="@+id/best_poc"
+                android:id="@+id/test_connection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"

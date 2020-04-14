@@ -15,12 +15,14 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.ArrayAdapter
+import android.widget.LinearLayout
+import android.widget.Spinner
+import android.widget.Toast
 import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.kent.university.privelt.R
 import com.kent.university.privelt.api.DataExtraction.processDataExtraction
 import com.kent.university.privelt.api.ServiceHelper
@@ -28,10 +30,10 @@ import com.kent.university.privelt.base.BaseFragment
 import com.kent.university.privelt.events.ChangeWatchListStatusEvent
 import com.kent.university.privelt.events.DetailedCardEvent
 import com.kent.university.privelt.events.UpdateCredentialsEvent
+import com.kent.university.privelt.model.Card
 import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.model.UserData
 import com.kent.university.privelt.ui.dashboard.DashboardActivity
-import com.kent.university.privelt.ui.dashboard.card.CardFragment
 import com.kent.university.privelt.ui.dashboard.card.FilterAlertDialog.FilterDialogListener
 import com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardActivity
 import com.kent.university.privelt.ui.login.LoginActivity
@@ -39,37 +41,20 @@ import com.kent.university.privelt.ui.risk_value.RiskValueActivity
 import com.kent.university.privelt.utils.CardManager
 import com.kent.university.privelt.utils.WatchListHelper
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
+import kotlinx.android.synthetic.main.fragment_service.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.*
+
 
 class CardFragment : BaseFragment(), FilterDialogListener {
     private var cardViewModel: CardViewModel? = null
     private var subscribedServices: ArrayList<Service>? = null
     private var userData: ArrayList<UserData>? = null
-
-    @JvmField
-    @BindView(R.id.recycler_view_services)
-    var servicesList: RecyclerView? = null
-
-    @JvmField
-    @BindView(R.id.no_services)
-    var noService: TextView? = null
-
-    @JvmField
-    @BindView(R.id.add_service)
-    var addService: FloatingActionButton? = null
-
-    @JvmField
-    @BindView(R.id.global_privacy_value)
-    var privacyValue: TextView? = null
-
-    @JvmField
-    @BindView(R.id.risk_progress_overall)
-    var progressBar: ProgressBar? = null
     private var watchListHelper: WatchListHelper? = null
     private var cardAdapter: CardAdapter? = null
     private lateinit var filters: BooleanArray
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         filters = FilterAlertDialog.getFilters(activity!!.getSharedPreferences(FilterAlertDialog.KEY_SHARED, Context.MODE_PRIVATE))
@@ -87,7 +72,7 @@ class CardFragment : BaseFragment(), FilterDialogListener {
     }
 
     private val services: Unit
-        private get() {
+        get() {
             cardViewModel!!.services!!.observe(this, Observer { services: List<Service> -> updateServices(services) })
         }
 
@@ -97,29 +82,35 @@ class CardFragment : BaseFragment(), FilterDialogListener {
     }
 
     private fun updateRecyclerView() {
-        if (subscribedServices!!.size == 0) noService!!.visibility = View.VISIBLE else {
-            noService!!.visibility = View.GONE
-            cardAdapter!!.updateCards(CardManager.cardsFilter(userData, subscribedServices, filters, watchListHelper!!.watchList))
-            cardAdapter!!.notifyDataSetChanged()
+        if (subscribedServices!!.size == 0) {
+            baseView.noServices!!.visibility = View.VISIBLE
+            cardAdapter!!.updateCards(ArrayList(0))
         }
+        else {
+            baseView.noServices!!.visibility = View.GONE
+            cardAdapter!!.updateCards(CardManager.cardsFilter(userData, subscribedServices!!, filters, watchListHelper!!.watchList))
+        }
+        cardAdapter!!.notifyDataSetChanged()
     }
 
     private fun updateOverallRiskValue() {
         var riskValue = userData!!.size
         if (riskValue > 100) riskValue = 100
-        if (riskValue < 20) privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low") else if (riskValue < 60) privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Medium") else privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
-        progressBar!!.progress = riskValue
+        if (riskValue < 20) baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low")
+        else if (riskValue < 60) baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Medium")
+        else baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
+        baseView.progressBar!!.progress = riskValue
     }
 
     private fun setupAddButton() {
-        addService!!.setOnClickListener { view: View? ->
-            val services: List<String> = serviceHelper.getRemainingServices(subscribedServices)
+        baseView.addService?.setOnClickListener {
+            val services: List<String> = serviceHelper?.getRemainingServices(subscribedServices!!)!!
             if (services.isEmpty()) {
                 Toast.makeText(this@CardFragment.context, R.string.already_added_all, Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
             val adp = ArrayAdapter(context!!,
-                    android.R.layout.simple_spinner_item, serviceHelper.getRemainingServices(subscribedServices))
+                    android.R.layout.simple_spinner_item, serviceHelper!!.getRemainingServices(subscribedServices!!))
             val sp = Spinner(context)
             sp.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             sp.setPadding(50, 50, 50, 50)
@@ -127,7 +118,7 @@ class CardFragment : BaseFragment(), FilterDialogListener {
             val builder = AlertDialog.Builder(context)
             builder.setTitle(R.string.choose_service)
             builder.setView(sp)
-            builder.setPositiveButton(R.string.choose) { dialogInterface: DialogInterface?, i: Int ->
+            builder.setPositiveButton(R.string.choose) { _: DialogInterface?, _: Int ->
                 editCredentials(
                         Service(sp.selectedItem.toString(), false, "", "", ""), REQUEST_LOGIN)
             }
@@ -141,29 +132,29 @@ class CardFragment : BaseFragment(), FilterDialogListener {
         startActivityForResult(intent, requestCode)
     }
 
-    private fun setUpRecyclerView() {
+    private fun setUpRecyclerView(view: View) {
         subscribedServices = ArrayList()
-        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(context)
-        servicesList!!.layoutManager = layoutManager
+        val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(view.context)
+        baseView.servicesList?.layoutManager = layoutManager
         cardAdapter = CardAdapter()
-        servicesList!!.adapter = cardAdapter
+        baseView.servicesList?.adapter = cardAdapter
     }
 
-    override fun getFragmentLayout(): Int {
-        return R.layout.fragment_service
-    }
+    override val fragmentLayout: Int
+        get() = R.layout.fragment_service
 
     override fun configureViewModel() {
         cardViewModel = getViewModel(CardViewModel::class.java)
         cardViewModel?.init()
     }
 
-    override fun configureDesign() {
-        setUpRecyclerView()
+    override fun configureDesign(view: View) {
+        setUpRecyclerView(view)
         setupAddButton()
         services
         getUserData()
-        progressBar!!.setOnClickListener { v: View? -> startActivity(Intent(activity, RiskValueActivity::class.java)) }
+        baseView.progressBar?.setOnClickListener { startActivity(Intent(activity, RiskValueActivity::class.java)) }
+        enableSwipeToDeleteAndUndo()
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -175,8 +166,8 @@ class CardFragment : BaseFragment(), FilterDialogListener {
                 val user = data.getStringExtra(LoginActivity.PARAM_USER)
                 val password = data.getStringExtra(LoginActivity.PARAM_PASSWORD)
                 if (service.isPasswordSaved) {
-                    service.user = user
-                    service.password = password
+                    service.user = user!!
+                    service.password = password!!
                 }
                 object : AsyncTask<Void?, Void?, Void?>() {
                     override fun doInBackground(vararg voids: Void?): Void? {
@@ -190,7 +181,9 @@ class CardFragment : BaseFragment(), FilterDialogListener {
 
                     override fun onPostExecute(aVoid: Void?) {
                         super.onPostExecute(aVoid)
-                        if (!service.isPasswordSaved) processDataExtraction(ServiceHelper(context), service, user, password, context!!.applicationContext) else (activity as DashboardActivity?)!!.launchService()
+                        if (!service.isPasswordSaved)
+                            processDataExtraction(ServiceHelper(context), service, user, password, context!!.applicationContext)
+                        else (activity as DashboardActivity?)!!.launchService()
                     }
                 }.execute()
             }
@@ -238,9 +231,34 @@ class CardFragment : BaseFragment(), FilterDialogListener {
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onDialogPositiveClick(selectedItems: BooleanArray) {
-        filters = selectedItems
+    override fun onDialogPositiveClick(selectedItems: BooleanArray?) {
+        filters = selectedItems!!
         updateRecyclerView()
+    }
+
+    private fun enableSwipeToDeleteAndUndo() {
+        val swipeToDeleteCallback: SwipeToDeleteCallback = object : SwipeToDeleteCallback(context!!) {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
+                val position = viewHolder.adapterPosition
+                val item: Card = cardAdapter?.getData()?.get(position)!!
+                val tmpService: Service? = subscribedServices?.last { it.name == item.title }
+
+                AlertDialog.Builder(context)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setTitle(R.string.unsubscribe)
+                        .setMessage(R.string.unsubscribe_confirmation)
+                        .setPositiveButton(R.string.yes) { _, _ -> run { cardViewModel?.deleteService(tmpService) } }
+                        .setNegativeButton(R.string.no) { _: DialogInterface, _: Int ->
+                            run {
+                                cardAdapter?.removeItem(position)
+                                cardAdapter?.restoreItem(item, position)
+                            }
+                        }
+                        .show()
+            }
+        }
+        val itemTouchhelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchhelper.attachToRecyclerView(baseView.servicesList)
     }
 
     companion object {

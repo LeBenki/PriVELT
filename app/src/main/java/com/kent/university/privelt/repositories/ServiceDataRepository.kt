@@ -12,10 +12,10 @@ import javax.inject.Inject
 
 class ServiceDataRepository @Inject constructor(private val mServiceDao: ServiceDao) {
     val services: LiveData<List<Service>>
-        get() = mServiceDao.services
+        get() = mServiceDao.services!!
 
     val allServices: List<Service>
-        get() = mServiceDao.allServices
+        get() = mServiceDao.allServices!!
 
     fun deleteServices(vararg credentials: Service?) {
         mServiceDao.deleteServices(*credentials)

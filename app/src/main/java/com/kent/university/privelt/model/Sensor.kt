@@ -31,7 +31,7 @@ enum class Sensor(var title: String, val resId: Int, val isSensor: Boolean) {
     }
 
     fun isEnabled(context: Context?): Boolean {
-        return SensorManager.isEnabled(this, context)
+        return SensorManager.isEnabled(this, context!!)
     }
 
     init {

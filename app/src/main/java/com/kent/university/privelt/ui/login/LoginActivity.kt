@@ -15,60 +15,31 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
-import com.kent.university.privelt.BuildConfig
 import com.kent.university.privelt.R
 import com.kent.university.privelt.api.ServiceHelper
 import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.utils.EyePassword
+import kotlinx.android.synthetic.main.activity_login.*
 import net.neferett.webviewsextractor.DataExtractor
 import net.neferett.webviewsinjector.response.ResponseCallback
 import net.neferett.webviewsinjector.response.ResponseEnum
 import net.neferett.webviewsinjector.services.LoginService
-import java.util.*
 
 class LoginActivity : BaseActivity(), View.OnClickListener {
     private var service: Service? = null
 
-    @JvmField
-    @BindView(R.id.best_poc)
-    var button: Button? = null
-
-    @JvmField
-    @BindView(R.id.mail)
-    var email: EditText? = null
-
-    @JvmField
-    @BindView(R.id.password)
-    var password: EditText? = null
-
-    @JvmField
-    @BindView(R.id.progress_circular)
-    var progressBar: ProgressBar? = null
-
-    @JvmField
-    @BindView(R.id.scripts)
-    var recyclerView: RecyclerView? = null
-
-    @JvmField
-    @BindView(R.id.eye_password)
-    var eye: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.remember_password)
-    var rememberPassword: CheckBox? = null
-    var loginService: LoginService? = null
-    var alertDialog: AlertDialog? = null
+    private var loginService: LoginService? = null
+    private var alertDialog: AlertDialog? = null
     private var adapter: ScriptsAdapter? = null
-    override fun getActivityLayout(): Int {
-        return R.layout.activity_login
-    }
+
+    override val activityLayout: Int
+        get() = R.layout.activity_login
 
     override fun configureViewModel() {}
+
     override fun configureDesign(savedInstanceState: Bundle?) {
-        button!!.setOnClickListener(this)
+        test_connection!!.setOnClickListener(this)
         if (intent != null) {
             service = intent.getSerializableExtra(PARAM_SERVICE) as Service
         } else if (savedInstanceState != null) {
@@ -76,19 +47,19 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         }
         assert(service != null)
         title = service!!.name
-        EyePassword.configureEye(eye, password)
+        EyePassword.configureEye(eye_password!!, password!!)
         val serviceHelper = ServiceHelper(this)
         loginService = serviceHelper.getServiceWithName(service!!.name)
-        rememberPassword!!.isChecked = service!!.isPasswordSaved
+        remember_password!!.isChecked = service!!.isPasswordSaved
         configureRecyclerView()
     }
 
     private fun configureRecyclerView() {
-        recyclerView!!.layoutManager = LinearLayoutManager(this)
+        scripts!!.layoutManager = LinearLayoutManager(this)
         val dataExtractor = DataExtractor(loginService)
         dataExtractor.serviceName
-        adapter = ScriptsAdapter(dataExtractor.stringScripts, Arrays.asList(*service!!.unConcatenatedScripts))
-        recyclerView!!.adapter = adapter
+        adapter = ScriptsAdapter(dataExtractor.stringScripts, listOf(*service!!.unConcatenatedScripts))
+        scripts!!.adapter = adapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -96,20 +67,19 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         outState.putSerializable(PARAM_SERVICE, service)
     }
 
-    fun processLogin() {
-        progressBar!!.visibility = View.VISIBLE
-        button!!.isEnabled = false
-        if (BuildConfig.DEBUG) showAlertDebug()
+    private fun processLogin() {
+        progress_circular!!.visibility = View.VISIBLE
+        test_connection!!.isEnabled = false
         loginService!!.autoLogin(email!!.text.toString(), password!!.text.toString(), object : ResponseCallback() {
             override fun getResponse(responseEnum: ResponseEnum, data: String) {
                 if (responseEnum != ResponseEnum.SUCCESS) {
-                    button!!.isEnabled = true
+                    test_connection!!.isEnabled = true
                     showAlertDebug()
                     Toast.makeText(this@LoginActivity, responseEnum.getName(), Toast.LENGTH_LONG).show()
                 } else {
                     Toast.makeText(this@LoginActivity, R.string.login_success, Toast.LENGTH_LONG).show()
                 }
-                progressBar!!.visibility = View.GONE
+                progress_circular!!.visibility = View.GONE
             }
         })
     }
@@ -141,7 +111,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         return true
     }
 
-    val isValidInput: Boolean
+    private val isValidInput: Boolean
         get() {
             if (email!!.text.toString().isEmpty() || password!!.text.toString().isEmpty()) {
                 Toast.makeText(this@LoginActivity, R.string.email_or_password_empty, Toast.LENGTH_LONG).show()
@@ -156,7 +126,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
                 val intent = Intent()
                 intent.putExtra(PARAM_USER, email!!.text.toString())
                 intent.putExtra(PARAM_PASSWORD, password!!.text.toString())
-                service!!.isPasswordSaved = rememberPassword!!.isChecked
+                service!!.isPasswordSaved = remember_password!!.isChecked
                 service!!.concatenatedScripts = adapter!!.concatenatedScriptsChecked
                 intent.putExtra(PARAM_SERVICE, service)
                 setResult(Activity.RESULT_OK, intent)

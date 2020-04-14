@@ -14,7 +14,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import androidx.lifecycle.Observer
-import butterknife.BindView
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
@@ -25,45 +24,25 @@ import com.kent.university.privelt.base.GoogleDriveActivity
 import com.kent.university.privelt.base.GoogleDriveListener
 import com.kent.university.privelt.model.Settings
 import com.kent.university.privelt.ui.master_password.MasterPasswordActivity
-import com.kent.university.privelt.ui.settings.SettingsActivity
+import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : GoogleDriveActivity() {
-    @JvmField
-    @BindView(R.id.change_password)
-    var changePassword: Button? = null
 
-    @JvmField
-    @BindView(R.id.logout)
-    var logout: Button? = null
-
-    @JvmField
-    @BindView(R.id.drive)
-    var drive: Switch? = null
-
-    @JvmField
-    @BindView(R.id.fileId)
-    var fileId: EditText? = null
-
-    @JvmField
-    @BindView(R.id.googleId)
-    var googleId: TextView? = null
-
-    @JvmField
-    @BindView(R.id.disconnect)
-    var disconnect: ImageView? = null
-    var settingsViewModel: SettingsViewModel? = null
+    override val activityLayout: Int
+        get() = R.layout.activity_settings
+    private var settingsViewModel: SettingsViewModel? = null
     private var settings: Settings? = null
     override fun configureDesign(savedInstanceState: Bundle?) {
-        changePassword!!.setOnClickListener { view: View? ->
+        change_password!!.setOnClickListener {
             val intent = Intent(this, MasterPasswordActivity::class.java)
             intent.putExtra(ARG_CHANGE_PASSWORD, true)
             startActivity(intent)
         }
-        logout!!.setOnClickListener { view: View? ->
+        logout!!.setOnClickListener {
             AlertDialog.Builder(this)
                     .setTitle(R.string.log_out)
                     .setMessage(R.string.log_out_confirmation)
-                    .setPositiveButton(R.string.yes) { dialog: DialogInterface?, which: Int ->
+                    .setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
                         startActivity(Intent(this, MasterPasswordActivity::class.java))
                         setResult(Activity.RESULT_OK)
                         finish()
@@ -81,18 +60,18 @@ class SettingsActivity : GoogleDriveActivity() {
                 googleId!!.visibility = View.VISIBLE
             }
         }
-        drive!!.setOnCheckedChangeListener { compoundButton: CompoundButton?, b: Boolean ->
+        drive!!.setOnCheckedChangeListener { _: CompoundButton?, b: Boolean ->
             settings!!.isGoogleDriveAutoSave = b
             if (b) googleDriveConnection()
             settingsViewModel!!.updateSettings(settings)
         }
-        fileId.setOnClickListener(View.OnClickListener { v: View? ->
+        fileIdEditText?.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("Copied text", fileId.getText().toString())
+            val clip = ClipData.newPlainText("Copied text", fileIdEditText?.text.toString())
             clipboard.setPrimaryClip(clip)
             Toast.makeText(this@SettingsActivity, "Text copied to clipboard", Toast.LENGTH_LONG).show()
-        })
-        disconnect!!.setOnClickListener { view: View? ->
+        }
+        disconnect!!.setOnClickListener {
             val signInOptions = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                     .requestEmail()
                     .requestScopes(Scope(DriveScopes.DRIVE_FILE))
@@ -107,7 +86,7 @@ class SettingsActivity : GoogleDriveActivity() {
     }
 
     private fun getSettings() {
-        settingsViewModel!!.settings.observe(this, Observer { settings: Settings? -> updateSettings(settings) })
+        settingsViewModel!!.settings?.observe(this, Observer { settings: Settings? -> updateSettings(settings) })
     }
 
     private fun updateSettings(settings: Settings?) {
@@ -115,7 +94,7 @@ class SettingsActivity : GoogleDriveActivity() {
         this.settings = settings
         if (settings == null) this.settings = Settings(false, "")
         drive!!.isChecked = this.settings!!.isGoogleDriveAutoSave
-        fileId.setText(this.settings!!.googleDriveFileID)
+        fileIdEditText?.setText(this.settings!!.googleDriveFileID)
         if (account != null) {
             googleId!!.text = resources.getString(R.string.logged_with, account.displayName)
             disconnect!!.visibility = View.VISIBLE
@@ -125,10 +104,6 @@ class SettingsActivity : GoogleDriveActivity() {
             disconnect!!.visibility = View.GONE
             googleId!!.visibility = View.GONE
         }
-    }
-
-    override fun getActivityLayout(): Int {
-        return R.layout.activity_settings
     }
 
     override fun configureViewModel() {

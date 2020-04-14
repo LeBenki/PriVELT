@@ -8,12 +8,8 @@ package com.kent.university.privelt.ui.dashboard.card.detailed
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.BindView
 import com.kent.university.privelt.PriVELTApplication
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseActivity
@@ -21,35 +17,17 @@ import com.kent.university.privelt.events.LaunchListDataEvent
 import com.kent.university.privelt.model.Card
 import com.kent.university.privelt.ui.data.DataActivity
 import com.kent.university.privelt.ui.login.LoginActivity
+import kotlinx.android.synthetic.main.activity_detailed_card.*
 import net.neferett.webviewsextractor.model.UserDataTypes
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
+import java.util.*
 
 class DetailedCardActivity : BaseActivity() {
     private var card: Card? = null
 
-    @JvmField
-    @BindView(R.id.progress_circular)
-    var progressBar: ProgressBar? = null
-
-    @JvmField
-    @BindView(R.id.recycler_view_metrics)
-    var recyclerView: RecyclerView? = null
-
-    @JvmField
-    @BindView(R.id.image_logo)
-    var logo: ImageView? = null
-
-    @JvmField
-    @BindView(R.id.title)
-    var title: TextView? = null
-
-    @JvmField
-    @BindView(R.id.risk_progress)
-    var overallRisk: ProgressBar? = null
-    override fun getActivityLayout(): Int {
-        return R.layout.activity_detailed_card
-    }
+    override val activityLayout: Int
+        get() = R.layout.activity_detailed_card
 
     override fun configureViewModel() {
         //TODO use viewmodel
@@ -61,18 +39,18 @@ class DetailedCardActivity : BaseActivity() {
         } else if (intent != null) {
             card = intent.getSerializableExtra(PARAM_CARD) as Card
         }
-        title!!.text = card!!.title
+        titleTV!!.text = card!!.title
         var progress = 0
         for ((_, number) in card!!.metrics) progress += number
-        overallRisk!!.progress = progress * 100 / 200
+        risk_progress!!.progress = progress * 100 / 200
         if (!card!!.isService) {
-            val userDataType = UserDataTypes.valueOf(card!!.title.toUpperCase())
+            val userDataType = UserDataTypes.valueOf(card!!.title.toUpperCase(Locale.ROOT))
             logo!!.setImageResource(userDataType.res)
         } else {
             val priVELTApplication = logo!!.context.applicationContext as PriVELTApplication
             logo!!.setImageResource(priVELTApplication.serviceHelper!!.getResIdWithName(card!!.title))
         }
-        setTitle(card!!.title)
+        title = card!!.title
         configureRecyclerView()
     }
 
@@ -83,12 +61,12 @@ class DetailedCardActivity : BaseActivity() {
 
     private fun configureRecyclerView() {
         if (card!!.metrics.size != 0) {
-            progressBar!!.visibility = View.GONE
+            progress_circular!!.visibility = View.GONE
         }
         val layoutManager: RecyclerView.LayoutManager = LinearLayoutManager(this)
-        recyclerView!!.layoutManager = layoutManager
+        recycler_view_metrics!!.layoutManager = layoutManager
         val detailedCardAdapter = DetailedCardAdapter(card!!.metrics, !card!!.isService)
-        recyclerView!!.adapter = detailedCardAdapter
+        recycler_view_metrics!!.adapter = detailedCardAdapter
     }
 
     public override fun onStart() {

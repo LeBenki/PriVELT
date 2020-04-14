@@ -15,7 +15,7 @@ import com.kent.university.privelt.model.UserData
 @Dao
 interface UserDataDao {
     @get:Query("SELECT * FROM user_data")
-    val userData: LiveData<List<UserData?>?>?
+    val userData: LiveData<List<UserData>>?
 
     @Query("DELETE FROM user_data")
     fun deleteAllUserData()
@@ -24,7 +24,7 @@ interface UserDataDao {
     fun deleteUserDataForAService(serviceId: Long)
 
     @Query("SELECT * FROM user_data WHERE service_id = :serviceId and type =:type")
-    fun getUserDataForAServiceAndType(serviceId: Long, type: String?): LiveData<List<UserData?>?>?
+    fun getUserDataForAServiceAndType(serviceId: Long, type: String?): LiveData<List<UserData>>?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUserData(vararg userData: UserData?)
