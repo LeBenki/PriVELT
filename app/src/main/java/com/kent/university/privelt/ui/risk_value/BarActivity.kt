@@ -8,7 +8,6 @@ package com.kent.university.privelt.ui.risk_value
 import android.graphics.Color
 import android.os.Bundle
 import androidx.lifecycle.Observer
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis.XAxisPosition
 import com.github.mikephil.charting.data.BarData
@@ -21,10 +20,10 @@ import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.model.UserData
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
+import kotlinx.android.synthetic.main.activity_barchart.*
 import java.util.*
 
 class BarActivity : BaseActivity() {
-    private var chart: BarChart? = null
     private var riskValueViewModel: RiskValueViewModel? = null
     private var services: List<Service>? = null
     private var userDatas: List<UserData>? = null

@@ -55,7 +55,7 @@ open class Service : Service() {
      * However, the app must call that service's startForeground() method within five seconds
      * after the service is created."
      */
-    fun restartForeground() {
+    private fun restartForeground() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
                 val notification = Notification()
@@ -85,7 +85,7 @@ open class Service : Service() {
         // stoptimertask();
     }
 
-    fun process() {
+    private fun process() {
 
         //set a new Timer - if one is already running, cancel it to avoid two running at the same time
         stoptimertask()
