@@ -6,7 +6,6 @@
 package com.kent.university.privelt.service.restarter
 
 import android.app.job.JobParameters
-import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
@@ -75,21 +74,5 @@ class JobService : android.app.job.JobService() {
         private var restartSensorServiceReceiver: RestartServiceBroadcastReceiver? = null
         private var instance: JobService? = null
         private var jobParameters: JobParameters? = null
-
-        /**
-         * called when the tracker is stopped for whatever reason
-         * @param context
-         */
-        fun stopJob(context: Context?) {
-            if (instance != null && jobParameters != null) {
-                try {
-                    instance!!.unregisterReceiver(restartSensorServiceReceiver)
-                } catch (e: Exception) {
-                    // not registered
-                }
-                Log.i(TAG, "Finishing job")
-                instance!!.jobFinished(jobParameters, true)
-            }
-        }
     }
 }

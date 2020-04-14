@@ -15,7 +15,7 @@ import android.widget.ImageView
 object EyePassword {
     @SuppressLint("ClickableViewAccessibility")
     fun configureEye(image: ImageView, editText: EditText) {
-        image.setOnTouchListener { v: View?, event: MotionEvent -> showEye(event, editText) }
+        image.setOnTouchListener { _: View?, event: MotionEvent -> showEye(event, editText) }
     }
 
     private fun showEye(event: MotionEvent, editText: EditText): Boolean {

@@ -20,7 +20,7 @@ import java.util.*
 class DetailedCardViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
     fun bind(cardItem: CardItem, isService: Boolean) {
         itemView.text1!!.text = SentenceAdapter.adapt(itemView.text1!!.context.resources.getString(R.string.data_found), cardItem.number)
-        itemView.setOnClickListener { view: View? -> EventBus.getDefault().post(LaunchListDataEvent(cardItem.name)) }
+        itemView.setOnClickListener { EventBus.getDefault().post(LaunchListDataEvent(cardItem.name)) }
         if (!isService) {
             val userDataType = UserDataTypes.valueOf(cardItem.name.toUpperCase(Locale.ROOT))
             itemView.icon!!.setImageResource(userDataType.res)

@@ -25,7 +25,7 @@ abstract class SwipeToDeleteCallback internal constructor(mContext: Context) : I
 
     override fun getMovementFlags(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val card = viewHolder as CardViewHolder
-        return if (card.itemView.cardService!!.strokeColor == recyclerView.context.resources.getColor(R.color.colorAccent))
+        return if (card.itemView.cardService!!.strokeColor == ContextCompat.getColor(viewHolder.itemView.context, R.color.colorAccent))
             makeMovementFlags(0, ItemTouchHelper.LEFT)
         else
             0

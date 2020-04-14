@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.kent.university.privelt.PriVELTApplication
-import com.kent.university.privelt.R
 import com.kent.university.privelt.api.PasswordManager
 import com.kent.university.privelt.di.DaggerPriVELTComponent
 import com.kent.university.privelt.di.RoomModule

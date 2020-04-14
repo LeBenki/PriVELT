@@ -24,9 +24,8 @@ object SentenceAdapter {
     }
 
     fun adapt(sentence: String, vararg objects: Any?): String {
-        var sentence = sentence
-        sentence = String.format(sentence, *objects)
-        return if (!sentence.contains(delimiter)) sentence else checkWords(sentence.split(" ").toTypedArray())
+        val sentence2 = String.format(sentence, *objects)
+        return if (!sentence2.contains(delimiter)) sentence2 else checkWords(sentence2.split(" ").toTypedArray())
     }
 
     private fun convertArrayToStringMethod(strArray: Array<String>): String {

@@ -15,7 +15,7 @@ import com.kent.university.privelt.api.DataExtraction.processExtractionForEachSe
 import com.kent.university.privelt.service.utilities.Notification
 import java.util.*
 
-class Service : Service() {
+open class Service : Service() {
     override fun onCreate() {
         super.onCreate()
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -23,7 +23,7 @@ class Service : Service() {
         }
     }
 
-    override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
 
         // it has been killed by Android and now it is restarted. We must make sure to have reinitialised everything
@@ -103,7 +103,7 @@ class Service : Service() {
     /**
      * not needed
      */
-    fun stoptimertask() {
+    private fun stoptimertask() {
         //stop the timer, if it's not already null
         if (timer != null) {
             timer!!.cancel()
@@ -114,7 +114,6 @@ class Service : Service() {
     companion object {
         const val RESTART_INTENT = "uk.ac.shef.oak.restarter"
         protected const val NOTIFICATION_ID = 1337
-        private const val TAG = "ServiceDataExtraction"
 
         /**
          * static to avoid multiple timers to be created when the service is called several times

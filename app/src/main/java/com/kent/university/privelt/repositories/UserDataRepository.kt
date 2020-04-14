@@ -14,18 +14,6 @@ class UserDataRepository @Inject constructor(private val mUserDataDao: UserDataD
     val userDatas: LiveData<List<UserData>>
         get() = mUserDataDao.userData!!
 
-    fun deleteAllUserDatas() {
-        mUserDataDao.deleteAllUserData()
-    }
-
-    fun insertUserDatas(vararg userData: UserData?) {
-        mUserDataDao.insertUserData(*userData)
-    }
-
-    fun deleteUserDatasForAService(id: Long) {
-        mUserDataDao.deleteUserDataForAService(id)
-    }
-
     fun getUserDatasForAServiceAndType(service: Long, type: String?): LiveData<List<UserData>> {
         return mUserDataDao.getUserDataForAServiceAndType(service, type)!!
     }

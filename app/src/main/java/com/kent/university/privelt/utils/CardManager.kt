@@ -15,7 +15,7 @@ object CardManager {
     private fun generateCards(userDataList: List<UserData>?, services: List<Service>): List<Card> {
         val cards: MutableList<Card> = ArrayList()
         for ((name) in services) {
-            cards.add(Card(name, false, true, ArrayList()))
+            cards.add(Card(name, isWatched = false, isService = true, metrics = ArrayList()))
         }
         if (userDataList == null) return cards
         for ((_, type, _, _, serviceId) in userDataList) {
@@ -33,7 +33,7 @@ object CardManager {
             if (!containsCard(cards, type)) {
                 val cardItems: MutableList<CardItem> = ArrayList()
                 cardItems.add(CardItem(service.name, 1))
-                cards.add(Card(type, false, false, cardItems))
+                cards.add(Card(type, isWatched = false, isService = false, metrics = cardItems))
             } else {
                 val card = getCardWithTitle(cards, type)
                 var cardItems = card!!.getCardItemWithCardIemTitle(service.name)

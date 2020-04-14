@@ -34,7 +34,6 @@ class ProcessMainClass {
     }
 
     companion object {
-        private val TAG = ProcessMainClass::class.java.simpleName
         private var serviceIntent: Intent? = null
     }
 }

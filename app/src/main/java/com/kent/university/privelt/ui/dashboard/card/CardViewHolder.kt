@@ -7,6 +7,7 @@ package com.kent.university.privelt.ui.dashboard.card
 
 import android.content.Intent
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kent.university.privelt.PriVELTApplication
@@ -38,18 +39,18 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         }
         if (card.isService) {
             itemView.settings!!.visibility = View.VISIBLE
-            itemView.settings!!.setOnClickListener { view: View? -> EventBus.getDefault().post(UpdateCredentialsEvent(card.title)) }
-            itemView.cardService!!.strokeColor = itemView.context.resources.getColor(R.color.colorAccent)
+            itemView.settings!!.setOnClickListener { EventBus.getDefault().post(UpdateCredentialsEvent(card.title)) }
+            itemView.cardService!!.strokeColor = ContextCompat.getColor(itemView.context, R.color.colorAccent)
         } else {
             itemView.settings!!.visibility = View.GONE
         }
         itemView.watch_icon!!.setOnClickListener {
             EventBus.getDefault().post(ChangeWatchListStatusEvent(card.title))
             card.isWatched = !card.isWatched
-            itemView.watch_icon!!.setColorFilter(if (card.isWatched) itemView.context.resources.getColor(R.color.colorAccent) else itemView.context.resources.getColor(android.R.color.black))
+            itemView.watch_icon!!.setColorFilter(if (card.isWatched) itemView.context.resources.getColor(R.color.colorAccent) else ContextCompat.getColor(itemView.context, android.R.color.black))
         }
         itemView.setOnClickListener { EventBus.getDefault().post(DetailedCardEvent(card)) }
-        itemView.watch_icon!!.setColorFilter(if (card.isWatched) itemView.context.resources.getColor(R.color.colorAccent) else itemView.context.resources.getColor(android.R.color.black))
+        itemView.watch_icon!!.setColorFilter(if (card.isWatched) itemView.context.resources.getColor(R.color.colorAccent) else ContextCompat.getColor(itemView.context, android.R.color.black))
         var total = 0
         for (item in card.metrics) total += item.number
         if (card.metrics.size != 0) {

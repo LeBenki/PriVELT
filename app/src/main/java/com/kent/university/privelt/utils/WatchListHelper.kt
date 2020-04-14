@@ -26,7 +26,7 @@ class WatchListHelper(private val sharedPreferences: SharedPreferences) {
     }
 
     init {
-        watchList = ArrayList(Arrays.asList(*sharedPreferences.getString(PARAM_WATCH_LIST, "")!!.split(",").toTypedArray()))
+        watchList = ArrayList(listOf(*sharedPreferences.getString(PARAM_WATCH_LIST, "")!!.split(",").toTypedArray()))
         if (watchList.contains("")) watchList.remove("")
     }
 }

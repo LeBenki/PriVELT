@@ -20,7 +20,7 @@ internal class SensorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
     fun bind(sensor: Sensor) {
         itemView.image_sensor!!.setImageResource(sensor.resId)
         itemView.sensor_value!!.text = sensor.getApplications().size.toString()
-        itemView.setOnClickListener { view: View? -> EventBus.getDefault().post(LaunchDetailedSensorEvent(sensor)) }
+        itemView.setOnClickListener { EventBus.getDefault().post(LaunchDetailedSensorEvent(sensor)) }
         if (sensor.isSensor) {
             itemView.sensor_status_image!!.visibility = View.VISIBLE
             itemView.sensor_status_name!!.visibility = View.VISIBLE

@@ -14,9 +14,6 @@ class ServiceDataRepository @Inject constructor(private val mServiceDao: Service
     val services: LiveData<List<Service>>
         get() = mServiceDao.services!!
 
-    val allServices: List<Service>
-        get() = mServiceDao.allServices!!
-
     fun deleteServices(vararg credentials: Service?) {
         mServiceDao.deleteServices(*credentials)
     }
@@ -28,9 +25,4 @@ class ServiceDataRepository @Inject constructor(private val mServiceDao: Service
     fun updateServices(vararg credentials: Service?) {
         mServiceDao.updateServices(*credentials)
     }
-
-    fun deleteAllServices() {
-        mServiceDao.deleteAllServices()
-    }
-
 }

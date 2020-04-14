@@ -24,35 +24,43 @@ import javax.inject.Singleton
 
 @Singleton
 class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: UserDataRepository, private var mServiceDataSource: ServiceDataRepository, private var mCurrentUserDataRepository: CurrentUserDataRepository, private var mSettingsDataSource: SettingsDataRepository, private var mExecutor: Executor) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return try {
-            if (CardViewModel::class.java == modelClass) {
-                modelClass.getConstructor(ServiceDataRepository::class.java,
-                                UserDataRepository::class.java,
-                                Executor::class.java)
-                        .newInstance(mServiceDataSource, mUserDataSource, mExecutor) as T
-            } else if (DataViewModel::class.java == modelClass) {
-                modelClass.getConstructor(UserDataRepository::class.java,
-                                ServiceDataRepository::class.java,
-                                Executor::class.java)
-                        .newInstance(mUserDataSource, mServiceDataSource, mExecutor) as T
-            } else if (RiskValueViewModel::class.java == modelClass) {
-                modelClass.getConstructor(ServiceDataRepository::class.java,
-                                UserDataRepository::class.java)
-                        .newInstance(mServiceDataSource, mUserDataSource) as T
-            } else if (UserViewModel::class.java == modelClass) {
-                modelClass.getConstructor(CurrentUserDataRepository::class.java,
-                                Executor::class.java)
-                        .newInstance(mCurrentUserDataRepository, mExecutor) as T
-            } else if (DetailedCardViewModel::class.java == modelClass) {
-                modelClass.getConstructor(UserDataRepository::class.java,
-                                Executor::class.java)
-                        .newInstance(mUserDataSource, mExecutor) as T
-            } else if (SettingsViewModel::class.java == modelClass) {
-                modelClass.getConstructor(SettingsDataRepository::class.java,
-                                Executor::class.java)
-                        .newInstance(mSettingsDataSource, mExecutor) as T
-            } else throw IllegalArgumentException("Unknown ViewModel class")
+            when {
+                CardViewModel::class.java == modelClass -> {
+                    modelClass.getConstructor(ServiceDataRepository::class.java,
+                                    UserDataRepository::class.java,
+                                    Executor::class.java)
+                            .newInstance(mServiceDataSource, mUserDataSource, mExecutor) as T
+                }
+                DataViewModel::class.java == modelClass -> {
+                    modelClass.getConstructor(UserDataRepository::class.java,
+                                    ServiceDataRepository::class.java)
+                            .newInstance(mUserDataSource, mServiceDataSource) as T
+                }
+                RiskValueViewModel::class.java == modelClass -> {
+                    modelClass.getConstructor(ServiceDataRepository::class.java,
+                                    UserDataRepository::class.java)
+                            .newInstance(mServiceDataSource, mUserDataSource) as T
+                }
+                UserViewModel::class.java == modelClass -> {
+                    modelClass.getConstructor(CurrentUserDataRepository::class.java,
+                                    Executor::class.java)
+                            .newInstance(mCurrentUserDataRepository, mExecutor) as T
+                }
+                DetailedCardViewModel::class.java == modelClass -> {
+                    modelClass.getConstructor(UserDataRepository::class.java,
+                                    Executor::class.java)
+                            .newInstance(mUserDataSource, mExecutor) as T
+                }
+                SettingsViewModel::class.java == modelClass -> {
+                    modelClass.getConstructor(SettingsDataRepository::class.java,
+                                    Executor::class.java)
+                            .newInstance(mSettingsDataSource, mExecutor) as T
+                }
+                else -> throw IllegalArgumentException("Unknown ViewModel class")
+            }
         } catch (e: IllegalAccessException) {
             throw IllegalArgumentException("Unknown ViewModel class")
         } catch (e: InstantiationException) {

@@ -14,15 +14,7 @@ class SettingsDataRepository @Inject constructor(private val mSettingsDao: Setti
     val settings: LiveData<Settings>
         get() = mSettingsDao.settings!!
 
-    val instantSettings: Settings
-        get() = mSettingsDao.instantSettings
-
     fun updateSettings(vararg settings: Settings?) {
         mSettingsDao.updateSettings(*settings)
     }
-
-    fun deleteSettings() {
-        mSettingsDao.deleteSettings()
-    }
-
 }

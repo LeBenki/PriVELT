@@ -17,5 +17,4 @@ class DetailedCardViewModel(private val mUserDataRepository: UserDataRepository,
     fun getUserDatasForService(serviceId: Long): LiveData<List<UserData>>? {
         return userDatas
     }
-
 }

@@ -11,9 +11,8 @@ import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.model.UserData
 import com.kent.university.privelt.repositories.ServiceDataRepository
 import com.kent.university.privelt.repositories.UserDataRepository
-import java.util.concurrent.Executor
 
-class DataViewModel(private val mUserDataRepository: UserDataRepository, private val mServiceDataRepository: ServiceDataRepository, private val mExecutor: Executor) : ViewModel() {
+class DataViewModel(private val mUserDataRepository: UserDataRepository, private val mServiceDataRepository: ServiceDataRepository) : ViewModel() {
     var services: LiveData<List<Service>>? = null
         private set
 

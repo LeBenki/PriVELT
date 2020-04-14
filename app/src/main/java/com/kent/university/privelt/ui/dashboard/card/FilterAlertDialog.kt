@@ -26,8 +26,8 @@ class FilterAlertDialog internal constructor(private val listener: FilterDialogL
         val checkedItems = getFilters(sharedPreferences)
         builder.setTitle(getString(R.string.choose_cards)) // Specify the list array, the items to be selected by default (null for none),
                 // and the listener through which to receive callbacks when items are selected
-                .setMultiChoiceItems(R.array.filters, checkedItems) { dialogInterface: DialogInterface?, i: Int, b: Boolean -> checkedItems[i] = b }
-                .setPositiveButton(R.string.yes) { dialog: DialogInterface?, id: Int ->
+                .setMultiChoiceItems(R.array.filters, checkedItems) { _: DialogInterface?, i: Int, b: Boolean -> checkedItems[i] = b }
+                .setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
                     listener.onDialogPositiveClick(checkedItems)
                     sharedPreferences.edit().putBoolean(DATA, checkedItems[0]).apply()
                     sharedPreferences.edit().putBoolean(SERVICE, checkedItems[1]).apply()

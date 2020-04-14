@@ -9,7 +9,6 @@ import android.content.Context
 import android.text.TextUtils
 import android.util.Log
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.common.util.CollectionUtils.setOf
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.json.gson.GsonFactory
@@ -39,7 +38,7 @@ object DataExtraction {
             try {
                 val account = GoogleSignIn.getLastSignedInAccount(PriVELTApplication.getInstance())
                 val credential = GoogleAccountCredential.usingOAuth2(
-                        PriVELTApplication.getInstance(), setOf(DriveScopes.DRIVE_FILE))
+                        PriVELTApplication.getInstance(), listOf(DriveScopes.DRIVE_FILE))
                 credential.selectedAccount = account!!.account
                 val googleDriveService = Drive.Builder(
                                 AndroidHttp.newCompatibleTransport(),

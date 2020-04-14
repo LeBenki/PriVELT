@@ -107,11 +107,11 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
 
     @SuppressLint("StaticFieldLeak")
     private fun resetMasterPassword() {
-        reset!!.setOnClickListener { view: View? ->
+        reset!!.setOnClickListener {
             AlertDialog.Builder(this)
                     .setTitle(R.string.reset_confirmation)
                     .setMessage(R.string.process_confirmation)
-                    .setPositiveButton(R.string.yes) { dialog: DialogInterface?, which: Int ->
+                    .setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
                         reset!!.isEnabled = false
                         start!!.isEnabled = false
                         progress_circular!!.visibility = View.VISIBLE
@@ -196,7 +196,7 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
         updatePasswordStrengthView(editable.toString())
     }
 
-    fun onDataImported() {
+    private fun onDataImported() {
         reset!!.setOnClickListener { v: View? ->
             val alert = AlertDialog.Builder(this)
             val edittext = EditText(this)

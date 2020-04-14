@@ -96,9 +96,11 @@ class CardFragment : BaseFragment(), FilterDialogListener {
     private fun updateOverallRiskValue() {
         var riskValue = userData!!.size
         if (riskValue > 100) riskValue = 100
-        if (riskValue < 20) baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low")
-        else if (riskValue < 60) baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Medium")
-        else baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
+        when {
+            riskValue < 20 -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low")
+            riskValue < 60 -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Medium")
+            else -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
+        }
         baseView.progressBar!!.progress = riskValue
     }
 

@@ -17,9 +17,4 @@ class CurrentUserDataRepository @Inject constructor(private val mCurrentUserDao:
     fun updateCurrentUser(vararg currentUsers: CurrentUser?) {
         mCurrentUserDao.updateCurrentUser(*currentUsers)
     }
-
-    fun deleteCurrentUser() {
-        mCurrentUserDao.deleteCurrentUser()
-    }
-
 }

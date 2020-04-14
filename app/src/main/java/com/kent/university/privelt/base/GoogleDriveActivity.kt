@@ -12,8 +12,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.Scope
-import com.google.android.gms.common.util.CollectionUtils.setOf
-import com.google.android.gms.tasks.OnSuccessListener
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.json.gson.GsonFactory
@@ -26,7 +24,7 @@ import com.kent.university.privelt.utils.DriveServiceHelper
 abstract class GoogleDriveActivity : BaseActivity() {
     private var mDriveServiceHelper: DriveServiceHelper? = null
     protected var listener: GoogleDriveListener? = null
-    protected var fileId = ""
+    private var fileId = ""
     protected fun googleDriveConnection() {
         googleDriveConnectionAndDownload(false, "")
     }
@@ -38,7 +36,7 @@ abstract class GoogleDriveActivity : BaseActivity() {
             requestSignIn()
         } else {
             val credential = GoogleAccountCredential.usingOAuth2(
-                    this, setOf(DriveScopes.DRIVE_FILE))
+                    this, listOf(DriveScopes.DRIVE_FILE))
             credential.selectedAccount = account.account
             val googleDriveService = Drive.Builder(
                             AndroidHttp.newCompatibleTransport(),
@@ -62,15 +60,15 @@ abstract class GoogleDriveActivity : BaseActivity() {
 
     private fun downloadFile() {
         mDriveServiceHelper!!.downloadFile(fileId, getDatabasePath(PriVELTDatabase.PriVELTDatabaseName).path)
-                .addOnSuccessListener(OnSuccessListener { s: Void? -> listener!!.onDownloadSuccess() })
-                .addOnFailureListener { e: Exception? -> listener!!.onDownloadFailure() }
+                .addOnSuccessListener { listener!!.onDownloadSuccess() }
+                .addOnFailureListener { listener!!.onDownloadFailure() }
     }
 
     private fun handleSignInResult(result: Intent) {
         GoogleSignIn.getSignedInAccountFromIntent(result)
                 .addOnSuccessListener { googleAccount: GoogleSignInAccount ->
                     val credential = GoogleAccountCredential.usingOAuth2(
-                            this, setOf(DriveScopes.DRIVE_FILE))
+                            this, listOf(DriveScopes.DRIVE_FILE))
                     credential.selectedAccount = googleAccount.account
                     val googleDriveService = Drive.Builder(
                                     AndroidHttp.newCompatibleTransport(),
@@ -80,7 +78,7 @@ abstract class GoogleDriveActivity : BaseActivity() {
                             .build()
                     mDriveServiceHelper = DriveServiceHelper(googleDriveService)
                     if (listener != null) downloadFile()
-                }.addOnSuccessListener { runnable: GoogleSignInAccount? -> listener!!.onConnectionSuccess() }
+                }.addOnSuccessListener { listener!!.onConnectionSuccess() }
                 .addOnFailureListener { exception: Exception? -> Log.e("TAG", "Unable to sign in.", exception) }
     }
 
