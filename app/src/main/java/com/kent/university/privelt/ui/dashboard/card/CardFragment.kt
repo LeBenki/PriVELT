@@ -171,20 +171,21 @@ class CardFragment : BaseFragment(), FilterDialogListener {
                     service.user = user!!
                     service.password = password!!
                 }
-                object : AsyncTask<Void?, Void?, Void?>() {
-                    override fun doInBackground(vararg voids: Void?): Void? {
+                object : AsyncTask<Void?, Void?, Service?>() {
+                    override fun doInBackground(vararg voids: Void?): Service? {
                         if (requestCode == REQUEST_LOGIN) {
                             cardViewModel!!.insertService(service)
+                            return cardViewModel!!.getServiceWithName(serviceName = service.name)
                         } else {
                             cardViewModel!!.updateService(service)
                         }
                         return null
                     }
 
-                    override fun onPostExecute(aVoid: Void?) {
-                        super.onPostExecute(aVoid)
+                    override fun onPostExecute(serviceP: Service?) {
+                        super.onPostExecute(serviceP)
                         if (!service.isPasswordSaved)
-                            processDataExtraction(ServiceHelper(context), service, user, password, context!!.applicationContext)
+                            processDataExtraction(ServiceHelper(context), serviceP!!, user, password, context!!.applicationContext)
                         else (activity as DashboardActivity?)!!.launchService()
                     }
                 }.execute()

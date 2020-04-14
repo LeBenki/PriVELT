@@ -28,4 +28,7 @@ interface ServiceDao {
 
     @Query("DELETE FROM service")
     fun deleteAllServices()
+
+    @Query("SELECT * FROM service WHERE name = :serviceName")
+    fun getServiceWithName(serviceName: String): Service
 }

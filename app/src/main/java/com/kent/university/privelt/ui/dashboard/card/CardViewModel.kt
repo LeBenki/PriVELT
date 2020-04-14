@@ -36,4 +36,8 @@ class CardViewModel(private val mServiceDataSource: ServiceDataRepository, priva
         mServiceDataSource.updateServices(*services)
     }
 
+    fun getServiceWithName(serviceName: String): Service {
+        return mServiceDataSource.getServiceWithName(serviceName)
+    }
+
 }

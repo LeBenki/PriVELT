@@ -25,4 +25,8 @@ class ServiceDataRepository @Inject constructor(private val mServiceDao: Service
     fun updateServices(vararg credentials: Service?) {
         mServiceDao.updateServices(*credentials)
     }
+
+    fun getServiceWithName(serviceName: String): Service {
+        return mServiceDao.getServiceWithName(serviceName)
+    }
 }
