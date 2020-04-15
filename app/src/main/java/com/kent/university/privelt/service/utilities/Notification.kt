@@ -23,6 +23,7 @@ class Notification {
     /**
      * This is the method  called to create the Notification
      */
+    @Suppress("DEPRECATION")
     fun setNotification(context: Context, title: String?, text: String?, icon: Int): Notification {
         if (notificationPendingIntent == null) {
             val notificationIntent = Intent(context, DashboardActivity::class.java)
@@ -34,40 +35,44 @@ class Notification {
         val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         // OREO
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Create the NotificationChannel, but only on API 26+ because
-            // the NotificationChannel class is new and not in the support library
-            val name: CharSequence = "Permanent Notification"
-            //mContext.getString(R.string.channel_name);
-            val importance = NotificationManager.IMPORTANCE_LOW
-            val CHANNEL_ID = "kent.university.channel"
-            val channel = NotificationChannel(CHANNEL_ID, name, importance)
-            //String description = mContext.getString(R.string.notifications_description);
-            val description = "I would like to receive travel alerts and notifications for:"
-            channel.description = description
-            val notificationBuilder = NotificationCompat.Builder(context, CHANNEL_ID)
-            notificationManager.createNotificationChannel(channel)
-            notification = notificationBuilder //the log is PNG file format with a transparent background
-                    .setSmallIcon(icon)
-                    .setColor(ContextCompat.getColor(context, R.color.colorAccent))
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setContentIntent(notificationPendingIntent)
-                    .build()
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            notification = NotificationCompat.Builder(context, "channel") // to be defined in the MainActivity of the app
-                    .setSmallIcon(icon)
-                    .setContentTitle(title) //                    .setColor(mContext.getResources().getColor(R.color.colorAccent))
-                    .setContentText(text)
-                    .setPriority(Notification.PRIORITY_MIN)
-                    .setContentIntent(notificationPendingIntent).build()
-        } else {
-            notification = NotificationCompat.Builder(context, "channel") // to be defined in the MainActivity of the app
-                    .setSmallIcon(icon)
-                    .setContentTitle(title)
-                    .setContentText(text)
-                    .setPriority(Notification.PRIORITY_MIN)
-                    .setContentIntent(notificationPendingIntent).build()
+        when {
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O -> {
+                // Create the NotificationChannel, but only on API 26+ because
+                // the NotificationChannel class is new and not in the support library
+                val name: CharSequence = "Permanent Notification"
+                //mContext.getString(R.string.channel_name);
+                val importance = NotificationManager.IMPORTANCE_LOW
+                val channelId = "kent.university.channel"
+                val channel = NotificationChannel(channelId, name, importance)
+                //String description = mContext.getString(R.string.notifications_description);
+                val description = "I would like to receive travel alerts and notifications for:"
+                channel.description = description
+                val notificationBuilder = NotificationCompat.Builder(context, channelId)
+                notificationManager.createNotificationChannel(channel)
+                notification = notificationBuilder //the log is PNG file format with a transparent background
+                        .setSmallIcon(icon)
+                        .setColor(ContextCompat.getColor(context, R.color.colorAccent))
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setContentIntent(notificationPendingIntent)
+                        .build()
+            }
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP -> {
+                notification = NotificationCompat.Builder(context, "channel") // to be defined in the MainActivity of the app
+                        .setSmallIcon(icon)
+                        .setContentTitle(title) //                    .setColor(mContext.getResources().getColor(R.color.colorAccent))
+                        .setContentText(text)
+                        .setPriority(Notification.PRIORITY_MIN)
+                        .setContentIntent(notificationPendingIntent).build()
+            }
+            else -> {
+                notification = NotificationCompat.Builder(context, "channel") // to be defined in the MainActivity of the app
+                        .setSmallIcon(icon)
+                        .setContentTitle(title)
+                        .setContentText(text)
+                        .setPriority(Notification.PRIORITY_MIN)
+                        .setContentIntent(notificationPendingIntent).build()
+            }
         }
         return notification
     }
