@@ -9,14 +9,15 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.PorterDuff
+import android.graphics.*
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.*
+import androidx.core.graphics.BlendModeColorFilterCompat
+import androidx.core.graphics.BlendModeCompat
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.GoogleDriveActivity
 import com.kent.university.privelt.base.GoogleDriveListener
@@ -116,12 +117,12 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
                         start!!.isEnabled = false
                         progress_circular!!.visibility = View.VISIBLE
                         object : AsyncTask<Void?, Void?, Void?>() {
-                             override fun doInBackground(vararg voids: Void?): Void? {
+                            override fun doInBackground(vararg voids: Void?): Void? {
                                 masterPasswordAlreadyGiven = false
                                 changePassword = false
                                 deleteDatabase(PriVELTDatabase.PriVELTDatabaseName)
                                 return null
-                             }
+                            }
 
                             override fun onPostExecute(aVoid: Void?) {
                                 super.onPostExecute(aVoid)
@@ -152,11 +153,8 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
         val password = password!!.text
         identityManager?.password = password
         object : AsyncTask<Void?, Void?, Boolean>() {
-             override fun doInBackground(vararg v: Void?): Boolean {
+            override fun doInBackground(vararg v: Void?): Boolean {
                 return if (changePassword || !masterPasswordAlreadyGiven) {
-                    if (changePassword) {
-                        this@MasterPasswordActivity.identityManager?.changePassword(password)
-                    }
                     masterPasswordAlreadyGiven = true
                     true
                 } else {
@@ -180,6 +178,8 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
                 if (res) {
                     if (!changePassword) {
                         startActivity(Intent(this@MasterPasswordActivity, DashboardActivity::class.java))
+                    } else {
+                        this@MasterPasswordActivity.identityManager?.changePassword(password)
                     }
                     finish()
                 } else {
@@ -220,6 +220,6 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
         progress_password!!.progress = ps.progress
         password_strength!!.setText(ps.resId)
         password_strength!!.setTextColor(ps.color)
-        progress_password!!.progressDrawable.setColorFilter(ps.color, PorterDuff.Mode.SRC_IN)
+        progress_password!!.progressDrawable.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(ps.color, BlendModeCompat.SRC_IN)
     }
 }
