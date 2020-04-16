@@ -3,16 +3,6 @@
 Android application to centralise known data from different services.
 The project is funded by PriVELT (https://privelt.ac.uk/).
 
-To test the app you will need a github.properties file with :
-
-```
-gpr.usr=GITHUB USERNAME
-gpr.key=GITHUB TOKEN OR PASSWORD
-```
-
-
-It is required to use the LoginService and the DataExtractor
-
 # Current Services
 
 Research Engine:
@@ -34,11 +24,6 @@ Online Social Networks:
 
 Sports:
   - Strava.com
-
-Contributors
-----
-- [Jordan Bonaldi (Back End API Solution)](http://github.com/jordanbonaldi/)
-- [Lucas Benkemoun (Front End Solution)](https://github.com/LeBenki)
 
 License
 ----
