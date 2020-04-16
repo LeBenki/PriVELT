@@ -3,7 +3,8 @@
 Android application to centralise known data from different services.
 The project is funded by PriVELT (https://privelt.ac.uk/).
 
-# Current Services
+Current Services
+----
 
 Research Engine:
   - Google.com (Maps)
