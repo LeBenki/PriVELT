@@ -6,7 +6,7 @@
 package com.kent.university.privelt.api
 
 import android.text.Editable
-import com.kent.university.privelt.database.PriVELTDatabase.changeMasterPassword
+import com.kent.university.privelt.database.PriVELTDatabase.Companion.changeMasterPassword
 
 class PasswordManager {
     var password: Editable? = null

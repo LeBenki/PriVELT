@@ -30,29 +30,29 @@ class RoomModule(private val context: Context) {
     @Singleton
     @Provides
     fun provideUserDataSource(context: Context?): UserDataRepository {
-        val database = PriVELTDatabase.getInstance(context)
-        return UserDataRepository(database.userDataDao())
+        val database = PriVELTDatabase.getInstance(context!!)
+        return UserDataRepository(database?.userDataDao()!!)
     }
 
     @Singleton
     @Provides
     fun provideServiceDataSource(context: Context?): ServiceDataRepository {
-        val database = PriVELTDatabase.getInstance(context)
-        return ServiceDataRepository(database.serviceDao())
+        val database = PriVELTDatabase.getInstance(context!!)
+        return ServiceDataRepository(database?.serviceDao()!!)
     }
 
     @Singleton
     @Provides
     fun provideCurrentUserDataSource(context: Context?): CurrentUserDataRepository {
-        val database = PriVELTDatabase.getInstance(context)
-        return CurrentUserDataRepository(database.currentUserDao())
+        val database = PriVELTDatabase.getInstance(context!!)
+        return CurrentUserDataRepository(database?.currentUserDao()!!)
     }
 
     @Singleton
     @Provides
     fun provideSettingsDataSource(context: Context?): SettingsDataRepository {
-        val database = PriVELTDatabase.getInstance(context)
-        return SettingsDataRepository(database.settingsDao())
+        val database = PriVELTDatabase.getInstance(context!!)
+        return SettingsDataRepository(database?.settingsDao()!!)
     }
 
     @Singleton
