@@ -26,7 +26,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/global_privacy_value"
+                        android:id="@+id/privacyValue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/activity_horizontal_margin"
@@ -38,7 +38,7 @@
                         android:textStyle="bold" />
 
                     <ProgressBar
-                        android:id="@+id/risk_progress_overall"
+                        android:id="@+id/progressBar"
                         style="?android:attr/progressBarStyleHorizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -49,15 +49,8 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <TextView
-                android:id="@+id/no_services"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/no_service" />
-
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view_services"
+                android:id="@+id/servicesList"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@id/overall_score"
@@ -68,12 +61,19 @@
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/add_service"
+        android:id="@+id/addService"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/activity_vertical_margin"
         app:srcCompat="@drawable/ic_add" />
+
+    <TextView
+        android:id="@+id/noServices"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="@string/no_service" />
 
 </RelativeLayout>

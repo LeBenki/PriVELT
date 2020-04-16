@@ -54,7 +54,7 @@
                 android:text="@string/save_data_on_google_drive" />
 
             <EditText
-                android:id="@+id/fileId"
+                android:id="@+id/fileIdEditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/logo"
