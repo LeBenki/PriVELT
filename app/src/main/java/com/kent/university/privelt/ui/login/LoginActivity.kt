@@ -50,6 +50,8 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         EyePassword.configureEye(eye_password!!, password!!)
         val serviceHelper = ServiceHelper(this)
         loginService = serviceHelper.getServiceWithName(service!!.name)
+        email.setText(service!!.user)
+        password.setText(service!!.password)
         remember_password!!.isChecked = service!!.isPasswordSaved
         configureRecyclerView()
     }

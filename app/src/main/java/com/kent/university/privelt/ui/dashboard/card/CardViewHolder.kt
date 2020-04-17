@@ -66,7 +66,7 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             itemView.metric_rv!!.visibility = View.VISIBLE
             itemView.service_value!!.visibility = View.VISIBLE
             itemView.service_value!!.text = total.toString()
-            dataMetricsAdapter.setDataMetrics(card.metrics, !card.isService)
+            dataMetricsAdapter.setDataMetrics(card)
             dataMetricsAdapter.notifyDataSetChanged()
         } else {
             itemView.risk_progress!!.progress = 0

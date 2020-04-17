@@ -9,19 +9,24 @@ import android.view.View
 
 import androidx.recyclerview.widget.RecyclerView
 import com.kent.university.privelt.PriVELTApplication
+import com.kent.university.privelt.events.DetailedCardEvent
+import com.kent.university.privelt.model.Card
 import com.kent.university.privelt.model.CardItem
 import kotlinx.android.synthetic.main.cell_metrics.view.*
 import net.neferett.webviewsextractor.model.UserDataTypes
+import org.greenrobot.eventbus.EventBus
+import java.util.*
 
 class DataMetricsViewHolder internal constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    fun bind(cardItem: CardItem, isService: Boolean) {
+    fun bind(card: Card, cardItem: CardItem) {
         itemView.value_metrics!!.text = cardItem.number.toString()
-        if (!isService) {
-            val userDataType = UserDataTypes.valueOf(cardItem.name.toUpperCase())
+        if ((card.isService)) {
+            val userDataType = UserDataTypes.valueOf(cardItem.name.toUpperCase(Locale.ROOT))
             itemView.image_type!!.setImageResource(userDataType.res)
         } else {
             val priVELTApplication = itemView.image_type!!.context.applicationContext as PriVELTApplication
             itemView.image_type!!.setImageResource(priVELTApplication.serviceHelper!!.getResIdWithName(cardItem.name))
         }
+        itemView.setOnClickListener { EventBus.getDefault().post(DetailedCardEvent(card)) }
     }
 }
