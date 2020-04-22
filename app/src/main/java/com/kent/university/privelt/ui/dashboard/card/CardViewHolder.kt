@@ -6,6 +6,7 @@
 package com.kent.university.privelt.ui.dashboard.card
 
 import android.content.Intent
+import android.graphics.Color
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +44,7 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             itemView.cardService!!.strokeColor = ContextCompat.getColor(itemView.context, R.color.colorAccent)
         } else {
             itemView.settings!!.visibility = View.GONE
+            itemView.cardService!!.strokeColor = Color.WHITE
         }
         itemView.watch_icon!!.setOnClickListener {
             EventBus.getDefault().post(ChangeWatchListStatusEvent(card.title))
