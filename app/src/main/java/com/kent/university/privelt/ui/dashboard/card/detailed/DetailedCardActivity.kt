@@ -17,6 +17,7 @@ import com.kent.university.privelt.events.LaunchListDataEvent
 import com.kent.university.privelt.model.Card
 import com.kent.university.privelt.ui.data.DataActivity
 import com.kent.university.privelt.ui.login.LoginActivity
+import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import kotlinx.android.synthetic.main.activity_detailed_card.*
 import net.neferett.webviewsextractor.model.UserDataTypes
 import org.greenrobot.eventbus.EventBus
@@ -49,6 +50,13 @@ class DetailedCardActivity : BaseActivity() {
         } else {
             val priVELTApplication = logo!!.context.applicationContext as PriVELTApplication
             logo!!.setImageResource(priVELTApplication.serviceHelper!!.getResIdWithName(card!!.title))
+        }
+        var riskValue = progress
+        if (riskValue > 100) riskValue = 100
+        when {
+            riskValue < 20 -> privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low")
+            riskValue < 60 -> privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Medium")
+            else -> privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
         }
         title = card!!.title
         configureRecyclerView()

@@ -77,6 +77,13 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             itemView.service_value!!.visibility = View.GONE
             itemView.risk_progress!!.setOnClickListener(null)
         }
+        var riskValue = total
+        if (riskValue > 100) riskValue = 100
+        when {
+            riskValue < 20 -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "Low")
+            riskValue < 60 -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "Medium")
+            else -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "High")
+        }
     }
 
     init {

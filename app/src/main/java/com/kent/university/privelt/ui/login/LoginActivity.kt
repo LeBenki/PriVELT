@@ -59,8 +59,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
     private fun configureRecyclerView() {
         scripts!!.layoutManager = LinearLayoutManager(this)
         val dataExtractor = DataExtractor(loginService)
-        dataExtractor.serviceName
-        adapter = ScriptsAdapter(dataExtractor.stringScripts, listOf(*service!!.unConcatenatedScripts))
+        adapter = ScriptsAdapter(dataExtractor.getDisplayNameScripts(), listOf(*service!!.unConcatenatedScripts))
         scripts!!.adapter = adapter
     }
 
