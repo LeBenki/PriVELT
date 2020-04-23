@@ -20,8 +20,7 @@ object SensorHelper {
 
     private fun parseName(name: String?): String? {
         if (name == null || name.isEmpty()) return name
-        val appName = name.substring(name.lastIndexOf(".") + 1).replace("Application|App".toRegex(), "")
-        return if (appName.isEmpty()) name else appName
+        return name.substring(name.lastIndexOf(".") + 1).replace("Application|App".toRegex(), "")
     }
 
     private fun checkIfApplicationHasPermission(application: Application, sensor: String): Boolean {

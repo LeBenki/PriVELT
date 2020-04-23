@@ -184,9 +184,7 @@ class CardFragment : BaseFragment(), FilterDialogListener {
 
                     override fun onPostExecute(serviceP: Service?) {
                         super.onPostExecute(serviceP)
-                        if (!service.isPasswordSaved)
-                            processDataExtraction(ServiceHelper(context), serviceP!!, user, password, context!!.applicationContext)
-                        else (activity as DashboardActivity?)!!.launchService()
+                        processDataExtraction(ServiceHelper(context), serviceP!!, user, password, context!!.applicationContext)
                     }
                 }.execute()
             }

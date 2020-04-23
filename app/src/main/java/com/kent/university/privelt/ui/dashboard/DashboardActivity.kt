@@ -54,7 +54,7 @@ class DashboardActivity : GoogleDriveActivity() {
         }
     }
 
-    fun launchService() {
+    private fun launchService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             scheduleJob(applicationContext)
         } else {
