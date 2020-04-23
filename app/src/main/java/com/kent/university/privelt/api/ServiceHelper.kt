@@ -33,7 +33,7 @@ class ServiceHelper(context: Context?) {
     }
 
     fun getServiceWithName(name: String): LoginService? {
-        for (i in 0 .. serviceNames.size) {
+        for (i in 0 until serviceNames.size) {
             if (serviceNames[i] == name) {
                 return serviceManager.serviceList[i]
             }

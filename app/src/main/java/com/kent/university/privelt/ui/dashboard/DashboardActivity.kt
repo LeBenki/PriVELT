@@ -73,7 +73,7 @@ class DashboardActivity : GoogleDriveActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_sensors -> {
-                toolbar!!.setTitle(R.string.applications)
+                toolbar!!.setTitle(R.string.permissions)
                 fragment = SensorFragment()
                 loadFragment(fragment)
                 return@OnNavigationItemSelectedListener true

@@ -7,7 +7,7 @@ package com.kent.university.privelt.model
 
 import java.util.*
 
-data class Application(var name: String) {
+data class Application(var packageName: String) {
     private val permissions: MutableList<String>
 
     fun getPermissions(): List<String> {
