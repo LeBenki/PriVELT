@@ -17,8 +17,7 @@
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/googlelogo" />
+                android:layout_height="80dp"/>
 
             <TextView
                 android:id="@+id/titleTV"

@@ -42,7 +42,8 @@ class ScriptsAdapter internal constructor(scripts: List<String>, alreadyChecked:
             this.scripts[script] = false
         }
         for (script in alreadyChecked) {
-            if (script.isNotEmpty()) this.scripts[script] = true
+            if (script.isNotEmpty() && this.scripts.containsKey(script))
+                this.scripts[script] = true
         }
     }
 }
