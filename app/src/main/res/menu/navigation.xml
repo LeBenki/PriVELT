@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_sensors"
         android:icon="@drawable/ic_applications"
-        android:title="@string/applications"/>
+        android:title="@string/permissions"/>
 
     <item
         android:id="@+id/navigation_user"

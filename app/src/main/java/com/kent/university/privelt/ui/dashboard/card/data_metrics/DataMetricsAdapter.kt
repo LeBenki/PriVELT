@@ -9,12 +9,11 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.kent.university.privelt.R
-import com.kent.university.privelt.model.CardItem
-import java.util.*
+import com.kent.university.privelt.model.Card
 
 class DataMetricsAdapter : RecyclerView.Adapter<DataMetricsViewHolder>() {
-    private var dataMetrics: List<CardItem>
-    private var isService = false
+    private var card: Card? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataMetricsViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val view = inflater.inflate(R.layout.cell_metrics, parent, false)
@@ -22,19 +21,14 @@ class DataMetricsAdapter : RecyclerView.Adapter<DataMetricsViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: DataMetricsViewHolder, position: Int) {
-        holder.bind(dataMetrics[position], isService)
+        holder.bind(card!!, card?.metrics?.get(position)!!)
     }
 
     override fun getItemCount(): Int {
-        return dataMetrics.size
+        return card?.metrics?.size!!
     }
 
-    fun setDataMetrics(dataMetrics: List<CardItem>, isService: Boolean) {
-        this.dataMetrics = dataMetrics
-        this.isService = isService
-    }
-
-    init {
-        dataMetrics = ArrayList()
+    fun setDataMetrics(card: Card) {
+        this.card = card
     }
 }

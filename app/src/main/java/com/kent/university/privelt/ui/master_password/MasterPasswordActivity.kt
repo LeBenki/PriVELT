@@ -9,13 +9,16 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.*
+import android.graphics.Color
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Editable
+import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.view.View
-import android.widget.*
+import android.widget.EditText
+import android.widget.TextView
+import android.widget.Toast
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import com.kent.university.privelt.R
@@ -26,19 +29,25 @@ import com.kent.university.privelt.ui.dashboard.DashboardActivity
 import com.kent.university.privelt.ui.settings.SettingsActivity
 import com.kent.university.privelt.utils.EyePassword
 import com.kent.university.privelt.utils.PasswordChecker
+import com.kent.university.privelt.utils.biometric.BiometricPromptTinkManager
 import com.nulabinc.zxcvbn.Zxcvbn
 import kotlinx.android.synthetic.main.activity_main_password.*
+
 
 class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, TextWatcher {
     private var zxcvbn: Zxcvbn? = null
     private var changePassword = false
+    private lateinit var biometricPromptManager: BiometricPromptTinkManager
 
     private var masterPasswordAlreadyGiven = false
 
     override val activityLayout: Int
         get() = R.layout.activity_main_password
 
-    override fun configureViewModel() {}
+    override fun configureViewModel() {
+
+    }
+
     private fun configureLoginScreen() {
         reset!!.setText(R.string.reset_data)
         resetMasterPassword()
@@ -49,6 +58,10 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
         progress_circular!!.visibility = View.GONE
         reset!!.isEnabled = true
         start!!.isEnabled = true
+        if (biometricPromptManager.checkIfPreviousEncryptedData() && biometricPromptManager.isFingerPrintAvailable())
+            fingerprint!!.visibility = View.VISIBLE
+        else
+            fingerprint!!.visibility = View.GONE
     }
 
     private fun configureNewPasswordScreen() {
@@ -63,9 +76,12 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
         reset!!.setText(R.string.import_your_data)
         onDataImported()
         onDataImported()
+        fingerprint!!.visibility = View.GONE
     }
 
     override fun configureDesign(savedInstanceState: Bundle?) {
+        biometricPromptManager = BiometricPromptTinkManager(this)
+
         start!!.setOnClickListener(this)
         password!!.addTextChangedListener(this)
         zxcvbn = Zxcvbn()
@@ -99,6 +115,24 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
 
             override fun onConnectionSuccess() {}
         }
+
+        fingerprint.setOnClickListener {
+            decryptPrompt()
+        }
+
+        if (!changePassword && biometricPromptManager.checkIfPreviousEncryptedData() && biometricPromptManager.isFingerPrintAvailable())
+            decryptPrompt()
+    }
+
+    private fun decryptPrompt() {
+        biometricPromptManager.decryptPrompt(
+                failedAction = {  },
+                successAction = {
+                    val password = String(it)
+                    val editable: Editable = SpannableStringBuilder(password)
+                    launchDashboard(editable)
+                }
+        )
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -127,6 +161,7 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
                             override fun onPostExecute(aVoid: Void?) {
                                 super.onPostExecute(aVoid)
                                 configureNewPasswordScreen()
+                                biometricPromptManager.clearMasterPassword()
                                 Toast.makeText(this@MasterPasswordActivity, R.string.reset_done, Toast.LENGTH_LONG).show()
                             }
                         }.execute()
@@ -150,44 +185,71 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
         start!!.isEnabled = false
         reset!!.isEnabled = false
         progress_circular!!.visibility = View.VISIBLE
+        val pass = password!!.text.toString()
         val password = password!!.text
         identityManager?.password = password
-        object : AsyncTask<Void?, Void?, Boolean>() {
-            override fun doInBackground(vararg v: Void?): Boolean {
-                return if (changePassword || !masterPasswordAlreadyGiven) {
+        object : AsyncTask<Void?, Void?, Pair<Boolean, String>>() {
+            override fun doInBackground(vararg v: Void?): Pair<Boolean, String> {
+                if (changePassword || !masterPasswordAlreadyGiven) {
                     masterPasswordAlreadyGiven = true
-                    true
+                    return Pair(true, pass)
                 } else {
                     val dbHelperObj = PriVELTDatabase.getInstance(this@MasterPasswordActivity)
                     try {
                         dbHelperObj?.serviceDao()?.allServices
+                        dbHelperObj?.currentUserDao()?.currentUser
                     } catch (e: Exception) {
                         dbHelperObj?.close()
                         PriVELTDatabase.nullDatabase()
-                        return false
+                        return Pair(false, pass)
                     }
-                    true
+                    return Pair(true, pass)
                 }
             }
 
-            override fun onPostExecute(res: Boolean) {
+            override fun onPostExecute(res: Pair<Boolean, String>) {
                 super.onPostExecute(res)
                 start!!.isEnabled = true
                 reset!!.isEnabled = true
                 progress_circular!!.visibility = View.GONE
-                if (res) {
-                    if (!changePassword) {
-                        startActivity(Intent(this@MasterPasswordActivity, DashboardActivity::class.java))
-                    } else {
-                        this@MasterPasswordActivity.identityManager?.changePassword(password)
-                    }
-                    finish()
+                if (res.first) {
+                    if (changePassword)
+                        biometricPromptManager.clearMasterPassword()
+                    if (changePassword || !biometricPromptManager.checkIfPreviousEncryptedData() && biometricPromptManager.isFingerPrintAvailable())
+                        AlertDialog.Builder(this@MasterPasswordActivity)
+                                .setTitle("Fingerprint")
+                                .setMessage("Do you want to enable fingerprint to login ?")
+                                .setPositiveButton("Yes"
+                                ) { _, _ ->
+                                    biometricPromptManager.encryptPrompt(
+                                            data = res.second.toByteArray(),
+                                            failedAction = {  },
+                                            successAction = {
+                                                launchDashboard(password)
+                                            }
+                                    )
+                                }
+                                .setNegativeButton("No") { _, _ ->
+                                launchDashboard(password)
+                                }.show()
+                    else
+                        launchDashboard(password)
                 } else {
                     val errMessage = if (changePassword) R.string.same_password else R.string.wrong_password
                     Toast.makeText(this@MasterPasswordActivity, errMessage, Toast.LENGTH_LONG).show()
                 }
             }
         }.execute()
+    }
+
+    fun launchDashboard(password: Editable) {
+        identityManager?.password = password
+        if (!changePassword) {
+            startActivity(Intent(this@MasterPasswordActivity, DashboardActivity::class.java))
+        } else {
+            this@MasterPasswordActivity.identityManager?.changePassword(password)
+        }
+        finish()
     }
 
     override fun beforeTextChanged(charSequence: CharSequence, i: Int, i1: Int, i2: Int) {}

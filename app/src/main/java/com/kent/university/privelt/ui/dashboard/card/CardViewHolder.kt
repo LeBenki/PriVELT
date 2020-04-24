@@ -6,6 +6,7 @@
 package com.kent.university.privelt.ui.dashboard.card
 
 import android.content.Intent
+import android.graphics.Color
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -43,6 +44,7 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             itemView.cardService!!.strokeColor = ContextCompat.getColor(itemView.context, R.color.colorAccent)
         } else {
             itemView.settings!!.visibility = View.GONE
+            itemView.cardService!!.strokeColor = Color.WHITE
         }
         itemView.watch_icon!!.setOnClickListener {
             EventBus.getDefault().post(ChangeWatchListStatusEvent(card.title))
@@ -66,7 +68,7 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             itemView.metric_rv!!.visibility = View.VISIBLE
             itemView.service_value!!.visibility = View.VISIBLE
             itemView.service_value!!.text = total.toString()
-            dataMetricsAdapter.setDataMetrics(card.metrics, !card.isService)
+            dataMetricsAdapter.setDataMetrics(card)
             dataMetricsAdapter.notifyDataSetChanged()
         } else {
             itemView.risk_progress!!.progress = 0
@@ -74,6 +76,13 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             itemView.metric_rv!!.visibility = View.GONE
             itemView.service_value!!.visibility = View.GONE
             itemView.risk_progress!!.setOnClickListener(null)
+        }
+        var riskValue = total
+        if (riskValue > 100) riskValue = 100
+        when {
+            riskValue < 20 -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "Low")
+            riskValue < 60 -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "Medium")
+            else -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "High")
         }
     }
 

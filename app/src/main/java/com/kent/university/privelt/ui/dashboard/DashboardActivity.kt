@@ -54,7 +54,7 @@ class DashboardActivity : GoogleDriveActivity() {
         }
     }
 
-    fun launchService() {
+    private fun launchService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             scheduleJob(applicationContext)
         } else {
@@ -73,7 +73,7 @@ class DashboardActivity : GoogleDriveActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_sensors -> {
-                toolbar!!.setTitle(R.string.applications)
+                toolbar!!.setTitle(R.string.permissions)
                 fragment = SensorFragment()
                 loadFragment(fragment)
                 return@OnNavigationItemSelectedListener true

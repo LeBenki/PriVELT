@@ -70,6 +70,7 @@ object CardManager {
         for (i in cards.indices) {
             if ((filters == null || filters[1] && cards[i].isService) && (filters == null || !filters[2] || cards[i].isWatched)) filteredCards.add(cards[i])
             if ((filters == null || filters[0] && !cards[i].isService) && (filters == null || !filters[2] || cards[i].isWatched)) filteredCards.add(cards[i])
+            if (filters != null && (!filters[0] && !filters[1]) && (cards[i].isWatched)) filteredCards.add(cards[i])
         }
         return filteredCards
     }

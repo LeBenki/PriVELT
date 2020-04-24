@@ -33,7 +33,6 @@ import com.kent.university.privelt.events.UpdateCredentialsEvent
 import com.kent.university.privelt.model.Card
 import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.model.UserData
-import com.kent.university.privelt.ui.dashboard.DashboardActivity
 import com.kent.university.privelt.ui.dashboard.card.FilterAlertDialog.FilterDialogListener
 import com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardActivity
 import com.kent.university.privelt.ui.login.LoginActivity
@@ -175,18 +174,15 @@ class CardFragment : BaseFragment(), FilterDialogListener {
                     override fun doInBackground(vararg voids: Void?): Service? {
                         if (requestCode == REQUEST_LOGIN) {
                             cardViewModel!!.insertService(service)
-                            return cardViewModel!!.getServiceWithName(serviceName = service.name)
                         } else {
                             cardViewModel!!.updateService(service)
                         }
-                        return null
+                        return cardViewModel!!.getServiceWithName(serviceName = service.name)
                     }
 
                     override fun onPostExecute(serviceP: Service?) {
                         super.onPostExecute(serviceP)
-                        if (!service.isPasswordSaved)
-                            processDataExtraction(ServiceHelper(context), serviceP!!, user, password, context!!.applicationContext)
-                        else (activity as DashboardActivity?)!!.launchService()
+                        processDataExtraction(ServiceHelper(context), serviceP!!, user, password, context!!.applicationContext)
                     }
                 }.execute()
             }
