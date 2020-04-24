@@ -33,7 +33,6 @@ import com.kent.university.privelt.events.UpdateCredentialsEvent
 import com.kent.university.privelt.model.Card
 import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.model.UserData
-import com.kent.university.privelt.ui.dashboard.DashboardActivity
 import com.kent.university.privelt.ui.dashboard.card.FilterAlertDialog.FilterDialogListener
 import com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardActivity
 import com.kent.university.privelt.ui.login.LoginActivity
