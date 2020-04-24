@@ -175,11 +175,10 @@ class CardFragment : BaseFragment(), FilterDialogListener {
                     override fun doInBackground(vararg voids: Void?): Service? {
                         if (requestCode == REQUEST_LOGIN) {
                             cardViewModel!!.insertService(service)
-                            return cardViewModel!!.getServiceWithName(serviceName = service.name)
                         } else {
                             cardViewModel!!.updateService(service)
                         }
-                        return null
+                        return cardViewModel!!.getServiceWithName(serviceName = service.name)
                     }
 
                     override fun onPostExecute(serviceP: Service?) {
