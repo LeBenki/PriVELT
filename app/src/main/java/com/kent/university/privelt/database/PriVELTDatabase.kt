@@ -13,21 +13,16 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.commonsware.cwac.saferoom.SafeHelperFactory
 import com.kent.university.privelt.PriVELTApplication.Companion.instance
-import com.kent.university.privelt.database.dao.CurrentUserDao
-import com.kent.university.privelt.database.dao.ServiceDao
-import com.kent.university.privelt.database.dao.SettingsDao
-import com.kent.university.privelt.database.dao.UserDataDao
-import com.kent.university.privelt.model.CurrentUser
-import com.kent.university.privelt.model.Service
-import com.kent.university.privelt.model.Settings
-import com.kent.university.privelt.model.UserData
+import com.kent.university.privelt.database.dao.*
+import com.kent.university.privelt.model.*
 
-@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class], version = 4, exportSchema = false)
+@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class], version = 5, exportSchema = false)
 abstract class PriVELTDatabase : RoomDatabase() {
     abstract fun userDataDao(): UserDataDao?
     abstract fun serviceDao(): ServiceDao?
     abstract fun currentUserDao(): CurrentUserDao?
     abstract fun settingsDao(): SettingsDao?
+    abstract fun sensorStatusDao(): SensorStatusDao?
 
     companion object {
         @Volatile
@@ -45,7 +40,7 @@ abstract class PriVELTDatabase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 PriVELTDatabase::class.java,
                                 PriVELTDatabaseName)
-                                .addMigrations(MIGRATION_3_4)
+                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
                                 .openHelperFactory(factory)
                                 .build()
                     }
@@ -60,6 +55,11 @@ abstract class PriVELTDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_4_5: Migration = object : Migration(4, 5) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `sensor_status` (`id` INTEGER, `sensorName` TEXT, `date` INTEGER, `wereActivated` INTEGER , PRIMARY KEY(`id`))")
+            }
+        }
         fun nullDatabase() {
             synchronized(PriVELTDatabase::class.java) { INSTANCE = null }
         }

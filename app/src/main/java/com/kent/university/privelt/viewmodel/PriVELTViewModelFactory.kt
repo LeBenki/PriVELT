@@ -7,12 +7,10 @@ package com.kent.university.privelt.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.kent.university.privelt.repositories.CurrentUserDataRepository
-import com.kent.university.privelt.repositories.ServiceDataRepository
-import com.kent.university.privelt.repositories.SettingsDataRepository
-import com.kent.university.privelt.repositories.UserDataRepository
+import com.kent.university.privelt.repositories.*
 import com.kent.university.privelt.ui.dashboard.card.CardViewModel
 import com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardViewModel
+import com.kent.university.privelt.ui.dashboard.sensors.chart.SensorChartViewModel
 import com.kent.university.privelt.ui.dashboard.user.UserViewModel
 import com.kent.university.privelt.ui.data.DataViewModel
 import com.kent.university.privelt.ui.risk_value.RiskValueViewModel
@@ -23,7 +21,12 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: UserDataRepository, private var mServiceDataSource: ServiceDataRepository, private var mCurrentUserDataRepository: CurrentUserDataRepository, private var mSettingsDataSource: SettingsDataRepository, private var mExecutor: Executor) : ViewModelProvider.Factory {
+class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: UserDataRepository,
+                                                  private var mServiceDataSource: ServiceDataRepository,
+                                                  private var mCurrentUserDataRepository: CurrentUserDataRepository,
+                                                  private var mSettingsDataSource: SettingsDataRepository,
+                                                  private var mSensorStatusRepository: SensorStatusRepository,
+                                                  private var mExecutor: Executor) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return try {
@@ -59,6 +62,10 @@ class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: U
                                     Executor::class.java)
                             .newInstance(mSettingsDataSource, mExecutor) as T
                 }
+                SensorChartViewModel::class.java == modelClass -> {
+                    modelClass.getConstructor(SensorStatusRepository::class.java)
+                            .newInstance(mSensorStatusRepository) as T
+                }
                 else -> throw IllegalArgumentException("Unknown ViewModel class")
             }
         } catch (e: IllegalAccessException) {
@@ -70,8 +77,5 @@ class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: U
         } catch (e: NoSuchMethodException) {
             throw IllegalArgumentException("Unknown ViewModel class")
         }
-
-
     }
-
 }

@@ -8,10 +8,7 @@ package com.kent.university.privelt.di
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.kent.university.privelt.database.PriVELTDatabase
-import com.kent.university.privelt.repositories.CurrentUserDataRepository
-import com.kent.university.privelt.repositories.ServiceDataRepository
-import com.kent.university.privelt.repositories.SettingsDataRepository
-import com.kent.university.privelt.repositories.UserDataRepository
+import com.kent.university.privelt.repositories.*
 import com.kent.university.privelt.viewmodel.PriVELTViewModelFactory
 import dagger.Module
 import dagger.Provides
@@ -25,6 +22,13 @@ class RoomModule(private val context: Context) {
     @Provides
     fun provideContext(): Context {
         return context
+    }
+
+    @Singleton
+    @Provides
+    fun provideSensorStatusSource(context: Context?): SensorStatusRepository {
+        val database = PriVELTDatabase.getInstance(context!!)
+        return SensorStatusRepository(database?.sensorStatusDao()!!)
     }
 
     @Singleton
@@ -68,8 +72,9 @@ class RoomModule(private val context: Context) {
             serviceSource: ServiceDataRepository?,
             currentUserSource: CurrentUserDataRepository?,
             settingsSource: SettingsDataRepository?,
+            sensorStatusSource: SensorStatusRepository?,
             executor: Executor?): ViewModelProvider.Factory {
-        return PriVELTViewModelFactory(userDataSource!!, serviceSource!!, currentUserSource!!, settingsSource!!, executor!!)
+        return PriVELTViewModelFactory(userDataSource!!, serviceSource!!, currentUserSource!!, settingsSource!!, sensorStatusSource!!, executor!!)
     }
 
 }

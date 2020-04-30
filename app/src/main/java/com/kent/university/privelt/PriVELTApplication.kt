@@ -7,8 +7,13 @@ package com.kent.university.privelt
 
 import android.app.Application
 import androidx.appcompat.app.AppCompatActivity
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequest
+import androidx.work.WorkManager
 import com.kent.university.privelt.api.PasswordManager
 import com.kent.university.privelt.api.ServiceHelper
+import com.kent.university.privelt.worker.PermissionsWorker
+import java.util.concurrent.TimeUnit
 
 class PriVELTApplication : Application() {
     var identityManager: PasswordManager? = null
@@ -21,6 +26,12 @@ class PriVELTApplication : Application() {
         instance = this
         serviceHelper = ServiceHelper(this)
         identityManager = PasswordManager()
+
+        val myWorkBuilder = PeriodicWorkRequest.Builder(PermissionsWorker::class.java, 1, TimeUnit.HOURS)
+
+        val myWork = myWorkBuilder.build()
+        WorkManager.getInstance(this)
+                .enqueueUniquePeriodicWork("PermissionsWorker", ExistingPeriodicWorkPolicy.REPLACE, myWork)
     }
 
     companion object {

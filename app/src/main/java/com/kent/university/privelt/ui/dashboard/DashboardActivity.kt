@@ -25,6 +25,7 @@ import com.kent.university.privelt.ui.dashboard.card.CardFragment
 import com.kent.university.privelt.ui.dashboard.sensors.SensorFragment
 import com.kent.university.privelt.ui.dashboard.user.UserFragment
 import com.kent.university.privelt.ui.settings.SettingsActivity
+import com.kent.university.privelt.utils.sensors.TemporarySavePermissions
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 class DashboardActivity : GoogleDriveActivity() {
@@ -38,6 +39,7 @@ class DashboardActivity : GoogleDriveActivity() {
         toolbar!!.setTitle(R.string.services)
         loadFragment(CardFragment())
         launchService()
+        TemporarySavePermissions.load(applicationContext)
     }
 
     override fun onResume() {

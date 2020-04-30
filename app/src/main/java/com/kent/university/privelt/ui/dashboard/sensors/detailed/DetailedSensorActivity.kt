@@ -12,7 +12,12 @@ import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.model.Sensor
 import com.kent.university.privelt.ui.dashboard.sensors.SensorFragment
+import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import kotlinx.android.synthetic.main.activity_detailed_sensor.*
+import kotlinx.android.synthetic.main.activity_detailed_sensor.logo
+import kotlinx.android.synthetic.main.activity_detailed_sensor.privacyValue
+import kotlinx.android.synthetic.main.activity_detailed_sensor.risk_progress
+import kotlinx.android.synthetic.main.activity_detailed_sensor.titleTV
 
 class DetailedSensorActivity : BaseActivity() {
     private var sensor: Sensor? = null
@@ -30,6 +35,15 @@ class DetailedSensorActivity : BaseActivity() {
         logo!!.setImageResource(sensor!!.resId)
         titleTV!!.text = sensor!!.title
         setUpRecyclerView()
+
+        var riskValue = sensor?.getApplications()?.size
+        if (riskValue!! > 100) riskValue = 100
+        when {
+            riskValue < 20 -> privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low")
+            riskValue < 60 -> privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Medium")
+            else -> privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
+        }
+        risk_progress!!.progress = riskValue
     }
 
     private fun setUpRecyclerView() {

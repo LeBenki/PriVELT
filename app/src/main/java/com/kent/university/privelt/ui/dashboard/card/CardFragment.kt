@@ -41,6 +41,7 @@ import com.kent.university.privelt.utils.CardManager
 import com.kent.university.privelt.utils.WatchListHelper
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import kotlinx.android.synthetic.main.fragment_service.view.*
+import kotlinx.android.synthetic.main.header_card_risk.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.*
