@@ -48,6 +48,8 @@ class TemporarySavePermissions {
             sensors?.forEach {
                 if (it.isNotEmpty()) {
                     val obj = json.parse(SensorStatus.serializer(), it)
+                    //TODO HOTFIX
+                    PriVELTDatabase.getInstance(applicationContext)
                     AsyncTask.execute {
                         kotlin.run {
                             PriVELTDatabase.getInstance(applicationContext)?.sensorStatusDao()?.insertSensorStatus(obj)
