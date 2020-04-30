@@ -34,18 +34,16 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
         if (card.isService) {
             val priVELTApplication = itemView.title!!.context.applicationContext as PriVELTApplication
             itemView.image_service!!.setImageResource(priVELTApplication.serviceHelper!!.getResIdWithName(card.title))
-        } else {
-            val userDataType = UserDataTypes.valueOf(card.title.toUpperCase(Locale.ROOT))
-            itemView.image_service!!.setImageResource(userDataType.res)
-        }
-        if (card.isService) {
             itemView.settings!!.visibility = View.VISIBLE
             itemView.settings!!.setOnClickListener { EventBus.getDefault().post(UpdateCredentialsEvent(card.title)) }
             itemView.cardService!!.strokeColor = ContextCompat.getColor(itemView.context, R.color.colorAccent)
         } else {
+            val userDataType = UserDataTypes.valueOf(card.title.toUpperCase(Locale.ROOT))
+            itemView.image_service!!.setImageResource(userDataType.res)
             itemView.settings!!.visibility = View.GONE
             itemView.cardService!!.strokeColor = Color.WHITE
         }
+
         itemView.watch_icon!!.setOnClickListener {
             EventBus.getDefault().post(ChangeWatchListStatusEvent(card.title))
             card.isWatched = !card.isWatched

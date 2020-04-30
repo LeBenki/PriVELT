@@ -17,10 +17,9 @@ import java.util.concurrent.TimeUnit
 
 class PriVELTApplication : Application() {
     var identityManager: PasswordManager? = null
-        private set
     var serviceHelper: ServiceHelper? = null
-        private set
     var currentActivity: AppCompatActivity? = null
+
     override fun onCreate() {
         super.onCreate()
         instance = this

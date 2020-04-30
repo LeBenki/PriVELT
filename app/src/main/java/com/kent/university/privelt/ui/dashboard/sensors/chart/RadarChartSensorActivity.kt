@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.view.View
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
@@ -20,7 +19,6 @@ import com.github.mikephil.charting.interfaces.datasets.IRadarDataSet
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.model.Sensor
-import com.kent.university.privelt.ui.risk_value.RadarMarkerView
 import kotlinx.android.synthetic.main.activity_risk_value.*
 import java.util.*
 
@@ -49,9 +47,6 @@ class RadarChartSensorActivity : BaseActivity() {
         chart!!.webColorInner = Color.LTGRAY
         chart!!.webAlpha = 100
 
-        val mv: MarkerView = RadarMarkerView(this, R.layout.radar_markerview)
-        mv.chartView = chart
-        chart!!.marker = mv
         setData(sensors)
         chart!!.animateXY(1400, 1400, Easing.EaseInOutQuad)
         val xAxis = chart!!.xAxis

@@ -43,6 +43,7 @@ class SensorFragment : BaseFragment() {
         for (sensor: Sensor in sensorsList)
             riskValue += sensor.getApplications().size
 
+        riskValue /= 3
         if (riskValue > 100) riskValue = 100
         when {
             riskValue < 20 -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low")

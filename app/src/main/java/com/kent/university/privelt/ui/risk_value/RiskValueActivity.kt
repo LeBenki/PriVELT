@@ -11,7 +11,6 @@ import android.view.View
 import androidx.lifecycle.Observer
 import com.github.mikephil.charting.animation.Easing
 import com.github.mikephil.charting.components.Legend
-import com.github.mikephil.charting.components.MarkerView
 import com.github.mikephil.charting.data.RadarData
 import com.github.mikephil.charting.data.RadarDataSet
 import com.github.mikephil.charting.data.RadarEntry
@@ -93,11 +92,6 @@ class RiskValueActivity : BaseActivity() {
         chart!!.webColorInner = Color.LTGRAY
         chart!!.webAlpha = 100
 
-        // create a custom MarkerView (extend MarkerView) and specify the layout
-        // to use for it
-        val mv: MarkerView = RadarMarkerView(this, R.layout.radar_markerview)
-        mv.chartView = chart // For bounds control
-        chart!!.marker = mv // Set the marker to the chart
         val mActivities = numberOfTypes
         setData(mActivities)
         chart!!.animateXY(1400, 1400, Easing.EaseInOutQuad)
@@ -110,8 +104,6 @@ class RiskValueActivity : BaseActivity() {
                 return if (!isDataCentric) mActivities[value.toInt() % mActivities.size] else services!![value.toInt() % services!!.size].name
             }
         }
-        //xAxis.setTextColor(Color.WHITE);
-        //l.setTextColor(Color.WHITE);
     }
 
     private val numberOfTypes: Array<String>
