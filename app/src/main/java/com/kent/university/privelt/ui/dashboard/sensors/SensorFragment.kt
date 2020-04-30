@@ -13,6 +13,7 @@ import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseFragment
 import com.kent.university.privelt.events.LaunchDetailedSensorEvent
 import com.kent.university.privelt.model.Sensor
+import com.kent.university.privelt.ui.dashboard.sensors.chart.RadarChartSensorActivity
 import com.kent.university.privelt.ui.dashboard.sensors.detailed.DetailedSensorActivity
 import com.kent.university.privelt.utils.sensors.SensorHelper
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
@@ -49,6 +50,9 @@ class SensorFragment : BaseFragment() {
             else -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
         }
         baseView.progressBar!!.progress = riskValue
+        baseView.progressBar.setOnClickListener {
+            startActivity(Intent(activity, RadarChartSensorActivity::class.java))
+        }
     }
 
     private fun setUpRecyclerView(sensorsList: List<Sensor>) {

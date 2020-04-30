@@ -97,6 +97,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
         </activity>
+        <activity
+            android:name=".ui.dashboard.sensors.chart.RadarChartSensorActivity"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
+        </activity>
         <service
             android:name=".service.restarter.JobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />
