@@ -79,8 +79,8 @@ dependencies {
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'
     implementation 'com.google.api-client:google-api-client-android:1.26.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
-    implementation 'net.neferett:webviewsinjector:2.0.3'
-    implementation 'net.neferett:webviewsextractor:2.1.3-SNAPSHOT'
+    implementation 'net.neferett:webviewsinjector:2.0.4-SNAPSHOT'
+    implementation 'net.neferett:webviewsextractor:2.1.4-SNAPSHOT'
     implementation 'com.android.support:multidex:1.0.3'
     def daggerVersion = "2.27"
     implementation "com.google.dagger:dagger:$daggerVersion"
