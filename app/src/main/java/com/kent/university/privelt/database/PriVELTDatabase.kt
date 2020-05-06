@@ -16,7 +16,7 @@ import com.kent.university.privelt.PriVELTApplication.Companion.instance
 import com.kent.university.privelt.database.dao.*
 import com.kent.university.privelt.model.*
 
-@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class], version = 5, exportSchema = false)
+@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class], version = 6, exportSchema = false)
 abstract class PriVELTDatabase : RoomDatabase() {
     abstract fun userDataDao(): UserDataDao?
     abstract fun serviceDao(): ServiceDao?
@@ -40,7 +40,7 @@ abstract class PriVELTDatabase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 PriVELTDatabase::class.java,
                                 PriVELTDatabaseName)
-                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5)
+                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
                                 .openHelperFactory(factory)
                                 .build()
                     }
@@ -60,6 +60,13 @@ abstract class PriVELTDatabase : RoomDatabase() {
                 database.execSQL("CREATE TABLE `sensor_status` (`id` INTEGER, `sensorName` TEXT, `date` INTEGER, `wereActivated` INTEGER , PRIMARY KEY(`id`))")
             }
         }
+
+        private val MIGRATION_5_6: Migration = object : Migration(5, 6) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `user_data` ADD COLUMN `date` INTEGER default 0 NOT NULL")
+            }
+        }
+
         fun nullDatabase() {
             synchronized(PriVELTDatabase::class.java) { INSTANCE = null }
         }
