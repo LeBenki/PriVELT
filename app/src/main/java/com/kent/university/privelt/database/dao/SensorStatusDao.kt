@@ -18,9 +18,6 @@ interface SensorStatusDao {
     @get:Query("SELECT * FROM sensor_status")
     val sensorStatus: LiveData<List<SensorStatus>>?
 
-    @Query("SELECT * FROM sensor_status WHERE sensorName = :name")
-    fun getSensorStatusForName(name: String): LiveData<List<SensorStatus>>?
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSensorStatus(vararg sensorStatus: SensorStatus?)
 }

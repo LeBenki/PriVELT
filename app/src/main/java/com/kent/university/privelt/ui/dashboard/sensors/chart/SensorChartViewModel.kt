@@ -14,11 +14,11 @@ import com.kent.university.privelt.repositories.SensorStatusRepository
 class SensorChartViewModel(private val mSensorStatusRepository: SensorStatusRepository) : ViewModel() {
     private var sensorStatus: LiveData<List<SensorStatus>>? = null
 
-    fun init(name: String) {
-        if (sensorStatus == null) sensorStatus = mSensorStatusRepository.getSensorStatusForName(name)
+    fun init() {
+        if (sensorStatus == null) sensorStatus = mSensorStatusRepository.sensorStatus
     }
 
-    fun getSensorStatusForName() : LiveData<List<SensorStatus>>? {
+    fun getSensorStatus() : LiveData<List<SensorStatus>>? {
         return sensorStatus
     }
 }

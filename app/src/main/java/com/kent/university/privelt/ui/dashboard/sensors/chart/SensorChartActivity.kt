@@ -8,7 +8,8 @@ package com.kent.university.privelt.ui.dashboard.sensors.chart
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
+import androidx.recyclerview.widget.GridLayoutManager
+import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
 import com.github.mikephil.charting.components.YAxis.AxisDependency
@@ -16,22 +17,36 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseActivity
+import com.kent.university.privelt.events.CheckedSensorEvent
+import com.kent.university.privelt.model.Sensor
 import com.kent.university.privelt.model.SensorStatus
 import kotlinx.android.synthetic.main.activity_sensor_chart.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
+import kotlin.collections.ArrayList
 
 
 class SensorChartActivity : BaseActivity() {
 
     private var sensor: String? = null
+    private var adapter: SensorChartAdapter? = null
+    private var listSensorStatus: List<SensorStatus>? = null
 
     companion object {
         const val PARAM_SENSOR = "sensor"
+        val colors = intArrayOf(
+                ColorTemplate.MATERIAL_COLORS[0],
+                ColorTemplate.MATERIAL_COLORS[1],
+                ColorTemplate.MATERIAL_COLORS[2],
+                ColorTemplate.MATERIAL_COLORS[3]
+        )
     }
 
     private var sensorStatusViewModel: SensorChartViewModel? = null
@@ -41,6 +56,17 @@ class SensorChartActivity : BaseActivity() {
 
     override fun configureViewModel() {
         sensorStatusViewModel = getViewModel(SensorChartViewModel::class.java)
+    }
+
+    private fun configureRecyclerView() {
+        listSensor!!.layoutManager = GridLayoutManager(this, 2)
+        val listSensors = ArrayList<String>()
+        Sensor.values().forEach {
+            if (it.isSensor)
+                listSensors.add(it.title)
+        }
+        adapter = SensorChartAdapter(listSensors, listOf(sensor!!))
+        listSensor!!.adapter = adapter
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -56,8 +82,11 @@ class SensorChartActivity : BaseActivity() {
             sensor = intent.getStringExtra(PARAM_SENSOR)
         }
 
-        sensorStatusViewModel?.init(sensor!!)
-        sensorStatusViewModel?.getSensorStatusForName()?.observe(this, androidx.lifecycle.Observer { list -> setData(list) })
+        sensorStatusViewModel?.init()
+        sensorStatusViewModel?.getSensorStatus()?.observe(this, androidx.lifecycle.Observer {
+            list -> setData(list, adapter?.getSelectedSensors()!!)
+            listSensorStatus = list
+        })
         chart.description.isEnabled = false
 
         // enable touch gestures
@@ -80,12 +109,6 @@ class SensorChartActivity : BaseActivity() {
         // set an alternative background color
         chart.setBackgroundColor(Color.WHITE)
         chart.setViewPortOffsets(0f, 0f, 0f, 0f)
-
-        // get the legend (only possible after setting data)
-
-        // get the legend (only possible after setting data)
-        val l = chart.legend
-        l.isEnabled = false
 
         val xAxis = chart.xAxis
         xAxis.position = XAxis.XAxisPosition.TOP_INSIDE
@@ -117,43 +140,53 @@ class SensorChartActivity : BaseActivity() {
         leftAxis.textColor = ColorTemplate.getHoloBlue()
         leftAxis.setDrawGridLines(true)
         leftAxis.isGranularityEnabled = true
-        leftAxis.axisMinimum = -1f
-        leftAxis.axisMaximum = 2f
+        leftAxis.axisMinimum = -0.5f
+        leftAxis.axisMaximum = 1.5f
         leftAxis.yOffset = -9f
 
         val rightAxis = chart.axisRight
         rightAxis.isEnabled = false
+
+        val l = chart.legend
+        l.verticalAlignment = Legend.LegendVerticalAlignment.BOTTOM
+        l.horizontalAlignment = Legend.LegendHorizontalAlignment.RIGHT
+        l.orientation = Legend.LegendOrientation.HORIZONTAL
+        l.setDrawInside(false)
+
+        configureRecyclerView()
     }
 
-    private fun setData(sensorStatus: List<SensorStatus>) {
+    private fun setData(sensorStatus: List<SensorStatus>, sensors: List<String>) {
 
-        val values: ArrayList<Entry> = ArrayList()
+        val dataSets: ArrayList<ILineDataSet> = ArrayList()
 
-        for (sensor: SensorStatus in sensorStatus) {
-            values.add(Entry(TimeUnit.MILLISECONDS.toHours(sensor.date).toFloat(), if (sensor.wereActivated) 1f else 0f))
-            Log.d("LUCAS", Entry(TimeUnit.MILLISECONDS.toHours(sensor.date).toFloat(), if (sensor.wereActivated) 1f else 0f).toString())
+        for ((i, sensor: String) in sensors.withIndex()) {
+            val values: ArrayList<Entry> = ArrayList()
+
+            for (sensorStat: SensorStatus in sensorStatus) {
+                if (sensorStat.sensorName == sensor)
+                    values.add(Entry(TimeUnit.MILLISECONDS.toHours(sensorStat.date).toFloat(), if (sensorStat.wereActivated) 1f else 0f))
+            }
+
+            // create a dataset and give it a type
+            val set1 = LineDataSet(values, sensor)
+            set1.axisDependency = AxisDependency.LEFT
+            set1.color = colors[i]
+            set1.valueTextColor = colors[i]
+            set1.lineWidth = 1.5f
+            set1.setDrawCircles(false)
+            set1.setDrawValues(false)
+            set1.fillAlpha = 65
+            set1.fillColor = colors[i]
+            set1.highLightColor = Color.rgb(0, 0, 0)
+            set1.setDrawCircleHole(false)
+
+            dataSets.add(set1)
         }
-
-
-        // create a dataset and give it a type
-
-        // create a dataset and give it a type
-        val set1 = LineDataSet(values, sensor)
-        set1.axisDependency = AxisDependency.LEFT
-        set1.color = ColorTemplate.getHoloBlue()
-        set1.valueTextColor = ColorTemplate.getHoloBlue()
-        set1.lineWidth = 1.5f
-        set1.setDrawCircles(false)
-        set1.setDrawValues(false)
-        set1.fillAlpha = 65
-        set1.fillColor = ColorTemplate.getHoloBlue()
-        set1.highLightColor = Color.rgb(0, 0, 0)
-        set1.setDrawCircleHole(false)
-
         // create a data object with the data sets
 
         // create a data object with the data sets
-        val data = LineData(set1)
+        val data = LineData(dataSets)
         data.setValueTextColor(Color.WHITE)
         data.setValueTextSize(9f)
 
@@ -163,4 +196,21 @@ class SensorChartActivity : BaseActivity() {
         chart.data = data
         chart.invalidate()
     }
+
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
+
+    @Subscribe
+    fun onCheckedSensor(event: CheckedSensorEvent) {
+       setData(listSensorStatus!!, adapter?.getSelectedSensors()!!)
+    }
+
 }
