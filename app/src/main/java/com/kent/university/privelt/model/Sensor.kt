@@ -10,15 +10,15 @@ import com.kent.university.privelt.R
 import com.kent.university.privelt.utils.sensors.SensorManager
 import java.util.*
 
-enum class Sensor(var title: String, val resId: Int, val isSensor: Boolean) {
-    LOCATION("Location", R.drawable.ic_location, true),
-    BLUETOOTH("Bluetooth", R.drawable.ic_bluetooth, true),
-    STORAGE("Storage", R.drawable.ic_storage, false),
-    WIFI("WIFI", R.drawable.ic_wifi, true),
-    NFC("NFC", R.drawable.ic_nfc, true),
-    CONTACTS("Contacts", R.drawable.ic_contacts, false),
-    CALENDAR("Calendar", R.drawable.ic_calendar, false),
-    SMS("SMS", R.drawable.ic_sms, false);
+enum class Sensor(var title: String, val resId: Int, val isSensor: Boolean, val color: Int) {
+    LOCATION("Location", R.drawable.ic_location, true, R.color.Location),
+    BLUETOOTH("Bluetooth", R.drawable.ic_bluetooth, true, R.color.Bluetooth),
+    STORAGE("Storage", R.drawable.ic_storage, false, R.color.Storage),
+    WIFI("WIFI", R.drawable.ic_wifi, true, R.color.WIFI),
+    NFC("NFC", R.drawable.ic_nfc, true, R.color.NFC),
+    CONTACTS("Contacts", R.drawable.ic_contacts, false, R.color.Contacts),
+    CALENDAR("Calendar", R.drawable.ic_calendar, false, R.color.Calendar),
+    SMS("SMS", R.drawable.ic_sms, false, R.color.SMS);
 
     private val applications: MutableList<Application>
 

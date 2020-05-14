@@ -11,12 +11,8 @@ import androidx.room.PrimaryKey
 import kotlinx.serialization.Serializable
 
 @Serializable
-@Entity(tableName = "sensor_status")
-class SensorStatus(var sensorName: String, var date: Long, var wereActivated: Boolean) {
+@Entity(tableName = "permission_status")
+class PermissionStatus(var permissionName: String, var date: Long, var wereActivated: Boolean, var applicationPackage: String) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
-
-    override fun toString(): String {
-        return "$sensorName $date $wereActivated"
-    }
 }

@@ -13,7 +13,7 @@ import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseFragment
 import com.kent.university.privelt.events.LaunchDetailedSensorEvent
 import com.kent.university.privelt.model.Sensor
-import com.kent.university.privelt.ui.dashboard.sensors.chart.RadarChartSensorActivity
+import com.kent.university.privelt.ui.dashboard.sensors.chart.global.RadarChartSensorActivity
 import com.kent.university.privelt.ui.dashboard.sensors.detailed.DetailedSensorActivity
 import com.kent.university.privelt.utils.sensors.SensorHelper
 import com.kent.university.privelt.utils.sentence.SentenceAdapter

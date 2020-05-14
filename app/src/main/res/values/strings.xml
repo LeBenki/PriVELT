@@ -104,4 +104,6 @@
 
     <!--DetailedSensorActivity-->
     <string name="permission_list_explained">Here is the list of all your installed applications using this permission</string>
+
+    <!--Sensors-->
 </resources>

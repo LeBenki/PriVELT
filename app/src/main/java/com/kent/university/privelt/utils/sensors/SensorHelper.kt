@@ -7,13 +7,15 @@ package com.kent.university.privelt.utils.sensors
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.content.pm.PackageInfo
+import android.content.pm.PackageInfo.REQUESTED_PERMISSION_GRANTED
 import android.content.pm.PackageManager
 import com.kent.university.privelt.model.Application
 import com.kent.university.privelt.model.Sensor
 import java.util.*
 
 object SensorHelper {
-    private fun isSystemPackage(applicationInfo: ApplicationInfo): Boolean {
+    fun isSystemPackage(applicationInfo: ApplicationInfo): Boolean {
         return applicationInfo.flags and ApplicationInfo.FLAG_SYSTEM != 0
     }
 
@@ -38,6 +40,10 @@ object SensorHelper {
         return sensors
     }
 
+    fun getIfPermissionWereGranted(pi: PackageInfo, i: Int): Boolean {
+        return (pi.requestedPermissionsFlags[i] and REQUESTED_PERMISSION_GRANTED) != 0
+    }
+
     private fun getApplicationsInformation(context: Context): List<Application> {
         val applications: MutableList<Application> = ArrayList()
         val pm = context.packageManager
@@ -49,8 +55,9 @@ object SensorHelper {
                 val packageInfo = pm.getPackageInfo(applicationInfo.packageName, PackageManager.GET_PERMISSIONS)
                 val requestedPermissions = packageInfo.requestedPermissions
                 if (requestedPermissions != null) {
-                    for (requestedPermission in requestedPermissions) {
-                        application.addPermission(requestedPermission)
+                    for ((i, requestedPermission) in requestedPermissions.withIndex()) {
+                        if (getIfPermissionWereGranted(packageInfo, i))
+                            application.addPermission(requestedPermission)
                     }
                 }
             } catch (e: PackageManager.NameNotFoundException) {

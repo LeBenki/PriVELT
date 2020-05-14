@@ -10,11 +10,13 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.kent.university.privelt.utils.sensors.TemporarySavePermissions
+import com.kent.university.privelt.utils.sensors.TemporarySaveSensors
 
 class PermissionsWorker(appContext: Context, workerParams: WorkerParameters)
     : Worker(appContext, workerParams)  {
 
     override fun doWork(): Result {
+        TemporarySaveSensors.save(applicationContext)
         TemporarySavePermissions.save(applicationContext)
         return Result.success()
     }

@@ -16,13 +16,14 @@ import com.kent.university.privelt.PriVELTApplication.Companion.instance
 import com.kent.university.privelt.database.dao.*
 import com.kent.university.privelt.model.*
 
-@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class], version = 6, exportSchema = false)
+@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class, PermissionStatus::class], version = 7, exportSchema = false)
 abstract class PriVELTDatabase : RoomDatabase() {
     abstract fun userDataDao(): UserDataDao?
     abstract fun serviceDao(): ServiceDao?
     abstract fun currentUserDao(): CurrentUserDao?
     abstract fun settingsDao(): SettingsDao?
     abstract fun sensorStatusDao(): SensorStatusDao?
+    abstract fun permissionStatusDao(): PermissionStatusDao?
 
     companion object {
         @Volatile
@@ -40,7 +41,7 @@ abstract class PriVELTDatabase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 PriVELTDatabase::class.java,
                                 PriVELTDatabaseName)
-                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
+                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
                                 .openHelperFactory(factory)
                                 .build()
                     }
@@ -64,6 +65,12 @@ abstract class PriVELTDatabase : RoomDatabase() {
         private val MIGRATION_5_6: Migration = object : Migration(5, 6) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 database.execSQL("ALTER TABLE `user_data` ADD COLUMN `date` INTEGER default 0 NOT NULL")
+            }
+        }
+
+        private val MIGRATION_6_7: Migration = object : Migration(6, 7) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `permission_status` (`id` INTEGER NOT NULL, `permissionName` TEXT NOT NULL, `date` INTEGER NOT NULL, `wereActivated` INTEGER NOT NULL, `applicationPackage` TEXT NOT NULL, PRIMARY KEY(`id`))")
             }
         }
 

@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.kent.university.privelt.ui.dashboard.sensors.chart
+package com.kent.university.privelt.ui.dashboard.sensors.chart.global
 
 import android.graphics.Color
 import android.os.Bundle

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.events.LaunchDetailedSensorEvent
 import com.kent.university.privelt.model.Sensor
-import com.kent.university.privelt.ui.dashboard.sensors.chart.SensorChartActivity
+import com.kent.university.privelt.ui.dashboard.sensors.chart.sensor.SensorChartActivity
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import kotlinx.android.synthetic.main.cell_application.view.*
 import kotlinx.android.synthetic.main.cell_application.view.privacyValue
@@ -34,6 +34,12 @@ internal class SensorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
         itemView.status!!.setOnClickListener {
             val intent = Intent(itemView.risk_progress!!.context, SensorChartActivity::class.java)
             intent.putExtra(SensorChartActivity.PARAM_SENSOR, sensor.title)
+            itemView.risk_progress!!.context.startActivity(intent)
+        }
+
+        itemView.risk_progress!!.setOnClickListener {
+            val intent = Intent(itemView.risk_progress!!.context, SensorChartActivity::class.java)
+            intent.putExtra(SensorChartActivity.PARAM_PERMISSION, sensor.title)
             itemView.risk_progress!!.context.startActivity(intent)
         }
 
