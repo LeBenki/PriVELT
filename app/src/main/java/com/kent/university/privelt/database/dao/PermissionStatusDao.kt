@@ -15,8 +15,8 @@ import com.kent.university.privelt.model.PermissionStatus
 
 @Dao
 interface PermissionStatusDao {
-    @get:Query("SELECT * FROM permission_status")
-    val permissionStatus: LiveData<List<PermissionStatus>>?
+    @Query("SELECT * FROM permission_status WHERE date > :dateL AND date <= :dateR")
+    fun getPermissions(dateL: Long, dateR: Long): LiveData<List<PermissionStatus>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertPermissionStatus(vararg permissionStatus: PermissionStatus?)

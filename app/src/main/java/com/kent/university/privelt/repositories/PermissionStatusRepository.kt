@@ -12,6 +12,8 @@ import com.kent.university.privelt.model.PermissionStatus
 import javax.inject.Inject
 
 class PermissionStatusRepository  @Inject constructor(private val mPermissionStatusDao: PermissionStatusDao) {
-    val permissionStatus: LiveData<List<PermissionStatus>>
-        get() = mPermissionStatusDao.permissionStatus!!
+
+    fun getPermissions(dateL: Long, dateR: Long): LiveData<List<PermissionStatus>> {
+        return mPermissionStatusDao.getPermissions(dateL, dateR)
+    }
 }

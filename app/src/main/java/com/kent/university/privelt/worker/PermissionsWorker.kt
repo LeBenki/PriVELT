@@ -16,8 +16,9 @@ class PermissionsWorker(appContext: Context, workerParams: WorkerParameters)
     : Worker(appContext, workerParams)  {
 
     override fun doWork(): Result {
-        TemporarySaveSensors.save(applicationContext)
-        TemporarySavePermissions.save(applicationContext)
+        val time = System.currentTimeMillis()
+        TemporarySaveSensors.save(applicationContext, time)
+        TemporarySavePermissions.save(applicationContext, time)
         return Result.success()
     }
 

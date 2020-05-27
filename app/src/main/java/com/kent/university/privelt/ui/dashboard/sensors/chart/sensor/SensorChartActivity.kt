@@ -90,19 +90,19 @@ class SensorChartActivity : BaseActivity() {
         isSensor = sensor != null && sensor!!.isNotEmpty()
 
         sensorStatusViewModel = getViewModel(SensorChartViewModel::class.java)
-        sensorStatusViewModel?.init()
 
-        if (isSensor!!) {
-            sensorStatusViewModel?.sensorStatus?.observe(this, androidx.lifecycle.Observer { list ->
+        sensorStatusViewModel?.init(System.currentTimeMillis() - 1000 * 60 * 60 * 24 * 3, System.currentTimeMillis())
+
+        sensorStatusViewModel?.sensorStatus?.observe(this, androidx.lifecycle.Observer { list ->
+            if (isSensor!!)
                 setDataSensor(list, adapter?.getSelectedSensors()!!)
-                listSensorStatus = list
-            })
-        } else {
-            sensorStatusViewModel?.permissionStatus?.observe(this, androidx.lifecycle.Observer { list ->
+            listSensorStatus = list
+        })
+        sensorStatusViewModel?.permissionStatus?.observe(this, androidx.lifecycle.Observer { list ->
+            if (!isSensor!!)
                 setDataPermission(list, adapter?.getSelectedSensors()!!)
-                listPermissionStatus = list
-            })
-        }
+            listPermissionStatus = list
+        })
 
         chart.description.isEnabled = false
 
@@ -115,7 +115,8 @@ class SensorChartActivity : BaseActivity() {
         chart.isDragEnabled = true
         chart.setScaleEnabled(true)
         chart.setDrawGridBackground(false)
-        chart.isHighlightPerDragEnabled = true
+        chart.isHighlightPerDragEnabled = false
+        chart.isHighlightFullBarEnabled = true
 
         // set an alternative background color
         chart.setBackgroundColor(Color.WHITE)
@@ -126,7 +127,7 @@ class SensorChartActivity : BaseActivity() {
         xAxis.textSize = 10f
         xAxis.textColor = Color.WHITE
         xAxis.setDrawAxisLine(false)
-        xAxis.setDrawGridLines(true)
+        xAxis.setDrawGridLines(false)
         xAxis.textColor = Color.rgb(0, 0, 0)
         xAxis.setCenterAxisLabels(true)
         xAxis.granularity = 0.01f // one hour
@@ -153,7 +154,9 @@ class SensorChartActivity : BaseActivity() {
         rightAxis.isEnabled = false
 
         chart.legend.isEnabled = false
-
+        val mv = MyMarkerView(this, R.layout.custom_marker_view)
+        if (!isSensor!!)
+            chart.marker = mv
         configureRecyclerView()
     }
 
@@ -177,15 +180,25 @@ class SensorChartActivity : BaseActivity() {
 
         for (permissionS in permissionStatus.distinctBy { it.date }) {
             val tmpStack = ArrayList<Float>()
+            val tmpSensors = ArrayList<String>()
             for (sensor in Sensor.values()) {
                 if (permissions.contains(sensor.title)) {
 
                     val resForSensor = permissionStatus.filter { it.date == permissionS.date && it.permissionName.toUpperCase(Locale.ROOT).contains(sensor.title.toUpperCase(Locale.ROOT)) }
+
+                    val tmpSensorState = listSensorStatus?.filter { it.sensorName == sensor.title && it.date == permissionS.date }
+                    if (sensor.isSensor) {
+                        if (tmpSensorState != null && tmpSensorState.isNotEmpty())
+                            tmpSensors.add(sensor.title + ": " + if (tmpSensorState[0].wereActivated) "activated" else "unactivated")
+                        else
+                            tmpSensors.add(sensor.title + ": " + "unknown")
+                    }
                     tmpStack.add(resForSensor.size.toFloat())
                 }
             }
-
-            values.add(BarEntry(TimeUnit.MILLISECONDS.toHours(permissionS.date).toFloat(), arrayListToPrimitiveArrayPermission(tmpStack)))
+            val b = BarEntry(TimeUnit.MILLISECONDS.toHours(permissionS.date).toFloat(), arrayListToPrimitiveArrayPermission(tmpStack))
+            b.data = tmpSensors
+            values.add(b)
         }
 
         val distValues = values.distinctBy { it.x }
@@ -209,7 +222,7 @@ class SensorChartActivity : BaseActivity() {
 
         for (sensorS in sensorStatus.distinctBy { it.date }) {
             val res = sensorStatus.filter { it.date == sensorS.date && sensors.contains(it.sensorName) }
-            values.add(BarEntry(TimeUnit.MILLISECONDS.toHours(sensorS.date).toFloat(), arrayListToPrimitiveArraySensor(res)))
+            values.add(BarEntry(TimeUnit.MILLISECONDS.toHours(sensorS.date).toFloat(), arrayListToPrimitiveArraySensor(res), "bite"))
         }
 
         val distValues = values.distinctBy { it.x }
@@ -255,5 +268,4 @@ class SensorChartActivity : BaseActivity() {
         else
             setDataPermission(listPermissionStatus!!, adapter?.getSelectedSensors()!!)
     }
-
 }

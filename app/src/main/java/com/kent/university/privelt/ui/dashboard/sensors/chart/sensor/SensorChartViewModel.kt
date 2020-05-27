@@ -17,8 +17,8 @@ class SensorChartViewModel(private val mSensorStatusRepository: SensorStatusRepo
     internal var sensorStatus: LiveData<List<SensorStatus>>? = null
     internal var permissionStatus: LiveData<List<PermissionStatus>>? = null
 
-    fun init() {
-        if (sensorStatus == null) sensorStatus = mSensorStatusRepository.sensorStatus
-        if (permissionStatus == null) permissionStatus = mPermissionStatusRepository.permissionStatus
+    fun init(dateL: Long, dateR: Long) {
+        if (sensorStatus == null) sensorStatus = mSensorStatusRepository.getSensors(dateL, dateR)
+        if (permissionStatus == null) permissionStatus = mPermissionStatusRepository.getPermissions(dateL, dateR)
     }
 }

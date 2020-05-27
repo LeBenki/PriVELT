@@ -19,10 +19,8 @@ object TemporarySaveSensors {
     private const val SHARED_SENSORS_PARAM = "shared_sensors_param"
     private const val DELIMITER = "@/%"
 
-    fun save(applicationContext: Context) {
+    fun save(applicationContext: Context, time: Long) {
         val sensors = Sensor.values()
-
-        val currentTimestamp = System.currentTimeMillis()
 
         val json = Json(JsonConfiguration.Stable)
 
@@ -31,7 +29,7 @@ object TemporarySaveSensors {
 
         sensors.forEach {
             if (it.isSensor) {
-                val sensorStatus = SensorStatus(it.title, currentTimestamp, it.isEnabled(applicationContext))
+                val sensorStatus = SensorStatus(it.title, time, it.isEnabled(applicationContext))
                 sensorsString += json.stringify(SensorStatus.serializer(), sensorStatus) + DELIMITER
             }
         }

@@ -20,9 +20,7 @@ object TemporarySavePermissions {
     private const val SHARED_PERMISSIONS_PARAM = "shared_permission_param"
     private const val DELIMITER = "@/%"
 
-    fun save(applicationContext: Context) {
-
-        val currentTimestamp = System.currentTimeMillis()
+    fun save(applicationContext: Context, time: Long) {
 
         val json = Json(JsonConfiguration.Stable)
 
@@ -39,7 +37,7 @@ object TemporarySavePermissions {
                 val requestedPermissions = packageInfo.requestedPermissions
                 if (requestedPermissions != null) {
                     for ((i, requestedPermission) in requestedPermissions.withIndex()) {
-                        val permission = PermissionStatus(requestedPermission, currentTimestamp, SensorHelper.getIfPermissionWereGranted(packageInfo, i), applicationInfo.packageName)
+                        val permission = PermissionStatus(requestedPermission, time, SensorHelper.getIfPermissionWereGranted(packageInfo, i), applicationInfo.packageName)
                         permissionString += json.stringify(PermissionStatus.serializer(), permission) + DELIMITER
                     }
                 }

@@ -26,7 +26,7 @@ class PriVELTApplication : Application() {
         serviceHelper = ServiceHelper(this)
         identityManager = PasswordManager()
 
-        val myWorkBuilder = PeriodicWorkRequest.Builder(PermissionsWorker::class.java, 1, TimeUnit.HOURS)
+        val myWorkBuilder = PeriodicWorkRequest.Builder(PermissionsWorker::class.java, 12, TimeUnit.HOURS)
 
         val myWork = myWorkBuilder.build()
         WorkManager.getInstance(this)
