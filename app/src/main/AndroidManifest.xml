@@ -92,7 +92,8 @@
         </activity>
         <activity
             android:name=".ui.dashboard.sensors.chart.sensor.SensorChartActivity"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:label="@string/sensor_chart_activity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />

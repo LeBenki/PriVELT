@@ -26,6 +26,18 @@ object SensorHelper {
         return false
     }
 
+    fun getNumberOfApplicationInstalled(context: Context): Int {
+        var numberOfNonSystemApps = 0
+
+        val appList: List<ApplicationInfo> = context.packageManager.getInstalledApplications(0)
+        for (info in appList) {
+            if (info.flags and ApplicationInfo.FLAG_SYSTEM == 0) {
+                numberOfNonSystemApps++
+            }
+        }
+        return numberOfNonSystemApps
+    }
+
     fun getSensorsInformation(context: Context): List<Sensor> {
         val applications = getApplicationsInformation(context)
         val sensors = listOf(*Sensor.values())

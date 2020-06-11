@@ -104,6 +104,9 @@
 
     <!--DetailedSensorActivity-->
     <string name="permission_list_explained">Here is the list of all your installed applications using this permission</string>
+    <string name="if_a_color_is_transparent_the_sensor_were_not_activated">If a color is transparent the sensor were not activated</string>
+    <string name="sensor_chart_activity">Number of permissions granted</string>
+    <string name="number_app">There are %1$d installed applications on this device</string>
 
     <!--Sensors-->
 </resources>

@@ -8,17 +8,13 @@ package com.kent.university.privelt.ui.dashboard.sensors.chart.sensor
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.kent.university.privelt.model.PermissionStatus
-import com.kent.university.privelt.model.SensorStatus
-import com.kent.university.privelt.repositories.PermissionStatusRepository
-import com.kent.university.privelt.repositories.SensorStatusRepository
+import com.kent.university.privelt.model.HistoryPermission
+import com.kent.university.privelt.repositories.HistoryPermissionRepository
 
-class SensorChartViewModel(private val mSensorStatusRepository: SensorStatusRepository, private val mPermissionStatusRepository: PermissionStatusRepository) : ViewModel() {
-    internal var sensorStatus: LiveData<List<SensorStatus>>? = null
-    internal var permissionStatus: LiveData<List<PermissionStatus>>? = null
+class SensorChartViewModel(private val mHistoryPermissionRepository: HistoryPermissionRepository) : ViewModel() {
+    internal var permissionStatus: LiveData<List<HistoryPermission>>? = null
 
-    fun init(dateL: Long, dateR: Long) {
-        if (sensorStatus == null) sensorStatus = mSensorStatusRepository.getSensors(dateL, dateR)
-        if (permissionStatus == null) permissionStatus = mPermissionStatusRepository.getPermissions(dateL, dateR)
+    fun init() {
+        if (permissionStatus == null) permissionStatus = mHistoryPermissionRepository.getPermissions()
     }
 }

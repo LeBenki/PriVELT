@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#D81B60</color>
-    <color name="colorPrimaryDark">#FE5295</color>
+    <color name="colorPrimary">#1d99d7</color>
+    <color name="colorPrimaryDark">#006ba5</color>
     <color name="colorAccent">#D81B60</color>
 
     <!-- Sensor -->

@@ -31,11 +31,6 @@ internal class SensorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
         itemView.title.text = sensor.title
 
         itemView.risk_progress!!.progress = sensor.getApplications().size
-        itemView.status!!.setOnClickListener {
-            val intent = Intent(itemView.risk_progress!!.context, SensorChartActivity::class.java)
-            intent.putExtra(SensorChartActivity.PARAM_SENSOR, sensor.title)
-            itemView.risk_progress!!.context.startActivity(intent)
-        }
 
         itemView.risk_progress!!.setOnClickListener {
             val intent = Intent(itemView.risk_progress!!.context, SensorChartActivity::class.java)

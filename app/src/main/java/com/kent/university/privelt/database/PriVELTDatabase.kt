@@ -16,7 +16,7 @@ import com.kent.university.privelt.PriVELTApplication.Companion.instance
 import com.kent.university.privelt.database.dao.*
 import com.kent.university.privelt.model.*
 
-@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class, PermissionStatus::class], version = 7, exportSchema = false)
+@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class, PermissionStatus::class, HistoryPermission::class], version = 8, exportSchema = false)
 abstract class PriVELTDatabase : RoomDatabase() {
     abstract fun userDataDao(): UserDataDao?
     abstract fun serviceDao(): ServiceDao?
@@ -24,6 +24,7 @@ abstract class PriVELTDatabase : RoomDatabase() {
     abstract fun settingsDao(): SettingsDao?
     abstract fun sensorStatusDao(): SensorStatusDao?
     abstract fun permissionStatusDao(): PermissionStatusDao?
+    abstract fun historyPermissionDao(): HistoryPermissionDao?
 
     companion object {
         @Volatile
@@ -41,7 +42,7 @@ abstract class PriVELTDatabase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 PriVELTDatabase::class.java,
                                 PriVELTDatabaseName)
-                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
                                 .openHelperFactory(factory)
                                 .build()
                     }
@@ -74,6 +75,11 @@ abstract class PriVELTDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_7_8: Migration = object : Migration(7, 8) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("CREATE TABLE `history_permission` (`id` INTEGER NOT NULL, `date` INTEGER NOT NULL, `locationSensor` INTEGER NOT NULL,`bluetoothSensor` INTEGER NOT NULL, `nfcSensor` INTEGER NOT NULL, `wifiSensor` INTEGER NOT NULL,`locationValue` INTEGER NOT NULL, `contactsValue` INTEGER NOT NULL, `bluetoothValue` INTEGER NOT NULL,`storageValue` INTEGER NOT NULL,`wifiValue` INTEGER NOT NULL,`nfcValue` INTEGER NOT NULL,`calendarValue` INTEGER NOT NULL,`smsValue` INTEGER NOT NULL,PRIMARY KEY(`id`))")
+            }
+        }
         fun nullDatabase() {
             synchronized(PriVELTDatabase::class.java) { INSTANCE = null }
         }

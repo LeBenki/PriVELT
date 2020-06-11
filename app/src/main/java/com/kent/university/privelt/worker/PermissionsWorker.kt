@@ -10,6 +10,7 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.kent.university.privelt.utils.sensors.TemporarySavePermissions
+import com.kent.university.privelt.utils.sensors.TemporarySavePermissionsHistory
 import com.kent.university.privelt.utils.sensors.TemporarySaveSensors
 
 class PermissionsWorker(appContext: Context, workerParams: WorkerParameters)
@@ -19,6 +20,7 @@ class PermissionsWorker(appContext: Context, workerParams: WorkerParameters)
         val time = System.currentTimeMillis()
         TemporarySaveSensors.save(applicationContext, time)
         TemporarySavePermissions.save(applicationContext, time)
+        TemporarySavePermissionsHistory.save(applicationContext, time)
         return Result.success()
     }
 

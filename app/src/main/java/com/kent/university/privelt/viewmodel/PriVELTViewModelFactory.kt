@@ -27,6 +27,7 @@ class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: U
                                                   private var mSettingsDataSource: SettingsDataRepository,
                                                   private var mSensorStatusRepository: SensorStatusRepository,
                                                   private var mPermissionStatusRepository: PermissionStatusRepository,
+                                                  private var mHistoryPermissionRepository: HistoryPermissionRepository?,
                                                   private var mExecutor: Executor) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -64,9 +65,8 @@ class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: U
                             .newInstance(mSettingsDataSource, mExecutor) as T
                 }
                 SensorChartViewModel::class.java == modelClass -> {
-                    modelClass.getConstructor(SensorStatusRepository::class.java,
-                                                PermissionStatusRepository::class.java)
-                            .newInstance(mSensorStatusRepository, mPermissionStatusRepository) as T
+                    modelClass.getConstructor(HistoryPermissionRepository::class.java)
+                            .newInstance(mHistoryPermissionRepository) as T
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class")
             }

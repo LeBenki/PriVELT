@@ -26,6 +26,13 @@ class RoomModule(private val context: Context) {
 
     @Singleton
     @Provides
+    fun provideHistoryPermissionSource(context: Context?): HistoryPermissionRepository {
+        val database = PriVELTDatabase.getInstance(context!!)
+        return HistoryPermissionRepository(database?.historyPermissionDao()!!)
+    }
+
+    @Singleton
+    @Provides
     fun providePermissionStatusSource(context: Context?): PermissionStatusRepository {
         val database = PriVELTDatabase.getInstance(context!!)
         return PermissionStatusRepository(database?.permissionStatusDao()!!)
@@ -81,8 +88,9 @@ class RoomModule(private val context: Context) {
             settingsSource: SettingsDataRepository?,
             sensorStatusSource: SensorStatusRepository?,
             permissionStatusSource: PermissionStatusRepository?,
+            historyPermissionRepository: HistoryPermissionRepository?,
             executor: Executor?): ViewModelProvider.Factory {
-        return PriVELTViewModelFactory(userDataSource!!, serviceSource!!, currentUserSource!!, settingsSource!!, sensorStatusSource!!, permissionStatusSource!!, executor!!)
+        return PriVELTViewModelFactory(userDataSource!!, serviceSource!!, currentUserSource!!, settingsSource!!, sensorStatusSource!!, permissionStatusSource!!, historyPermissionRepository, executor!!)
     }
 
 }

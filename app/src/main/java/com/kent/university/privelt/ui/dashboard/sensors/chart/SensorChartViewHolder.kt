@@ -27,7 +27,14 @@ class SensorChartViewHolder internal constructor(itemView: View) : RecyclerView.
 
         itemView.sensorCheckbox.setOnCheckedChangeListener { _: CompoundButton?, b: Boolean ->
             scripts[sensor.title] = b
-            EventBus.getDefault().post(CheckedSensorEvent())
+
+            if (scripts.containsValue(true)) {
+                EventBus.getDefault().post(CheckedSensorEvent())
+            }
+            else {
+                scripts[sensor.title] = true
+                itemView.sensorCheckbox.isChecked = true
+            }
         }
 
         itemView.logo.setImageResource(sensor.resId)
