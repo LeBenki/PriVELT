@@ -143,7 +143,8 @@ class SensorChartActivity : BaseActivity() {
     private fun getLimitLineAt(xIndex: Int): LimitLine {
         val ll = LimitLine(xIndex.toFloat()) // set where the line should be drawn
         ll.lineColor = Color.BLACK
-        ll.lineWidth = 0.5f
+        ll.enableDashedLine(10f, 10f, 0f)
+        ll.lineWidth = 0.2f
         return ll
     }
 
@@ -238,7 +239,7 @@ class SensorChartActivity : BaseActivity() {
                 colors.add(ResourcesCompat.getColor(resources, sensor.color, null))
                 if (sensor.isSensor) {
                     var color = ResourcesCompat.getColor(resources, sensor.color, null)
-                    color = ColorUtils.setAlphaComponent(color, 200)
+                    color = ColorUtils.setAlphaComponent(color, 100)
                     colors.add(color)
                 }
             }
