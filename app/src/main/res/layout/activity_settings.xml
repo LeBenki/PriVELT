@@ -50,7 +50,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center_horizontal"
-                android:layout_toRightOf="@id/logo"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="@dimen/activity_vertical_margin"
                 android:text="@string/save_data_on_google_drive" />
 
             <EditText
@@ -65,6 +66,66 @@
                 android:focusable="false"
                 android:focusableInTouchMode="false"
                 android:hint="@string/here_will_be_the_file_id" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:id="@+id/hatLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:gravity="center_vertical"
+                android:layout_margin="@dimen/activity_vertical_margin">
+
+                <TextView
+                    android:id="@+id/hatId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageView
+                    android:id="@+id/hatDisconnect"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:srcCompat="@drawable/ic_close" />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/hatLogo"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:src="@drawable/hat" />
+
+            <Switch
+                android:id="@+id/hatSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_alignParentEnd="true"
+                android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+                android:text="@string/save_data_on_hat" />
+
+            <EditText
+                android:id="@+id/hatEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hatLogo"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:hint="@string/enter_email" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

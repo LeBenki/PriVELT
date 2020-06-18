@@ -26,12 +26,14 @@ import com.kent.university.privelt.model.Settings
 import com.kent.university.privelt.ui.master_password.MasterPasswordActivity
 import kotlinx.android.synthetic.main.activity_settings.*
 
-class SettingsActivity : GoogleDriveActivity() {
+class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationListener {
 
     override val activityLayout: Int
         get() = R.layout.activity_settings
     private var settingsViewModel: SettingsViewModel? = null
     private var settings: Settings? = null
+
+    //TODO Here we need a recyclerview with each service and a ServiceManager
     override fun configureDesign(savedInstanceState: Bundle?) {
         change_password!!.setOnClickListener {
             val intent = Intent(this, MasterPasswordActivity::class.java)
@@ -81,6 +83,10 @@ class SettingsActivity : GoogleDriveActivity() {
             settings!!.isGoogleDriveAutoSave = false
             settingsViewModel!!.updateSettings(settings)
         }
+        hatSwitch.setOnClickListener {
+            val newFragment = WebViewDialog(hatEmail.text.toString())
+            newFragment.show(supportFragmentManager, "WebViewDialog")
+        }
         configureViewModel()
         getSettings()
     }
@@ -127,5 +133,13 @@ class SettingsActivity : GoogleDriveActivity() {
 
     companion object {
         const val ARG_CHANGE_PASSWORD = "ARG_CHANGE_PASSWORD"
+    }
+
+    override fun onSuccess(token: String) {
+        Toast.makeText(this, token, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onFailure(error: String) {
+        Toast.makeText(this, error, Toast.LENGTH_LONG).show()
     }
 }
