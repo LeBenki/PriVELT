@@ -16,7 +16,7 @@ import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 import java.util.*
 
-object TemporarySavePermissionsHistory {
+object TemporarySaveHistoryPermission {
 
     private const val SHARED_PERMISSIONS = "shared_history_permission"
     private const val SHARED_PERMISSIONS_PARAM = "shared_history_permission_param"

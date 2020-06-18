@@ -26,7 +26,7 @@ import com.kent.university.privelt.ui.dashboard.sensors.SensorFragment
 import com.kent.university.privelt.ui.dashboard.user.UserFragment
 import com.kent.university.privelt.ui.settings.SettingsActivity
 import com.kent.university.privelt.utils.sensors.TemporarySavePermissions
-import com.kent.university.privelt.utils.sensors.TemporarySavePermissionsHistory
+import com.kent.university.privelt.utils.sensors.TemporarySaveHistoryPermission
 import com.kent.university.privelt.utils.sensors.TemporarySaveSensors
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
@@ -44,7 +44,7 @@ class DashboardActivity : GoogleDriveActivity() {
         launchService()
         TemporarySaveSensors.load(applicationContext)
         TemporarySavePermissions.load(applicationContext)
-        TemporarySavePermissionsHistory.load(applicationContext)
+        TemporarySaveHistoryPermission.load(applicationContext)
     }
 
     override fun onResume() {

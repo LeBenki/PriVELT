@@ -10,7 +10,6 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.ColorUtils
 import androidx.recyclerview.widget.GridLayoutManager
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.LimitLine
@@ -34,6 +33,7 @@ import org.greenrobot.eventbus.Subscribe
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.math.ceil
 
 
 class SensorChartActivity : BaseActivity() {
@@ -128,8 +128,6 @@ class SensorChartActivity : BaseActivity() {
         leftAxis.setDrawGridLines(true)
         leftAxis.isGranularityEnabled = true
         leftAxis.axisMinimum = 0f
-        //TODO: hardcoded
-        leftAxis.axisMaximum = 500f
         leftAxis.yOffset = -9f
 
         val rightAxis = chart.axisRight
@@ -174,48 +172,16 @@ class SensorChartActivity : BaseActivity() {
         //TODO use reflection
         for ((i, permissionS) in permissionStatus.withIndex()) {
             val tmpStack = ArrayList<Float>()
-            if (permissions.contains("Location")) {
-                if (permissionS.locationSensor) {
-                    tmpStack.add(permissionS.locationValue.toFloat())
-                    tmpStack.add(0f)
-                }
-                else {
-                    tmpStack.add(0f)
-                    tmpStack.add(permissionS.locationValue.toFloat())
-                }
-            }
-            if (permissions.contains("Bluetooth")) {
-                if (permissionS.bluetoothSensor) {
-                    tmpStack.add(permissionS.bluetoothValue.toFloat())
-                    tmpStack.add(0f)
-                }
-                else {
-                    tmpStack.add(0f)
-                    tmpStack.add(permissionS.bluetoothValue.toFloat())
-                }
-            }
+            if (permissions.contains("Location"))
+                tmpStack.add(permissionS.locationValue.toFloat() + if (!permissionS.locationSensor) 0.5f else 0f)
+            if (permissions.contains("Bluetooth"))
+                tmpStack.add(permissionS.bluetoothValue.toFloat() + if (!permissionS.bluetoothSensor) 0.5f else 0f)
             if (permissions.contains("Storage"))
                 tmpStack.add(permissionS.storageValue.toFloat())
-            if (permissions.contains("WIFI")) {
-                if (permissionS.wifiSensor) {
-                    tmpStack.add(permissionS.wifiValue.toFloat())
-                    tmpStack.add(0f)
-                }
-                else {
-                    tmpStack.add(0f)
-                    tmpStack.add(permissionS.wifiValue.toFloat())
-                }
-            }
-            if (permissions.contains("NFC")) {
-                if (permissionS.nfcSensor) {
-                    tmpStack.add(permissionS.nfcValue.toFloat())
-                    tmpStack.add(0f)
-                }
-                else {
-                    tmpStack.add(0f)
-                    tmpStack.add(permissionS.nfcValue.toFloat())
-                }
-            }
+            if (permissions.contains("WIFI"))
+                tmpStack.add(permissionS.wifiValue.toFloat() + if (!permissionS.wifiSensor) 0.5f else 0f)
+            if (permissions.contains("NFC"))
+                tmpStack.add(permissionS.nfcValue.toFloat() + if (!permissionS.nfcSensor) 0.5f else 0f)
             if (permissions.contains("Contacts"))
                 tmpStack.add(permissionS.contactsValue.toFloat())
             if (permissions.contains("Calendar"))
@@ -225,6 +191,11 @@ class SensorChartActivity : BaseActivity() {
             val b = BarEntry((i).toFloat(), arrayListToPrimitiveArrayPermission(tmpStack))
             dates.add(getDate(permissionS.date)!!)
             chart.xAxis.addLimitLine(getLimitLineAt(i))
+            val historyMax = permissionStatus.maxBy { it.calendarValue + it.contactsValue + it.bluetoothValue + it.locationValue + it.smsValue + it.nfcValue + it.wifiValue + it.storageValue }
+            var maxChart = historyMax?.calendarValue!! + historyMax.contactsValue + historyMax.bluetoothValue + historyMax.locationValue + historyMax.smsValue + historyMax.nfcValue + historyMax.wifiValue + historyMax.storageValue
+            maxChart += maxChart % 100
+            chart.axisLeft.axisMaximum = maxChart.toFloat()
+
             values.add(b)
         }
 
@@ -237,11 +208,6 @@ class SensorChartActivity : BaseActivity() {
         for (sensor in Sensor.values())
             if (permissions.contains(sensor.title)) {
                 colors.add(ResourcesCompat.getColor(resources, sensor.color, null))
-                if (sensor.isSensor) {
-                    var color = ResourcesCompat.getColor(resources, sensor.color, null)
-                    color = ColorUtils.setAlphaComponent(color, 100)
-                    colors.add(color)
-                }
             }
         set1.colors = colors
 
@@ -252,10 +218,18 @@ class SensorChartActivity : BaseActivity() {
         val dataSets: ArrayList<IBarDataSet> = ArrayList()
         dataSets.add(set1)
         val data = BarData(dataSets)
-        data.setValueTextColor(Color.WHITE)
         chart.data = data
-        chart.data.setValueTextColor(Color.BLACK)
+        chart.data.setValueTextColor(Color.WHITE)
         chart.data.setDrawValues(true)
+        chart.data.setValueTextSize(12f)
+        chart.setDrawValueAboveBar(false)
+        chart.data.setValueFormatter(object : ValueFormatter() {
+            override fun getFormattedValue(value: Float): String {
+                return if (value.toDouble() != ceil(value.toDouble())) "Off"
+                else value.toInt().toString()
+            }
+        })
+
         chart.setFitBars(true)
         chart.xAxis.setLabelCount(7, true)
         chart.moveViewToX(set1.entryCount.toFloat())
