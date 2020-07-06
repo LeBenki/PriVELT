@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.events.LaunchDetailedSensorEvent
 import com.kent.university.privelt.model.Sensor
-import com.kent.university.privelt.ui.dashboard.sensors.chart.SensorChartActivity
+import com.kent.university.privelt.ui.dashboard.sensors.chart.sensor.SensorChartActivity
+import com.kent.university.privelt.utils.privacy_scoring.PermissionScoring.computeScoreForPermission
+import com.kent.university.privelt.utils.sensors.SensorHelper.getNumberOfApplicationInstalled
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import kotlinx.android.synthetic.main.cell_application.view.*
 import kotlinx.android.synthetic.main.cell_application.view.privacyValue
@@ -30,20 +32,21 @@ internal class SensorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
         itemView.setOnClickListener { EventBus.getDefault().post(LaunchDetailedSensorEvent(sensor)) }
         itemView.title.text = sensor.title
 
-        itemView.risk_progress!!.progress = sensor.getApplications().size
-        itemView.status!!.setOnClickListener {
+
+        itemView.risk_progress!!.setOnClickListener {
             val intent = Intent(itemView.risk_progress!!.context, SensorChartActivity::class.java)
-            intent.putExtra(SensorChartActivity.PARAM_SENSOR, sensor.title)
+            intent.putExtra(SensorChartActivity.PARAM_PERMISSION, sensor.title)
             itemView.risk_progress!!.context.startActivity(intent)
         }
 
-        var riskValue = sensor.getApplications().size
-        if (riskValue > 100) riskValue = 100
+        var riskValue = computeScoreForPermission(sensor, getNumberOfApplicationInstalled(itemView.context))
+        if (riskValue > 100) riskValue = 100F
         when {
             riskValue < 20 -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "Low")
             riskValue < 60 -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "Medium")
             else -> itemView.privacyValue!!.text = SentenceAdapter.adapt(itemView.context.resources.getString(R.string.global_privacy_value), "High")
         }
+        itemView.risk_progress!!.progress = riskValue.toInt()
 
         if (sensor.isSensor) {
             itemView.sensor_status_image!!.visibility = View.VISIBLE

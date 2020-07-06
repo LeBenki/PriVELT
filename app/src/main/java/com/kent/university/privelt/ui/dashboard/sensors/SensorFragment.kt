@@ -13,8 +13,9 @@ import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseFragment
 import com.kent.university.privelt.events.LaunchDetailedSensorEvent
 import com.kent.university.privelt.model.Sensor
-import com.kent.university.privelt.ui.dashboard.sensors.chart.RadarChartSensorActivity
+import com.kent.university.privelt.ui.dashboard.sensors.chart.global.RadarChartSensorActivity
 import com.kent.university.privelt.ui.dashboard.sensors.detailed.DetailedSensorActivity
+import com.kent.university.privelt.utils.privacy_scoring.PermissionScoring.computeGlobalScore
 import com.kent.university.privelt.utils.sensors.SensorHelper
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import kotlinx.android.synthetic.main.fragment_sensors.view.*
@@ -33,24 +34,21 @@ class SensorFragment : BaseFragment() {
         val sensorsList = SensorHelper.getSensorsInformation(context!!)
 
         setUpRecyclerView(sensorsList)
-        updateOverallRiskValue(sensorsList)
+        updateOverallRiskValue()
     }
 
-    private fun updateOverallRiskValue(sensorsList: List<Sensor>) {
+    private fun updateOverallRiskValue() {
 
-        var riskValue = 0
+        var riskValue = computeGlobalScore(context!!)
 
-        for (sensor: Sensor in sensorsList)
-            riskValue += sensor.getApplications().size
-
-        riskValue /= 3
         if (riskValue > 100) riskValue = 100
         when {
-            riskValue < 20 -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low")
-            riskValue < 60 -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Medium")
+            riskValue < 35 -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Low")
+            riskValue < 65 -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "Medium")
             else -> baseView.privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
         }
         baseView.progressBar!!.progress = riskValue
+
         baseView.progressBar.setOnClickListener {
             startActivity(Intent(activity, RadarChartSensorActivity::class.java))
         }

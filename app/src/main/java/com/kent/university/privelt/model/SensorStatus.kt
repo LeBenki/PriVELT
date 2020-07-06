@@ -15,4 +15,8 @@ import kotlinx.serialization.Serializable
 class SensorStatus(var sensorName: String, var date: Long, var wereActivated: Boolean) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
+
+    override fun toString(): String {
+        return "$sensorName $date $wereActivated"
+    }
 }

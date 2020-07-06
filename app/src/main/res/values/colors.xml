@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#D81B60</color>
-    <color name="colorPrimaryDark">#FE5295</color>
+    <color name="colorPrimary">#1d99d7</color>
+    <color name="colorPrimaryDark">#006ba5</color>
     <color name="colorAccent">#D81B60</color>
+
+    <!-- Sensor -->
+    <color name="Location">#d32f2f</color>
+    <color name ="Bluetooth">#2196f3</color>
+    <color name ="Storage">#FFB300</color>
+    <color name ="WIFI">#ff7043</color>
+    <color name ="NFC">#0BD5C4</color>
+    <color name ="Contacts">#1565c0</color>
+    <color name ="Calendar">#757575</color>
+    <color name ="SMS">#00897b</color>
+    <color name ="Micro">#ec407a</color>
+    <color name ="Camera">#795548</color>
+
 </resources>

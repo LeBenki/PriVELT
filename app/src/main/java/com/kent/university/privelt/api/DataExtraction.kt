@@ -127,7 +127,8 @@ object DataExtraction {
                         obj.getString("type"),
                         obj.getString("value"),
                         TextUtils.join(UserData.DELIMITER, td),
-                        service.id)
+                        service.id,
+                        System.currentTimeMillis())
                 array.add(userData)
             }
         } catch (ignored: Exception) {

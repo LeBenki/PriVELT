@@ -7,64 +7,69 @@
 package com.kent.university.privelt.utils.sensors
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.os.AsyncTask
 import com.kent.university.privelt.database.PriVELTDatabase
-import com.kent.university.privelt.model.Sensor
-import com.kent.university.privelt.model.SensorStatus
+import com.kent.university.privelt.model.PermissionStatus
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.json.JsonConfiguration
 
-class TemporarySavePermissions {
+object TemporarySavePermissions {
 
-    companion object {
-        fun save(applicationContext: Context) {
-            val sensors = Sensor.values()
+    private const val SHARED_PERMISSIONS = "shared_permission"
+    private const val SHARED_PERMISSIONS_PARAM = "shared_permission_param"
+    private const val DELIMITER = "@/%"
 
-            val currentTimestamp = System.currentTimeMillis()
+    fun save(applicationContext: Context, time: Long) {
 
-            val json = Json(JsonConfiguration.Stable)
+        val json = Json(JsonConfiguration.Stable)
 
-            val sharedPreferences = applicationContext.getSharedPreferences(SHARED_SENSORS, Context.MODE_PRIVATE)
-            var sensorsString = sharedPreferences.getString(SHARED_SENSORS_PARAM, "")
+        val sharedPreferences = applicationContext.getSharedPreferences(SHARED_PERMISSIONS, Context.MODE_PRIVATE)
+        var permissionString = sharedPreferences.getString(SHARED_PERMISSIONS_PARAM, "")
 
-            sensors.forEach {
-                if (it.isSensor) {
-                    val sensorStatus = SensorStatus(it.title, currentTimestamp, it.isEnabled(applicationContext))
-                    sensorsString += json.stringify(SensorStatus.serializer(), sensorStatus) + DELIMITER
+
+        val pm = applicationContext.packageManager
+        val packages = pm.getInstalledApplications(PackageManager.GET_META_DATA)
+        for (applicationInfo in packages) {
+            if (SensorHelper.isSystemPackage(applicationInfo)) continue
+            try {
+                val packageInfo = pm.getPackageInfo(applicationInfo.packageName, PackageManager.GET_PERMISSIONS)
+                val requestedPermissions = packageInfo.requestedPermissions
+                if (requestedPermissions != null) {
+                    for ((i, requestedPermission) in requestedPermissions.withIndex()) {
+                        val permission = PermissionStatus(requestedPermission, time, SensorHelper.getIfPermissionWereGranted(packageInfo, i), applicationInfo.packageName)
+                        permissionString += json.stringify(PermissionStatus.serializer(), permission) + DELIMITER
+                    }
                 }
+            } catch (e: PackageManager.NameNotFoundException) {
+                e.printStackTrace()
             }
-
-            sharedPreferences.edit().putString(SHARED_SENSORS_PARAM, sensorsString).apply()
         }
 
-        fun load(applicationContext: Context) {
-            val json = Json(JsonConfiguration.Stable)
+        sharedPreferences.edit().putString(SHARED_PERMISSIONS_PARAM, permissionString).apply()
+    }
 
-            val sharedPreferences = applicationContext.getSharedPreferences(SHARED_SENSORS, Context.MODE_PRIVATE)
-            val sensorsString = sharedPreferences.getString(SHARED_SENSORS_PARAM, "")
+    fun load(applicationContext: Context) {
+        val json = Json(JsonConfiguration.Stable)
 
-            val sensors = sensorsString?.split(DELIMITER)
+        val sharedPreferences = applicationContext.getSharedPreferences(SHARED_PERMISSIONS, Context.MODE_PRIVATE)
+        val permissionString = sharedPreferences.getString(SHARED_PERMISSIONS_PARAM, "")
 
-            sensors?.forEach {
-                if (it.isNotEmpty()) {
-                    val obj = json.parse(SensorStatus.serializer(), it)
-                    //TODO HOTFIX
-                    PriVELTDatabase.getInstance(applicationContext)
-                    AsyncTask.execute {
-                        kotlin.run {
-                            PriVELTDatabase.getInstance(applicationContext)?.sensorStatusDao()?.insertSensorStatus(obj)
-                        }
+        val permission = permissionString?.split(DELIMITER)
+
+        permission?.forEach {
+            if (it.isNotEmpty()) {
+                val obj = json.parse(PermissionStatus.serializer(), it)
+                //TODO HOTFIX
+                PriVELTDatabase.getInstance(applicationContext)
+                AsyncTask.execute {
+                    kotlin.run {
+                        PriVELTDatabase.getInstance(applicationContext)?.permissionStatusDao()?.insertPermissionStatus(obj)
                     }
                 }
             }
-
-            sharedPreferences.edit().putString(SHARED_SENSORS_PARAM, "").apply()
         }
 
-        private const val SHARED_SENSORS = "shared_sensors"
-        private const val SHARED_SENSORS_PARAM = "shared_sensors_param"
-        private const val DELIMITER = "@/%"
+        sharedPreferences.edit().putString(SHARED_PERMISSIONS_PARAM, "").apply()
     }
-
-
 }

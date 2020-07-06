@@ -4,7 +4,7 @@
  *  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
-package com.kent.university.privelt.ui.dashboard.sensors.chart
+package com.kent.university.privelt.ui.dashboard.sensors.chart.global
 
 import android.graphics.Color
 import android.os.Bundle
@@ -55,7 +55,7 @@ class RadarChartSensorActivity : BaseActivity() {
         xAxis.xOffset = 0f
         xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return if (value.toInt() < 8f) sensors[value.toInt()].title else ""
+                return if (value.toInt() < Sensor.values().size.toFloat()) sensors[value.toInt()].title else ""
             }
         }
     }

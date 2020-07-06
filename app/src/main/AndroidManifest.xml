@@ -91,14 +91,15 @@
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
         </activity>
         <activity
-            android:name=".ui.dashboard.sensors.chart.SensorChartActivity"
-            android:screenOrientation="portrait">
+            android:name=".ui.dashboard.sensors.chart.sensor.SensorChartActivity"
+            android:screenOrientation="portrait"
+            android:label="@string/sensor_chart_activity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
         </activity>
         <activity
-            android:name=".ui.dashboard.sensors.chart.RadarChartSensorActivity"
+            android:name=".ui.dashboard.sensors.chart.global.RadarChartSensorActivity"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

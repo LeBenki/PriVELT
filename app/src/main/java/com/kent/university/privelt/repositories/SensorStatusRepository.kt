@@ -12,14 +12,8 @@ import com.kent.university.privelt.model.SensorStatus
 import javax.inject.Inject
 
 class SensorStatusRepository @Inject constructor(private val mSensorStatusDao: SensorStatusDao) {
-    val sensorStatus: LiveData<List<SensorStatus>>
-        get() = mSensorStatusDao.sensorStatus!!
 
-    fun getSensorStatusForName(name: String) : LiveData<List<SensorStatus>>? {
-        return mSensorStatusDao.getSensorStatusForName(name)
-    }
-
-    fun insertSensorStatus(vararg credentials: SensorStatus?) {
-        mSensorStatusDao.insertSensorStatus(*credentials)
+    fun getSensors(dateL: Long, dateR: Long): LiveData<List<SensorStatus>> {
+        return mSensorStatusDao.getSensors(dateL, dateR)
     }
 }

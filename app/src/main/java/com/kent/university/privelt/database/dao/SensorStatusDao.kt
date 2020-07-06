@@ -15,11 +15,8 @@ import com.kent.university.privelt.model.SensorStatus
 
 @Dao
 interface SensorStatusDao {
-    @get:Query("SELECT * FROM sensor_status")
-    val sensorStatus: LiveData<List<SensorStatus>>?
-
-    @Query("SELECT * FROM sensor_status WHERE sensorName = :name")
-    fun getSensorStatusForName(name: String): LiveData<List<SensorStatus>>?
+    @Query("SELECT * FROM sensor_status WHERE date > :dateL AND date <= :dateR")
+    fun getSensors(dateL: Long, dateR: Long): LiveData<List<SensorStatus>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSensorStatus(vararg sensorStatus: SensorStatus?)

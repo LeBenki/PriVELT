@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.kent.university.privelt.repositories.*
 import com.kent.university.privelt.ui.dashboard.card.CardViewModel
 import com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardViewModel
-import com.kent.university.privelt.ui.dashboard.sensors.chart.SensorChartViewModel
+import com.kent.university.privelt.ui.dashboard.sensors.chart.sensor.SensorChartViewModel
 import com.kent.university.privelt.ui.dashboard.user.UserViewModel
 import com.kent.university.privelt.ui.data.DataViewModel
 import com.kent.university.privelt.ui.risk_value.RiskValueViewModel
@@ -26,6 +26,8 @@ class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: U
                                                   private var mCurrentUserDataRepository: CurrentUserDataRepository,
                                                   private var mSettingsDataSource: SettingsDataRepository,
                                                   private var mSensorStatusRepository: SensorStatusRepository,
+                                                  private var mPermissionStatusRepository: PermissionStatusRepository,
+                                                  private var mHistoryPermissionRepository: HistoryPermissionRepository?,
                                                   private var mExecutor: Executor) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -63,8 +65,8 @@ class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: U
                             .newInstance(mSettingsDataSource, mExecutor) as T
                 }
                 SensorChartViewModel::class.java == modelClass -> {
-                    modelClass.getConstructor(SensorStatusRepository::class.java)
-                            .newInstance(mSensorStatusRepository) as T
+                    modelClass.getConstructor(HistoryPermissionRepository::class.java)
+                            .newInstance(mHistoryPermissionRepository) as T
                 }
                 else -> throw IllegalArgumentException("Unknown ViewModel class")
             }

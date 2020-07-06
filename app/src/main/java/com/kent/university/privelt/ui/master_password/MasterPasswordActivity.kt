@@ -260,6 +260,11 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
 
     private fun onDataImported() {
         reset!!.setOnClickListener {
+            /*
+            val dialog = ImportDataDialog()
+            dialog.show(supportFragmentManager, "ImportDataDialog")
+            */
+
             val alert = AlertDialog.Builder(this)
             val edittext = EditText(this)
             edittext.setTextColor(Color.parseColor("#000000"))
