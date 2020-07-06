@@ -16,7 +16,7 @@ import com.kent.university.privelt.PriVELTApplication.Companion.instance
 import com.kent.university.privelt.database.dao.*
 import com.kent.university.privelt.model.*
 
-@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class, PermissionStatus::class, HistoryPermission::class], version = 8, exportSchema = false)
+@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class, PermissionStatus::class, HistoryPermission::class], version = 10, exportSchema = false)
 abstract class PriVELTDatabase : RoomDatabase() {
     abstract fun userDataDao(): UserDataDao?
     abstract fun serviceDao(): ServiceDao?
@@ -42,7 +42,7 @@ abstract class PriVELTDatabase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 PriVELTDatabase::class.java,
                                 PriVELTDatabaseName)
-                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
+                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
                                 .openHelperFactory(factory)
                                 .build()
                     }
@@ -80,6 +80,25 @@ abstract class PriVELTDatabase : RoomDatabase() {
                 database.execSQL("CREATE TABLE `history_permission` (`id` INTEGER NOT NULL, `date` INTEGER NOT NULL, `locationSensor` INTEGER NOT NULL,`bluetoothSensor` INTEGER NOT NULL, `nfcSensor` INTEGER NOT NULL, `wifiSensor` INTEGER NOT NULL,`locationValue` INTEGER NOT NULL, `contactsValue` INTEGER NOT NULL, `bluetoothValue` INTEGER NOT NULL,`storageValue` INTEGER NOT NULL,`wifiValue` INTEGER NOT NULL,`nfcValue` INTEGER NOT NULL,`calendarValue` INTEGER NOT NULL,`smsValue` INTEGER NOT NULL,PRIMARY KEY(`id`))")
             }
         }
+
+        private val MIGRATION_8_9: Migration = object : Migration(8, 9) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `history_permission` ADD COLUMN `microValue` INTEGER default 0 NOT NULL")
+                database.execSQL("ALTER TABLE `history_permission` ADD COLUMN `cameraValue` INTEGER default 0 NOT NULL")
+            }
+        }
+
+        private val MIGRATION_9_10: Migration = object : Migration(9, 10) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `history_permission` ADD COLUMN `accountsValue` INTEGER default 0 NOT NULL")
+                database.execSQL("ALTER TABLE `history_permission` ADD COLUMN `phonestateValue` INTEGER default 0 NOT NULL")
+                database.execSQL("ALTER TABLE `history_permission` ADD COLUMN `playingcontentValue` INTEGER default 0 NOT NULL")
+                database.execSQL("ALTER TABLE `history_permission` ADD COLUMN `activityrecognitionValue` INTEGER default 0 NOT NULL")
+                database.execSQL("ALTER TABLE `history_permission` ADD COLUMN `networkstateValue` INTEGER default 0 NOT NULL")
+                database.execSQL("ALTER TABLE `history_permission` ADD COLUMN `bodysensorsValue` INTEGER default 0 NOT NULL")
+            }
+        }
+
         fun nullDatabase() {
             synchronized(PriVELTDatabase::class.java) { INSTANCE = null }
         }

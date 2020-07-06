@@ -44,12 +44,25 @@ object SensorHelper {
         for (sensor in sensors) {
             sensor.getApplications().clear()
             for (application in applications) {
-                if (checkIfApplicationHasPermission(application, sensor.title)) {
+                if (checkIfApplicationHasPermission(application, sensor.name)) {
                     sensor.addApplication(application)
                 }
             }
         }
         return sensors
+    }
+
+    fun getApplicationWithSensorsInformation(context: Context): List<Application> {
+        val applications = getApplicationsInformation(context)
+        val sensors = listOf(*Sensor.values())
+        for (sensor in sensors) {
+            for (application in applications) {
+                if (checkIfApplicationHasPermission(application, sensor.name)) {
+                    application.addSensor(sensor)
+                }
+            }
+        }
+        return applications
     }
 
     fun getIfPermissionWereGranted(pi: PackageInfo, i: Int): Boolean {

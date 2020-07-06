@@ -9,6 +9,8 @@ package com.kent.university.privelt.ui.dashboard.sensors.chart.sensor
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.github.mikephil.charting.components.Legend
@@ -20,6 +22,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
+import com.google.android.material.snackbar.Snackbar
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.events.CheckedSensorEvent
@@ -34,7 +37,8 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.math.ceil
-
+import kotlin.math.max
+import kotlin.reflect.KMutableProperty
 
 class SensorChartActivity : BaseActivity() {
 
@@ -153,6 +157,20 @@ class SensorChartActivity : BaseActivity() {
         return res
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.help_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.help) {
+            Snackbar.make(chart, R.string.if_a_color_is_transparent_the_sensor_were_not_activated, Snackbar.LENGTH_LONG).show()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     @SuppressLint("SimpleDateFormat")
     private fun getDate(milliSeconds: Long): String? {
         // Create a DateFormatter object for displaying date in specified format.
@@ -164,40 +182,50 @@ class SensorChartActivity : BaseActivity() {
         return formatter.format(calendar.time)
     }
 
+    private fun getMaximumAxisSensors(historyPermissions: List<HistoryPermission>): Int {
+        var maximum = 0
+        for (historyPermission in historyPermissions) {
+            val kClass = Class.forName(historyPermission.javaClass.name).kotlin
+
+            var total = 0
+            for (member in kClass.members.filterIsInstance<KMutableProperty<*>>().filter { it.name.contains("Value") }) {
+                total += member.getter.call(historyPermission) as Int
+            }
+            total += (100 - total % 100) + 20
+            maximum = max(total, maximum)
+        }
+        return maximum
+    }
     private fun setDataPermission(permissionStatus: List<HistoryPermission>, permissions: List<String>) {
 
         val values: ArrayList<BarEntry> = ArrayList()
         val dates: ArrayList<String> = ArrayList()
 
-        //TODO use reflection
         for ((i, permissionS) in permissionStatus.withIndex()) {
             val tmpStack = ArrayList<Float>()
-            if (permissions.contains("Location"))
-                tmpStack.add(permissionS.locationValue.toFloat() + if (!permissionS.locationSensor) 0.5f else 0f)
-            if (permissions.contains("Bluetooth"))
-                tmpStack.add(permissionS.bluetoothValue.toFloat() + if (!permissionS.bluetoothSensor) 0.5f else 0f)
-            if (permissions.contains("Storage"))
-                tmpStack.add(permissionS.storageValue.toFloat())
-            if (permissions.contains("WIFI"))
-                tmpStack.add(permissionS.wifiValue.toFloat() + if (!permissionS.wifiSensor) 0.5f else 0f)
-            if (permissions.contains("NFC"))
-                tmpStack.add(permissionS.nfcValue.toFloat() + if (!permissionS.nfcSensor) 0.5f else 0f)
-            if (permissions.contains("Contacts"))
-                tmpStack.add(permissionS.contactsValue.toFloat())
-            if (permissions.contains("Calendar"))
-                tmpStack.add(permissionS.calendarValue.toFloat())
-            if (permissions.contains("SMS"))
-                tmpStack.add(permissionS.smsValue.toFloat())
+            for (sensor in Sensor.values()) {
+                if (permissions.contains(sensor.title)) {
+
+                    // Reflection to call each getter avoiding if forest
+
+                    val kClass = Class.forName(permissionS.javaClass.name).kotlin
+
+                    //Remove space and uppercase letters
+                    val value = kClass.members.filterIsInstance<KMutableProperty<*>>().firstOrNull { it.name == sensor.title.toLowerCase(Locale.ROOT).replace(" ", "") + "Value" }
+                    val sensorValue = kClass.members.filterIsInstance<KMutableProperty<*>>().firstOrNull { it.name == sensor.title.toLowerCase(Locale.ROOT).replace(" ", "") + "Sensor" }
+
+                    val res = (value?.getter?.call(permissionS) as Int) + if (sensor.isSensor && !(sensorValue?.getter?.call(permissionS) as Boolean)) 0.5f else 0f
+                    tmpStack.add(res)
+                }
+            }
             val b = BarEntry((i).toFloat(), arrayListToPrimitiveArrayPermission(tmpStack))
             dates.add(getDate(permissionS.date)!!)
             chart.xAxis.addLimitLine(getLimitLineAt(i))
-            val historyMax = permissionStatus.maxBy { it.calendarValue + it.contactsValue + it.bluetoothValue + it.locationValue + it.smsValue + it.nfcValue + it.wifiValue + it.storageValue }
-            var maxChart = historyMax?.calendarValue!! + historyMax.contactsValue + historyMax.bluetoothValue + historyMax.locationValue + historyMax.smsValue + historyMax.nfcValue + historyMax.wifiValue + historyMax.storageValue
-            maxChart += maxChart % 100
-            chart.axisLeft.axisMaximum = maxChart.toFloat()
 
             values.add(b)
         }
+
+        chart.axisLeft.axisMaximum = getMaximumAxisSensors(permissionStatus).toFloat()
 
         val set1: BarDataSet
 
@@ -231,7 +259,7 @@ class SensorChartActivity : BaseActivity() {
         })
 
         chart.setFitBars(true)
-        chart.xAxis.setLabelCount(7, true)
+        chart.xAxis.setLabelCount(7, false)
         chart.moveViewToX(set1.entryCount.toFloat())
         chart.xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {

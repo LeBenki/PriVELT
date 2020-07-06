@@ -23,14 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_marginVertical="@dimen/activity_vertical_margin"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#ff0000"
-        android:layout_gravity="center_horizontal"
-        android:text="@string/if_a_color_is_transparent_the_sensor_were_not_activated"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"/>
-
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/chart"
         android:layout_width="match_parent"

@@ -55,7 +55,7 @@ class RadarChartSensorActivity : BaseActivity() {
         xAxis.xOffset = 0f
         xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return if (value.toInt() < 8f) sensors[value.toInt()].title else ""
+                return if (value.toInt() < Sensor.values().size.toFloat()) sensors[value.toInt()].title else ""
             }
         }
     }

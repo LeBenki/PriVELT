@@ -15,7 +15,11 @@ data class HistoryPermission (var date: Long, var locationValue: Int, var blueto
                               var storageValue: Int, var wifiValue: Int, var nfcValue:Int,
                                 var contactsValue: Int, var calendarValue: Int, var smsValue: Int,
                                 var locationSensor: Boolean, var bluetoothSensor: Boolean,
-                                var nfcSensor: Boolean, var wifiSensor: Boolean) {
+                                var nfcSensor: Boolean, var wifiSensor: Boolean,
+                                var microValue: Int, var cameraValue: Int,
+                                var accountsValue: Int, var phonestateValue: Int,
+                                var playingcontentValue: Int, var activityrecognitionValue: Int,
+                                var networkstateValue: Int, var bodysensorsValue: Int) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
 }
