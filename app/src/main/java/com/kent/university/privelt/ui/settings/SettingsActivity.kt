@@ -12,7 +12,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.*
+import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -22,8 +23,14 @@ import com.google.api.services.drive.DriveScopes
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.GoogleDriveActivity
 import com.kent.university.privelt.base.GoogleDriveListener
+import com.kent.university.privelt.database.PriVELTDatabase
 import com.kent.university.privelt.model.Settings
 import com.kent.university.privelt.ui.master_password.MasterPasswordActivity
+import com.privelt.pda.dataplatform.DataPlatformFactory
+import com.privelt.pda.dataplatform.DataPlatformType
+import com.privelt.pda.dataplatform.generic.Credentials
+import com.privelt.pda.dataplatform.hat.HatPlatform
+import com.privelt.pda.dataplatform.hat.files.HatFileDetails
 import kotlinx.android.synthetic.main.activity_settings.*
 
 class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationListener {
@@ -137,6 +144,18 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
 
     override fun onSuccess(token: String) {
         Toast.makeText(this, token, Toast.LENGTH_LONG).show()
+
+        val credentials = Credentials(token)
+        val dataPlatformType = DataPlatformType.HAT
+
+        val dataPlatform = DataPlatformFactory.getDataPlatform(dataPlatformType, credentials)
+        val file = getDatabasePath(PriVELTDatabase.PriVELTDatabaseName)
+
+        val hatFilesOps = (dataPlatform as HatPlatform).hatFilesOps
+
+        val hatFileDetails = HatFileDetails(file.name, "app-112-dev", file.absolutePath)
+
+        hatFilesOps.upload(hatFileDetails)
     }
 
     override fun onFailure(error: String) {
