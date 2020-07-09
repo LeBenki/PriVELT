@@ -113,8 +113,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
+    //PDA LIB
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
     implementation 'commons-codec:commons-codec:1.14'
     implementation 'commons-io:commons-io:2.6'
+
+    implementation 'me.relex:circleindicator:2.1.4'
 }

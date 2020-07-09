@@ -9,8 +9,8 @@ package com.kent.university.privelt.ui.dashboard.sensors.chart.sensor
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.util.Log
+import android.view.View
 import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.github.mikephil.charting.components.Legend
@@ -22,15 +22,14 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet
-import com.google.android.material.snackbar.Snackbar
 import com.kent.university.privelt.R
-import com.kent.university.privelt.base.BaseActivity
+import com.kent.university.privelt.base.BaseFragment
 import com.kent.university.privelt.events.CheckedSensorEvent
 import com.kent.university.privelt.model.HistoryPermission
 import com.kent.university.privelt.model.Sensor
 import com.kent.university.privelt.ui.dashboard.sensors.chart.SensorChartAdapter
 import com.kent.university.privelt.utils.sensors.SensorHelper.getNumberOfApplicationInstalled
-import kotlinx.android.synthetic.main.activity_sensor_chart.*
+import kotlinx.android.synthetic.main.fragment_sensor_chart.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.text.SimpleDateFormat
@@ -40,81 +39,90 @@ import kotlin.math.ceil
 import kotlin.math.max
 import kotlin.reflect.KMutableProperty
 
-class SensorChartActivity : BaseActivity() {
+class SensorChartFragment : BaseFragment() {
 
     private var permission: String? = null
+    private var position: Int? = null
     private var adapter: SensorChartAdapter? = null
     private var listPermissionStatus: List<HistoryPermission>? = null
+    private var sensorsWithPosition: List<Sensor>? = null
 
     companion object {
         const val PARAM_PERMISSION = "permission"
+        const val PARAM_POSITION = "position"
+
+        fun newInstance(permission: String, position: Int): SensorChartFragment {
+            val fragment = SensorChartFragment()
+            val favoriteNeighbour = Bundle()
+            favoriteNeighbour.putString(PARAM_PERMISSION, permission)
+            favoriteNeighbour.putInt(PARAM_POSITION, position)
+            fragment.arguments = favoriteNeighbour
+            return fragment
+        }
     }
 
     private var sensorStatusViewModel: SensorChartViewModel? = null
 
-    override val activityLayout: Int
-        get() = R.layout.activity_sensor_chart
+    override val fragmentLayout: Int
+        get() = R.layout.fragment_sensor_chart
 
     override fun configureViewModel() {
         //Can not use it in this activity
     }
 
     private fun configureRecyclerView() {
-        listSensor!!.layoutManager = GridLayoutManager(this, 2)
+        baseView.listSensor!!.layoutManager = GridLayoutManager(context, 2)
         val listSensors = ArrayList<Sensor>()
-        Sensor.values().forEach {
+        sensorsWithPosition?.forEach {
             listSensors.add(it)
         }
         adapter = SensorChartAdapter(listSensors, listOf(permission!!))
-        listSensor!!.adapter = adapter
+        baseView.listSensor!!.adapter = adapter
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(PARAM_PERMISSION, permission)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        permission = arguments!!.getString(PARAM_PERMISSION)
+        position = arguments!!.getInt(PARAM_POSITION)
     }
 
-    override fun configureDesign(savedInstanceState: Bundle?) {
+    override fun configureDesign(view: View) {
 
-        if (savedInstanceState != null) {
-            permission = savedInstanceState.getString(PARAM_PERMISSION)
-        } else if (intent != null) {
-            permission = intent.getStringExtra(PARAM_PERMISSION)
-
-        }
+        sensorsWithPosition = getSensorWithPosition(position!!, SensorPagerAdapter.PAGE_SIZE)
 
         sensorStatusViewModel = getViewModel(SensorChartViewModel::class.java)
 
         sensorStatusViewModel?.init()
 
         sensorStatusViewModel?.permissionStatus?.observe(this, androidx.lifecycle.Observer { list ->
-            if (list.isNotEmpty())
+            Log.d("LUCAS", adapter?.getSelectedSensors()!!.isNotEmpty().toString())
+            if (list.isNotEmpty() && adapter?.getSelectedSensors()!!.isNotEmpty())
                 setDataPermission(list, adapter?.getSelectedSensors()!!)
             listPermissionStatus = list
         })
 
-        numberOfApplications.text = getString(R.string.number_app, getNumberOfApplicationInstalled(this))
-        chart.description.isEnabled = false
+        view.numberOfApplications.text = getString(R.string.number_app, getNumberOfApplicationInstalled(context!!))
+        view.chart.description.isEnabled = false
 
         // enable touch gestures
-        chart.setTouchEnabled(true)
+        view.chart.setTouchEnabled(true)
 
-        chart.dragDecelerationFrictionCoef = 0.9f
+        view.chart.dragDecelerationFrictionCoef = 0.9f
 
         // enable scaling and dragging
-        chart.isDragEnabled = true
-        chart.setScaleEnabled(false)
-        chart.setDrawGridBackground(false)
-        chart.isHighlightPerDragEnabled = false
-        chart.isHighlightFullBarEnabled = true
+        view.chart.isDragEnabled = true
+        view.chart.setScaleEnabled(false)
+        view.chart.setDrawGridBackground(false)
+        view.chart.isHighlightPerDragEnabled = false
+        view.chart.isHighlightFullBarEnabled = true
 
-        chart.xAxis.setDrawLimitLinesBehindData(true)
+        view.chart.xAxis.setDrawLimitLinesBehindData(true)
 
         // set an alternative background color
-        chart.setBackgroundColor(Color.WHITE)
-        chart.setViewPortOffsets(0f, 0f, 0f, 0f)
+        view.chart.setBackgroundColor(Color.WHITE)
+        view.chart.setViewPortOffsets(0f, 0f, 0f, 0f)
 
-        val xAxis = chart.xAxis
+        val xAxis = view.chart.xAxis
         xAxis.position = XAxis.XAxisPosition.TOP_INSIDE
         xAxis.textSize = 10f
         xAxis.textColor = Color.WHITE
@@ -125,8 +133,8 @@ class SensorChartActivity : BaseActivity() {
         xAxis.granularity = 1f
         xAxis.isGranularityEnabled = true
         xAxis.setCenterAxisLabels(true)
-        chart.axisLeft.granularity = 1f
-        val leftAxis = chart.axisLeft
+        view.chart.axisLeft.granularity = 1f
+        val leftAxis = view.chart.axisLeft
         leftAxis.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART)
         leftAxis.textColor = Color.rgb(0, 0, 0)
         leftAxis.setDrawGridLines(true)
@@ -134,12 +142,22 @@ class SensorChartActivity : BaseActivity() {
         leftAxis.axisMinimum = 0f
         leftAxis.yOffset = -9f
 
-        val rightAxis = chart.axisRight
+        val rightAxis = view.chart.axisRight
         rightAxis.isEnabled = false
 
-        val legend: Legend = chart.legend
+        val legend: Legend = view.chart.legend
         legend.isEnabled = false
         configureRecyclerView()
+    }
+
+    private fun getSensorWithPosition(position: Int, pageSize: Int): List<Sensor>? {
+        val sensorList = ArrayList<Sensor>()
+        for ((i, sensor) in Sensor.values().withIndex()) {
+            if (i >= (position * pageSize) && i < ((position + 1) * pageSize)) {
+                sensorList.add(sensor)
+            }
+        }
+        return sensorList
     }
 
     private fun getLimitLineAt(xIndex: Int): LimitLine {
@@ -157,19 +175,6 @@ class SensorChartActivity : BaseActivity() {
         return res
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        val inflater = menuInflater
-        inflater.inflate(R.menu.help_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.help) {
-            Snackbar.make(chart, R.string.if_a_color_is_transparent_the_sensor_were_not_activated, Snackbar.LENGTH_LONG).show()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     @SuppressLint("SimpleDateFormat")
     private fun getDate(milliSeconds: Long): String? {
@@ -189,9 +194,12 @@ class SensorChartActivity : BaseActivity() {
 
             var total = 0
             for (member in kClass.members.filterIsInstance<KMutableProperty<*>>().filter { it.name.contains("Value") }) {
-                total += member.getter.call(historyPermission) as Int
+                for (sensor in sensorsWithPosition!!) {
+                    if (member.name.contains(sensor.name.toLowerCase().replace(" " , "")))
+                        total += member.getter.call(historyPermission) as Int
+                }
             }
-            total += (100 - total % 100) + 20
+            total += (100 - total % 100)
             maximum = max(total, maximum)
         }
         return maximum
@@ -203,7 +211,7 @@ class SensorChartActivity : BaseActivity() {
 
         for ((i, permissionS) in permissionStatus.withIndex()) {
             val tmpStack = ArrayList<Float>()
-            for (sensor in Sensor.values()) {
+            for (sensor in sensorsWithPosition!!) {
                 if (permissions.contains(sensor.title)) {
 
                     // Reflection to call each getter avoiding if forest
@@ -220,12 +228,12 @@ class SensorChartActivity : BaseActivity() {
             }
             val b = BarEntry((i).toFloat(), arrayListToPrimitiveArrayPermission(tmpStack))
             dates.add(getDate(permissionS.date)!!)
-            chart.xAxis.addLimitLine(getLimitLineAt(i))
+            view?.chart?.xAxis?.addLimitLine(getLimitLineAt(i))
 
             values.add(b)
         }
 
-        chart.axisLeft.axisMaximum = getMaximumAxisSensors(permissionStatus).toFloat()
+        view?.chart?.axisLeft?.axisMaximum = getMaximumAxisSensors(permissionStatus).toFloat()
 
         val set1: BarDataSet
 
@@ -233,7 +241,7 @@ class SensorChartActivity : BaseActivity() {
         set1.setDrawIcons(false)
 
         val colors = ArrayList<Int>()
-        for (sensor in Sensor.values())
+        for (sensor in sensorsWithPosition!!)
             if (permissions.contains(sensor.title)) {
                 colors.add(ResourcesCompat.getColor(resources, sensor.color, null))
             }
@@ -246,30 +254,32 @@ class SensorChartActivity : BaseActivity() {
         val dataSets: ArrayList<IBarDataSet> = ArrayList()
         dataSets.add(set1)
         val data = BarData(dataSets)
-        chart.data = data
-        chart.data.setValueTextColor(Color.WHITE)
-        chart.data.setDrawValues(true)
-        chart.data.setValueTextSize(12f)
-        chart.setDrawValueAboveBar(false)
-        chart.data.setValueFormatter(object : ValueFormatter() {
+        view?.chart?.data = data
+        view?.chart?.data?.setValueTextColor(Color.WHITE)
+        view?.chart?.data?.setDrawValues(true)
+        view?.chart?.data?.setValueTextSize(12f)
+        view?.chart?.setDrawValueAboveBar(false)
+        view?.chart?.data?.setValueFormatter(object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
+                if (value == 0f)
+                    return ""
                 return if (value.toDouble() != ceil(value.toDouble())) "Off"
                 else value.toInt().toString()
             }
         })
 
-        chart.setFitBars(true)
-        chart.xAxis.setLabelCount(7, false)
-        chart.moveViewToX(set1.entryCount.toFloat())
-        chart.xAxis.valueFormatter = object : ValueFormatter() {
+        view?.chart?.setFitBars(true)
+        view?.chart?.xAxis?.setLabelCount(7, false)
+        view?.chart?.moveViewToX(set1.entryCount.toFloat())
+        view?.chart?.xAxis?.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 return if (value.toInt() + 1 < dates.size) dates[value.toInt() + 1] else ""
             }
         }
 
-        chart.data.isHighlightEnabled = false
-        chart.invalidate()
-        chart.setVisibleXRangeMaximum(7f)
+        view?.chart?.data?.isHighlightEnabled = false
+        view?.chart?.invalidate()
+        view?.chart?.setVisibleXRangeMaximum(7f)
     }
 
     override fun onStart() {
@@ -284,6 +294,7 @@ class SensorChartActivity : BaseActivity() {
 
     @Subscribe
     fun onCheckedSensor(event: CheckedSensorEvent) {
-        setDataPermission(listPermissionStatus!!, adapter?.getSelectedSensors()!!)
+        if (adapter?.getSelectedSensors()!!.isNotEmpty())
+            setDataPermission(listPermissionStatus!!, adapter?.getSelectedSensors()!!)
     }
 }
