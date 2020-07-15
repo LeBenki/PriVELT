@@ -32,6 +32,7 @@
 
         <ImageView
             android:id="@+id/gdpr"
+            android:visibility="gone"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="@dimen/activity_vertical_margin"
