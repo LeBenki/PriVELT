@@ -161,7 +161,6 @@ class RiskValueActivity : BaseActivity() {
         yAxis.textSize = 9f
         yAxis.axisMinimum = 0f
 
-        //TODO: 200 HARDCODED (MAX DATA)
         yAxis.axisMaximum = getMaximumValue(sets)
         yAxis.setDrawLabels(true)
         val l = chart!!.legend

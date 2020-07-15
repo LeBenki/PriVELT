@@ -105,6 +105,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
         </activity>
+        <activity
+            android:name=".ui.gdpr.GDPRActivity"
+            android:label="@string/privacy_policy"
+            android:screenOrientation="portrait">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.kent.university.privelt.ui.dashboard.card.detailed.DetailedCardActivity" />
+        </activity>
+
         <service
             android:name=".service.restarter.JobService"
             android:permission="android.permission.BIND_JOB_SERVICE" />

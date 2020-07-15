@@ -16,6 +16,7 @@ import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.events.LaunchListDataEvent
 import com.kent.university.privelt.model.Card
 import com.kent.university.privelt.ui.data.DataActivity
+import com.kent.university.privelt.ui.gdpr.GDPRActivity
 import com.kent.university.privelt.ui.login.LoginActivity
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import kotlinx.android.synthetic.main.activity_detailed_card.*
@@ -31,7 +32,6 @@ class DetailedCardActivity : BaseActivity() {
         get() = R.layout.activity_detailed_card
 
     override fun configureViewModel() {
-        //TODO use viewmodel
     }
 
     override fun configureDesign(savedInstanceState: Bundle?) {
@@ -59,6 +59,8 @@ class DetailedCardActivity : BaseActivity() {
             else -> privacyValue!!.text = SentenceAdapter.adapt(resources.getString(R.string.global_privacy_value), "High")
         }
         title = card!!.title
+
+        gdpr!!.setOnClickListener { startActivity(Intent(this, GDPRActivity::class.java)) }
         configureRecyclerView()
     }
 
