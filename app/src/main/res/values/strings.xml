@@ -106,10 +106,11 @@
 
     <!--DetailedSensorActivity-->
     <string name="permission_list_explained">Here is the list of all your installed applications using this permission</string>
-    <string name="if_a_color_is_transparent_the_sensor_were_not_activated">If \"Off\" is written the sensor were not activated</string>
+    <string name="sensor_off_info">If \"Off\" is written the sensor were not activated</string>
     <string name="sensor_chart_activity">Granted permissions</string>
     <string name="number_app">There are %1$d installed applications on this device</string>
     <string name="choose_service_import">Choose which service will import your data</string>
+    <string name="privacy_policy">Privacy policy</string>
 
     <!--Sensors-->
 </resources>

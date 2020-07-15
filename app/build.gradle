@@ -33,8 +33,6 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     compileOptions.incremental = false
-
-
     defaultConfig {
         multiDexEnabled true
         applicationId "com.kent.university.privelt"
@@ -91,9 +89,9 @@ dependencies {
     implementation 'com.google.http-client:google-http-client-gson:1.26.0'
     implementation 'com.google.api-client:google-api-client-android:1.26.0'
     implementation 'com.google.apis:google-api-services-drive:v3-rev136-1.25.0'
-    implementation 'net.neferett:webviewsinjector:2.1.2-SNAPSHOT'
-    implementation 'net.neferett:webviewsextractor:2.1.7-SNAPSHOT'
-    implementation 'com.privelt.pda:pdaapiwrapper:1.0.3'
+    implementation 'net.neferett:webviewsinjector:2.1.6-SNAPSHOT'
+    implementation 'net.neferett:webviewsextractor:2.1.7'
+    implementation 'com.privelt.pda:pdaapiwrapper:1.0.6'
     implementation 'com.android.support:multidex:1.0.3'
     def daggerVersion = "2.27"
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -113,8 +111,11 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0"
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
 
+    //PDA LIB
     implementation 'com.squareup.retrofit2:retrofit:2.7.1'
     implementation 'com.squareup.retrofit2:converter-gson:2.7.1'
     implementation 'commons-codec:commons-codec:1.14'
     implementation 'commons-io:commons-io:2.6'
+
+    implementation 'me.relex:circleindicator:2.1.4'
 }

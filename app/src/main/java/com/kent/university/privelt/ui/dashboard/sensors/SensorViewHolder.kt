@@ -14,7 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.events.LaunchDetailedSensorEvent
 import com.kent.university.privelt.model.Sensor
-import com.kent.university.privelt.ui.dashboard.sensors.chart.sensor.SensorChartActivity
+import com.kent.university.privelt.ui.dashboard.sensors.chart.sensor.SensorChartFragment
+import com.kent.university.privelt.ui.dashboard.sensors.chart.sensor.SensorPagerActivity
 import com.kent.university.privelt.utils.privacy_scoring.PermissionScoring.computeScoreForPermission
 import com.kent.university.privelt.utils.sensors.SensorHelper.getNumberOfApplicationInstalled
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
@@ -34,8 +35,8 @@ internal class SensorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemVi
 
 
         itemView.risk_progress!!.setOnClickListener {
-            val intent = Intent(itemView.risk_progress!!.context, SensorChartActivity::class.java)
-            intent.putExtra(SensorChartActivity.PARAM_PERMISSION, sensor.title)
+            val intent = Intent(itemView.risk_progress!!.context, SensorPagerActivity::class.java)
+            intent.putExtra(SensorChartFragment.PARAM_PERMISSION, sensor.title)
             itemView.risk_progress!!.context.startActivity(intent)
         }
 

@@ -8,11 +8,13 @@ package com.kent.university.privelt.ui.settings
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.*
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.EditText
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -32,6 +34,7 @@ import com.privelt.pda.dataplatform.generic.Credentials
 import com.privelt.pda.dataplatform.hat.HatPlatform
 import com.privelt.pda.dataplatform.hat.files.HatFileDetails
 import kotlinx.android.synthetic.main.activity_settings.*
+import java.util.concurrent.Executors
 
 class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationListener {
 
@@ -145,17 +148,30 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
     override fun onSuccess(token: String) {
         Toast.makeText(this, token, Toast.LENGTH_LONG).show()
 
-        val credentials = Credentials(token)
-        val dataPlatformType = DataPlatformType.HAT
+        val alert = AlertDialog.Builder(this)
+        val edittext = EditText(this)
+        edittext.setTextColor(Color.parseColor("#000000"))
+        alert.setTitle("Enter your user id")
+        alert.setView(edittext)
+        alert.setPositiveButton(R.string.yes)  { _: DialogInterface?, _: Int ->
+            val username = edittext.text.toString()
+            val credentials = Credentials(token)
+            credentials.username = username
 
-        val dataPlatform = DataPlatformFactory.getDataPlatform(dataPlatformType, credentials)
-        val file = getDatabasePath(PriVELTDatabase.PriVELTDatabaseName)
+            val dataPlatformType = DataPlatformType.HAT
 
-        val hatFilesOps = (dataPlatform as HatPlatform).hatFilesOps
+            val dataPlatform = DataPlatformFactory.getDataPlatform(dataPlatformType, credentials)
+            val file = getDatabasePath(PriVELTDatabase.PriVELTDatabaseName)
 
-        val hatFileDetails = HatFileDetails(file.name, "app-112-dev", file.absolutePath)
+            val hatFilesOps = (dataPlatform as HatPlatform).hatFilesOps
 
-        hatFilesOps.upload(hatFileDetails)
+            val hatFileDetails = HatFileDetails(file.name, "app-112-dev", file.absolutePath)
+            hatFileDetails.size = file.length()
+
+            Executors.newSingleThreadExecutor().execute { hatFilesOps.upload(hatFileDetails) }
+        }
+        alert.show()
+
     }
 
     override fun onFailure(error: String) {
