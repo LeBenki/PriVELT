@@ -26,6 +26,9 @@ interface UserDataDao {
     @Query("SELECT * FROM user_data WHERE service_id = :serviceId and type =:type")
     fun getUserDataForAServiceAndType(serviceId: Long, type: String?): LiveData<List<UserData>>?
 
+    @Query("SELECT * FROM user_data WHERE service_id = :serviceId")
+    fun getUserDataForAService(serviceId: Long): List<UserData>?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertUserData(vararg userData: UserData?)
 }
