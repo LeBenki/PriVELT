@@ -8,9 +8,12 @@ The local database is secured with a password known and chosen only by the user.
 
 ## Screenshots
 
-![Master password](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/1.jpg | width=100) ![Save database in another service](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/4.jpg | width=100)
-![Service and data cards](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/2.jpg | width=100) ![Granted permissions](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/5.jpg | width=100)
-![Permissions cards](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/3.jpg | width=100) ![Details of permission type](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/6.jpg | width=100)
+![Master password](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/1.jpg | width=100) 
+![Save database in another service](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/4.jpg | width=100)
+![Service and data cards](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/2.jpg | width=100) 
+![Granted permissions](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/5.jpg | width=100)
+![Permissions cards](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/3.jpg | width=100) 
+![Details of permission type](https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/6.jpg | width=100)
 
 ## Installation
 Clone this repository and import into **Android Studio**
