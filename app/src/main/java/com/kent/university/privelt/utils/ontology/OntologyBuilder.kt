@@ -7,8 +7,8 @@
 package com.kent.university.privelt.utils.ontology
 
 import android.content.Context
+import com.hp.hpl.jena.ontology.Individual
 import com.hp.hpl.jena.ontology.OntClass
-import com.hp.hpl.jena.ontology.OntDocumentManager.NS
 import com.hp.hpl.jena.ontology.OntModel
 import com.hp.hpl.jena.ontology.OntModelSpec
 import com.hp.hpl.jena.rdf.model.ModelFactory
@@ -21,13 +21,30 @@ import java.io.OutputStreamWriter
 
 class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
 
-    companion object {
-        var linkCount = 0
+    private var model: OntModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM)
+    private val priveltURI = "https://privelt.ac.uk/"
+
+    //Classes
+    private var personClass = createClass("person")
+    private var serviceClass = createClass("service")
+    private var dataClass = createClass("data")
+    private var onlineAccountClass = createClass("online account")
+    private var dataPackageClass = createClass("data package")
+    private var organisationClass = createClass("organisation")
+
+    init {
+        createProperty(dataClass, personClass, "owned by")
+        createProperty(dataClass, dataPackageClass, "construct")
+        createProperty(dataPackageClass, serviceClass, "required by")
+        createProperty(onlineAccountClass, personClass, "account")
+        createProperty(onlineAccountClass, dataPackageClass, "attach")
+        createProperty(serviceClass, onlineAccountClass, "create")
+        createProperty(serviceClass, organisationClass, "provided by")
     }
 
-    private var model: OntModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM)
-
     fun build(context: Context) {
+
+
         //instantiate DAOs
         val currentUserDao = priVELTDatabase.currentUserDao()
         val serviceDao = priVELTDatabase.serviceDao()
@@ -55,7 +72,6 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
                 if (organisation.ownedServices.contains(service.name)) {
                     //found organisation for service
                     val organisationOnt = createOrganisationNode(organisation.label)
-                    createLink(serviceOnt, organisationOnt, "provided by")
                 }
             }
 
@@ -67,65 +83,66 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
                 //build data package node
                 val dataPackageOnt = createDataPackageNode(data.type)
 
-                createLink(person, dataOnt, "owned by")
-
-                createLink(dataOnt, dataPackageOnt, "construct")
-
-                createLink(dataPackageOnt, serviceOnt, "required by")
-
-                createLink(onlineAccountOnt, person, "account")
-                createLink(onlineAccountOnt, dataOnt, "attach")
-                createLink(serviceOnt, onlineAccountOnt, "create")
             }
         }
         save(context)
     }
 
-    private fun createService(service: Service): OntClass {
-        val serviceOnt = model.createClass(NS + service.name + "_" + service.id)
+    private fun createService(service: Service): Individual {
+        val serviceOnt = serviceClass.createIndividual(priveltURI + service.name)
         serviceOnt.addLabel(service.name, "en")
         return serviceOnt
     }
 
-    private fun createDataNode(data: UserData): OntClass {
-        val dataOnt = model.createClass(NS + data.title + "_" + data.id)
-        dataOnt.addLabel(data.title, "en")
+    private fun createDataNode(data: UserData): Individual {
+        val subClass = model.createClass(priveltURI + data.title)
+        subClass.addLabel(data.title, "en")
+        dataClass.addSubClass(subClass)
+
+        val dataOnt = subClass.createIndividual(priveltURI + data.value)
+        dataOnt.addLabel(data.value, "en")
         return dataOnt
     }
 
-    private fun createPersonNode(current: CurrentUser): OntClass {
-        val person = model.createClass(NS + "Person")
+    private fun createPersonNode(current: CurrentUser): Individual {
+        val person = personClass.createIndividual(priveltURI + current.firstName)
         person.addLabel(current.firstName, "en")
         return person
     }
 
-    private fun createDataPackageNode(type: String): OntClass {
-        val dataPackageOnt = model.createClass(NS + type)
+    private fun createDataPackageNode(type: String): Individual {
+        val dataPackageOnt = dataPackageClass.createIndividual(priveltURI + type)
         dataPackageOnt.addLabel(type, "en")
         return dataPackageOnt
     }
 
-    private fun createOnlineAccountNode(service: Service): OntClass {
-        val dataOnlineAccountOnt = model.createClass(NS + service.user + "_" + service.id)
+    private fun createOnlineAccountNode(service: Service): Individual {
+        val dataOnlineAccountOnt = onlineAccountClass.createIndividual(priveltURI + service.user)
         dataOnlineAccountOnt.addLabel(service.user, "en")
         return dataOnlineAccountOnt
     }
 
-    private fun createOrganisationNode(organisation: String): OntClass {
-        val organisationOnt = model.createClass(NS + organisation)
+    private fun createOrganisationNode(organisation: String): Individual {
+        val organisationOnt = organisationClass.createIndividual(priveltURI + organisation)
         organisationOnt.addLabel(organisation, "en")
         return organisationOnt
     }
 
-    private fun createLink(from: OntClass, to:OntClass, relationShip: String) {
-        val requiredBy = model.createObjectProperty(NS + relationShip + "_" + linkCount++)
+    private fun createProperty(from: OntClass, to:OntClass, relationShip: String) {
+        val requiredBy = model.createObjectProperty(priveltURI + relationShip)
         requiredBy.addDomain(from)
         requiredBy.addRange(to)
         requiredBy.addLabel(relationShip, "en")
     }
 
+    private fun createClass(className: String): OntClass {
+        val ontClass = model.createClass(priveltURI + className)
+        ontClass.addLabel(className, "en")
+        return ontClass;
+    }
+
     private fun save(context: Context) {
-        val file = context.openFileOutput("ontology_debug.rdf", Context.MODE_PRIVATE)
+        val file = context.openFileOutput("ontology_debug.owl", Context.MODE_PRIVATE)
         val outputStreamWriter = OutputStreamWriter(file)
         model.write(outputStreamWriter)
         outputStreamWriter.close()
