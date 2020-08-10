@@ -20,7 +20,7 @@ class DataViewHolder internal constructor(itemView: View) : RecyclerView.ViewHol
         itemView.title!!.text = SentenceAdapter.capitaliseFirstLetter(userData.type)
         itemView.value!!.text = userData.value
         itemView.concatenated_data!!.text = TextUtils.join("\n", userData.unConcatenatedData)
-        val userDataType = UserDataTypes.valueOf(userData.type.toUpperCase(Locale.ROOT))
+        val userDataType = UserDataTypes.getUserDataType(userData.type.toUpperCase(Locale.ROOT))
         itemView.icon!!.setImageResource(userDataType.res)
     }
 }

@@ -18,28 +18,29 @@ import com.kent.university.privelt.model.Service
 import com.kent.university.privelt.model.UserData
 import java.io.OutputStreamWriter
 
-
 class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
+
+    fun String.capitalizeWords(): String = split(" ").map { it.capitalize() }.joinToString(" ")
 
     private var model: OntModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM)
     private val priveltURI = "https://privelt.ac.uk/"
 
     //Classes
-    private var personClass = createClass("person")
-    private var serviceClass = createClass("service")
-    private var dataClass = createClass("data")
-    private var onlineAccountClass = createClass("online account")
-    private var dataPackageClass = createClass("data package")
-    private var organisationClass = createClass("organisation")
+    private var personClass = createClass("Person")
+    private var serviceClass = createClass("Service")
+    private var dataClass = createClass("Data")
+    private var onlineAccountClass = createClass("OnlineAccount")
+    private var dataPackageClass = createClass("DataPackage")
+    private var organisationClass = createClass("Organisation")
 
     init {
-        createProperty(dataClass, personClass, "owned by")
+        createProperty(dataClass, personClass, "ownedBy")
         createProperty(dataClass, dataPackageClass, "construct")
-        createProperty(dataPackageClass, serviceClass, "required by")
+        createProperty(dataPackageClass, serviceClass, "requiredby")
         createProperty(onlineAccountClass, personClass, "account")
         createProperty(onlineAccountClass, dataPackageClass, "attach")
         createProperty(serviceClass, onlineAccountClass, "create")
-        createProperty(serviceClass, organisationClass, "provided by")
+        createProperty(serviceClass, organisationClass, "providedby")
     }
 
     fun build(context: Context) {
@@ -95,8 +96,9 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
     }
 
     private fun createDataNode(data: UserData): Individual {
-        val subClass = model.createClass(priveltURI + data.title)
-        subClass.addLabel(data.title, "en")
+        val className = data.title.capitalizeWords().replace(" ", "")
+        val subClass = model.createClass(priveltURI + className)
+        subClass.addLabel(className, "en")
         dataClass.addSubClass(subClass)
 
         val dataOnt = subClass.createIndividual(priveltURI + data.value)
@@ -110,10 +112,15 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
         return person
     }
 
-    private fun createDataPackageNode(type: String): Individual {
-        val dataPackageOnt = dataPackageClass.createIndividual(priveltURI + type)
-        dataPackageOnt.addLabel(type, "en")
-        return dataPackageOnt
+    private fun createDataPackageNode(type: String) {
+        val className = type.capitalizeWords().replace(" ", "")
+        val subClass = model.createClass(priveltURI + className)
+        subClass.addLabel(className, "en")
+        dataPackageClass.addSubClass(subClass)
+
+        //val dataPackageOnt = dataPackageClass.createIndividual(priveltURI + type)
+        //dataPackageOnt.addLabel(type, "en")
+        //return dataPackageOnt
     }
 
     private fun createOnlineAccountNode(service: Service): Individual {

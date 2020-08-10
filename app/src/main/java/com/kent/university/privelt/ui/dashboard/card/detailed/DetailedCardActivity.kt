@@ -45,7 +45,7 @@ class DetailedCardActivity : BaseActivity() {
         for ((_, number) in card!!.metrics) progress += number
         risk_progress!!.progress = progress * 100 / 200
         if (!card!!.isService) {
-            val userDataType = UserDataTypes.valueOf(card!!.title.toUpperCase(Locale.ROOT))
+            val userDataType = UserDataTypes.getUserDataType(card!!.title.toUpperCase(Locale.ROOT))
             logo!!.setImageResource(userDataType.res)
         } else {
             val priVELTApplication = logo!!.context.applicationContext as PriVELTApplication

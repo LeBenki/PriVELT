@@ -38,7 +38,7 @@ internal class CardViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView
             itemView.settings!!.setOnClickListener { EventBus.getDefault().post(UpdateCredentialsEvent(card.title)) }
             itemView.cardService!!.strokeColor = ContextCompat.getColor(itemView.context, R.color.colorAccent)
         } else {
-            val userDataType = UserDataTypes.valueOf(card.title.toUpperCase(Locale.ROOT))
+            val userDataType = UserDataTypes.getUserDataType(card.title.toUpperCase(Locale.ROOT))
             itemView.image_service!!.setImageResource(userDataType.res)
             itemView.settings!!.visibility = View.GONE
             itemView.cardService!!.strokeColor = Color.WHITE
