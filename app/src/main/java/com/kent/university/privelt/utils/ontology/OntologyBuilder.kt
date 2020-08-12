@@ -7,10 +7,7 @@
 package com.kent.university.privelt.utils.ontology
 
 import android.content.Context
-import com.hp.hpl.jena.ontology.Individual
-import com.hp.hpl.jena.ontology.OntClass
-import com.hp.hpl.jena.ontology.OntModel
-import com.hp.hpl.jena.ontology.OntModelSpec
+import com.hp.hpl.jena.ontology.*
 import com.hp.hpl.jena.rdf.model.ModelFactory
 import com.kent.university.privelt.database.PriVELTDatabase
 import com.kent.university.privelt.model.CurrentUser
@@ -20,7 +17,7 @@ import java.io.OutputStreamWriter
 
 class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
 
-    fun String.capitalizeWords(): String = split(" ").map { it.capitalize() }.joinToString(" ")
+    private fun String.capitalizeWords(): String = split(" ").joinToString(" ") { it.capitalize() }
 
     private var model: OntModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM)
     private val priveltURI = "https://privelt.ac.uk/"
@@ -33,18 +30,20 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
     private var dataPackageClass = createClass("DataPackage")
     private var organisationClass = createClass("Organisation")
 
-    init {
-        createProperty(dataClass, personClass, "ownedBy")
-        createProperty(dataClass, dataPackageClass, "construct")
-        createProperty(dataPackageClass, serviceClass, "requiredby")
-        createProperty(onlineAccountClass, personClass, "account")
-        createProperty(onlineAccountClass, dataPackageClass, "attach")
-        createProperty(serviceClass, onlineAccountClass, "create")
-        createProperty(serviceClass, organisationClass, "providedby")
+    private var construct = createProperty(dataClass, dataPackageClass, "construct")
+    private var ownedBy = createProperty(dataClass, personClass, "ownedBy")
+    private var requiredBy = createProperty(dataPackageClass, serviceClass, "requiredBy")
+    private var account = createProperty(onlineAccountClass, personClass, "account")
+    private var attach = createProperty(onlineAccountClass, dataPackageClass, "attach")
+    private var create = createProperty(serviceClass, onlineAccountClass, "create")
+    private var providedBy = createProperty(serviceClass, organisationClass, "providedBy")
+
+    companion object {
+        var packageId = 0
+        var dataId = 0
     }
 
     fun build(context: Context) {
-
 
         //instantiate DAOs
         val currentUserDao = priVELTDatabase.currentUserDao()
@@ -65,6 +64,8 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
 
             //build online account node
             val onlineAccountOnt = createOnlineAccountNode(service)
+            onlineAccountOnt.addProperty(account, person)
+            serviceOnt.addProperty(create, onlineAccountOnt)
 
             val userData = userDataDao?.getUserDataForAService(service.id)
 
@@ -73,17 +74,26 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
                 if (organisation.ownedServices.contains(service.name)) {
                     //found organisation for service
                     val organisationOnt = createOrganisationNode(organisation.label)
+                    serviceOnt.addProperty(providedBy, organisationOnt)
                 }
             }
 
-            for (data in userData!!) {
+            val dataSorted = userData?.groupBy { it.date }?.map { it.value }
 
-                //build user data node
-                val dataOnt = createDataNode(data)
+            for (map in dataSorted!!) {
 
                 //build data package node
-                val dataPackageOnt = createDataPackageNode(data.type)
+                val dataPackageOnt = createDataPackageNode()
+                dataPackageOnt.addProperty(requiredBy, serviceOnt)
+                onlineAccountOnt.addProperty(attach, dataPackageOnt)
 
+                for (data in map) {
+
+                    //build user data node
+                    val dataOnt = createDataNode(data)
+                    dataOnt.addProperty(construct, dataPackageOnt)
+                    dataOnt.addProperty(ownedBy, person)
+                }
             }
         }
         save(context)
@@ -101,8 +111,8 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
         subClass.addLabel(className, "en")
         dataClass.addSubClass(subClass)
 
-        val dataOnt = subClass.createIndividual(priveltURI + data.value)
-        dataOnt.addLabel(data.value, "en")
+        val dataOnt = subClass.createIndividual(priveltURI + data.value + "_" + dataId)
+        dataOnt.addLabel(data.value + "_" + dataId++, "en")
         return dataOnt
     }
 
@@ -112,15 +122,10 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
         return person
     }
 
-    private fun createDataPackageNode(type: String) {
-        val className = type.capitalizeWords().replace(" ", "")
-        val subClass = model.createClass(priveltURI + className)
-        subClass.addLabel(className, "en")
-        dataPackageClass.addSubClass(subClass)
-
-        //val dataPackageOnt = dataPackageClass.createIndividual(priveltURI + type)
-        //dataPackageOnt.addLabel(type, "en")
-        //return dataPackageOnt
+    private fun createDataPackageNode() : Individual {
+        val dataPackageOnt = dataPackageClass.createIndividual(priveltURI + "dp_" + packageId)
+        dataPackageOnt.addLabel("dp_" + packageId++, "en")
+        return dataPackageOnt
     }
 
     private fun createOnlineAccountNode(service: Service): Individual {
@@ -135,17 +140,18 @@ class OntologyBuilder(private val priVELTDatabase: PriVELTDatabase) {
         return organisationOnt
     }
 
-    private fun createProperty(from: OntClass, to:OntClass, relationShip: String) {
+    private fun createProperty(from: OntClass, to:OntClass, relationShip: String): ObjectProperty? {
         val requiredBy = model.createObjectProperty(priveltURI + relationShip)
         requiredBy.addDomain(from)
         requiredBy.addRange(to)
         requiredBy.addLabel(relationShip, "en")
+        return requiredBy
     }
 
     private fun createClass(className: String): OntClass {
         val ontClass = model.createClass(priveltURI + className)
         ontClass.addLabel(className, "en")
-        return ontClass;
+        return ontClass
     }
 
     private fun save(context: Context) {
