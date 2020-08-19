@@ -8,9 +8,9 @@ The local database is secured with a password known and chosen only by the user.
 
 ## Screenshots
 
-![Master password](screenshots/1?raw=true "Optional Title") ![Save database in another service](screenshots/4?raw=true "Optional Title")
-![Service and data cards](screenshots/2?raw=true "Optional Title") ![Granted permissions](screenshots/5?raw=true "Optional Title")
-![Permissions cards](screenshots/3?raw=true "Optional Title") ![Details of permission type](screenshots/6?raw=true "Optional Title")
+<img src="https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/1.jpg" width="200" hspace="20" title="Master password"/> <img src="https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/2.jpg" width="200" hspace="20" title="Service and data cards"/> <img src="https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/3.jpg" width="200" hspace="20" title="Permissions cards"/>
+
+<img src="https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/4.jpg" width="200" hspace="20" title="Save database in another service"/> <img src="https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/5.jpg" width="200" hspace="20" title="Granted permissions"/><img src="https://raw.githubusercontent.com/LeBenki/PriVELT/dev/screenshots/6.jpg" width="200" hspace="20" title="Details of permission type"/>
 
 ## Installation
 Clone this repository and import into **Android Studio**
