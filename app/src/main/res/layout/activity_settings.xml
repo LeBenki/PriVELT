@@ -72,6 +72,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_margin="@dimen/activity_vertical_margin">
 
         <RelativeLayout
@@ -117,6 +118,20 @@
                 android:layout_marginHorizontal="@dimen/activity_vertical_margin"
                 android:text="@string/save_data_on_hat" />
 
+            <Button
+                android:id="@+id/nextButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="next"
+                android:layout_centerHorizontal="true"/>
+
+            <Button
+                android:id="@+id/hatLoginButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="login"/>
+
             <EditText
                 android:id="@+id/hatEmail"
                 android:layout_width="match_parent"
@@ -126,6 +141,17 @@
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/activity_vertical_margin"
                 android:hint="@string/enter_email" />
+
+            <EditText
+                android:id="@+id/accessTokenTF"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/hatEmail"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:hint="@string/access_token" />
+
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

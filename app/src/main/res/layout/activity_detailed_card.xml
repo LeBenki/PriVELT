@@ -31,13 +31,12 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/gdpr"
-            android:visibility="gone"
+            android:id="@+id/privacy"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_margin="@dimen/activity_vertical_margin"
             android:layout_alignParentEnd="true"
-            android:src="@drawable/gdpr"/>
+            android:src="@drawable/privacy"/>
     </RelativeLayout>
 
     <LinearLayout

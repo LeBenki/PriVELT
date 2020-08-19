@@ -19,19 +19,14 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.GoogleDriveActivity
-import com.kent.university.privelt.database.PriVELTDatabase
 import com.kent.university.privelt.service.ProcessMainClass
 import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver.Companion.scheduleJob
 import com.kent.university.privelt.ui.dashboard.card.CardFragment
 import com.kent.university.privelt.ui.dashboard.sensors.SensorFragment
 import com.kent.university.privelt.ui.dashboard.user.UserFragment
 import com.kent.university.privelt.ui.settings.SettingsActivity
-import com.kent.university.privelt.utils.ontology.OntologyBuilder
-import com.kent.university.privelt.utils.sensors.TemporarySavePermissions
 import com.kent.university.privelt.utils.sensors.TemporarySaveHistoryPermission
-import com.kent.university.privelt.utils.sensors.TemporarySaveSensors
 import kotlinx.android.synthetic.main.activity_dashboard.*
-import java.util.concurrent.Executors
 
 
 class DashboardActivity : GoogleDriveActivity() {
@@ -45,16 +40,13 @@ class DashboardActivity : GoogleDriveActivity() {
         toolbar!!.setTitle(R.string.services)
         loadFragment(CardFragment())
         launchService()
-        TemporarySaveSensors.load(applicationContext)
-        TemporarySavePermissions.load(applicationContext)
         TemporarySaveHistoryPermission.load(applicationContext)
 
-        //TODO TO REMOVE THIS IS A TEST
-        val ex = Executors.newSingleThreadExecutor()
+        /*val ex = Executors.newSingleThreadExecutor()
         ex.execute {
             val test = OntologyBuilder(PriVELTDatabase.getInstance(this)!!)
             test.build(this)
-        }
+        }*/
     }
 
     override fun onResume() {

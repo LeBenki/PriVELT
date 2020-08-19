@@ -1,2 +1,3 @@
+include ':pdaapiwrapper-1.0.9'
 include ':app'
 rootProject.name='PriVELT'

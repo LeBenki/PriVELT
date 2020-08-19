@@ -18,15 +18,6 @@ Clone this repository and import into **Android Studio**
 git clone git@github.com:LeBenki/PriVELT.git
 ```
 
-To test the app you will need a github.properties file in the root of the project with :
-
-```
-gpr.usr=GITHUB USERNAME
-gpr.key=GITHUB TOKEN OR PASSWORD
-```
-
-It is required to use the PDA wrapper library
-
 ## Services supported
 
 Location history:
