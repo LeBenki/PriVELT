@@ -16,8 +16,9 @@ import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.events.LaunchListDataEvent
 import com.kent.university.privelt.model.Card
 import com.kent.university.privelt.ui.data.DataActivity
-import com.kent.university.privelt.ui.gdpr.GDPRActivity
+import com.kent.university.privelt.ui.privacy.PrivacyActivity
 import com.kent.university.privelt.ui.login.LoginActivity
+import com.kent.university.privelt.ui.privacy.PrivacyActivity.Companion.LINK_PARAM
 import com.kent.university.privelt.utils.sentence.SentenceAdapter
 import kotlinx.android.synthetic.main.activity_detailed_card.*
 import net.neferett.webviewsextractor.model.UserDataTypes
@@ -44,11 +45,11 @@ class DetailedCardActivity : BaseActivity() {
         var progress = 0
         for ((_, number) in card!!.metrics) progress += number
         risk_progress!!.progress = progress * 100 / 200
+        val priVELTApplication = logo!!.context.applicationContext as PriVELTApplication
         if (!card!!.isService) {
-            val userDataType = UserDataTypes.valueOf(card!!.title.toUpperCase(Locale.ROOT))
+            val userDataType = UserDataTypes.getUserDataType(card!!.title.toUpperCase(Locale.ROOT))
             logo!!.setImageResource(userDataType.res)
         } else {
-            val priVELTApplication = logo!!.context.applicationContext as PriVELTApplication
             logo!!.setImageResource(priVELTApplication.serviceHelper!!.getResIdWithName(card!!.title))
         }
         var riskValue = progress
@@ -60,7 +61,11 @@ class DetailedCardActivity : BaseActivity() {
         }
         title = card!!.title
 
-        gdpr!!.setOnClickListener { startActivity(Intent(this, GDPRActivity::class.java)) }
+        privacy!!.setOnClickListener {
+            val intent = Intent(this, PrivacyActivity::class.java)
+            intent.putExtra(LINK_PARAM, priVELTApplication.serviceHelper!!.getServiceWithName(card!!.title)?.privacyUrl)
+            startActivity(intent)
+        }
         configureRecyclerView()
     }
 

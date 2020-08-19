@@ -7,7 +7,6 @@
 package com.kent.university.privelt.utils.privacy_scoring
 
 import android.content.Context
-import android.util.Log
 import com.kent.university.privelt.model.Sensor
 import com.kent.university.privelt.utils.sensors.SensorHelper.getApplicationWithSensorsInformation
 import kotlin.math.min
@@ -38,9 +37,6 @@ object PermissionScoring {
     }
 
     fun computeScoreForPermission(sensor: Sensor, numberOfApps: Int): Float {
-        Log.d("LUCAS SENSOR", sensor.getApplications().size.toString())
-        Log.d("LUCAS NUMBER OF APPS", numberOfApps.toString())
-
         return sensor.getApplications().size.toFloat() / numberOfApps.toFloat() * 100f
     }
 }

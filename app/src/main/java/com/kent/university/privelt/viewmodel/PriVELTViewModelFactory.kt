@@ -25,8 +25,6 @@ class PriVELTViewModelFactory @Inject constructor(private var mUserDataSource: U
                                                   private var mServiceDataSource: ServiceDataRepository,
                                                   private var mCurrentUserDataRepository: CurrentUserDataRepository,
                                                   private var mSettingsDataSource: SettingsDataRepository,
-                                                  private var mSensorStatusRepository: SensorStatusRepository,
-                                                  private var mPermissionStatusRepository: PermissionStatusRepository,
                                                   private var mHistoryPermissionRepository: HistoryPermissionRepository?,
                                                   private var mExecutor: Executor) : ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")

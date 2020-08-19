@@ -16,14 +16,12 @@ import com.kent.university.privelt.PriVELTApplication.Companion.instance
 import com.kent.university.privelt.database.dao.*
 import com.kent.university.privelt.model.*
 
-@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, SensorStatus::class, PermissionStatus::class, HistoryPermission::class], version = 10, exportSchema = false)
+@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, HistoryPermission::class], version = 11, exportSchema = false)
 abstract class PriVELTDatabase : RoomDatabase() {
     abstract fun userDataDao(): UserDataDao?
     abstract fun serviceDao(): ServiceDao?
     abstract fun currentUserDao(): CurrentUserDao?
     abstract fun settingsDao(): SettingsDao?
-    abstract fun sensorStatusDao(): SensorStatusDao?
-    abstract fun permissionStatusDao(): PermissionStatusDao?
     abstract fun historyPermissionDao(): HistoryPermissionDao?
 
     companion object {
@@ -42,7 +40,7 @@ abstract class PriVELTDatabase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 PriVELTDatabase::class.java,
                                 PriVELTDatabaseName)
-                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10)
+                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
                                 .openHelperFactory(factory)
                                 .build()
                     }
@@ -99,7 +97,14 @@ abstract class PriVELTDatabase : RoomDatabase() {
             }
         }
 
-        fun nullDatabase() {
+        private val MIGRATION_10_11: Migration = object : Migration(10, 11) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("DROP TABLE permission_status")
+                database.execSQL("DROP TABLE sensor_status")
+            }
+        }
+
+            fun nullDatabase() {
             synchronized(PriVELTDatabase::class.java) { INSTANCE = null }
         }
     }

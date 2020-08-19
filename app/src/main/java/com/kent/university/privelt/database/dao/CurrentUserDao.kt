@@ -17,6 +17,9 @@ interface CurrentUserDao {
     @get:Query("SELECT * FROM current_user WHERE id = 0")
     val currentUser: LiveData<CurrentUser>?
 
+    @get:Query("SELECT * FROM current_user WHERE id = 0")
+    val currentUserSync: CurrentUser?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun updateCurrentUser(vararg user: CurrentUser?)
 

@@ -106,7 +106,7 @@
                 android:value="com.kent.university.privelt.ui.dashboard.DashboardActivity" />
         </activity>
         <activity
-            android:name=".ui.gdpr.GDPRActivity"
+            android:name=".ui.privacy.PrivacyActivity"
             android:label="@string/privacy_policy"
             android:screenOrientation="portrait">
             <meta-data

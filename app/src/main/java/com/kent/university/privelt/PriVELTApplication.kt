@@ -12,7 +12,10 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.kent.university.privelt.api.PasswordManager
 import com.kent.university.privelt.api.ServiceHelper
+import com.kent.university.privelt.database.PriVELTDatabase
+import com.kent.university.privelt.utils.ontology.OntologyBuilder
 import com.kent.university.privelt.worker.PermissionsWorker
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
 class PriVELTApplication : Application() {

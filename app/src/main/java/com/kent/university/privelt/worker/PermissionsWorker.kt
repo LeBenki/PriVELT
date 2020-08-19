@@ -16,9 +16,6 @@ class PermissionsWorker(appContext: Context, workerParams: WorkerParameters)
 
     override fun doWork(): Result {
         val time = System.currentTimeMillis()
-        //TODO it takes too much storage
-        //TemporarySaveSensors.save(applicationContext, time)
-        //TemporarySavePermissions.save(applicationContext, time)
         TemporarySaveHistoryPermission.save(applicationContext, time)
         return Result.success()
     }

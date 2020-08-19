@@ -83,7 +83,9 @@ object DataExtraction {
     }
 
     fun processDataExtraction(serviceHelper: ServiceHelper, service: Service, email: String?, password: String?, applicationContext: Context) {
+        val time = System.currentTimeMillis()
         val userDataRepository = PriVELTDatabase.getInstance(applicationContext)?.userDataDao()
+        val previousUserData = userDataRepository?.getUserDataForAService(service.id)
         val loginService = serviceHelper.getServiceWithName(service.name)
         val dataExtractor = DataExtractor(loginService)
         val allUserData = ArrayList<UserData>()
@@ -95,14 +97,19 @@ object DataExtraction {
                         dataExtractor.injectAll(applicationContext.currentActivity) { jsonArray: JSONArray?, status: Status ->
                             if (BuildConfig.DEBUG) Log.d(TAG + " FOR SERVICE=" + service.name, status.toString())
                             if (jsonArray != null) {
-                                allUserData.addAll(parseJSON(jsonArray, service))
+                                allUserData.addAll(parseJSON(jsonArray, service, time))
                                 if (BuildConfig.DEBUG) Log.d(TAG + " FOR SERVICE=" + service.name, jsonArray.toString())
                             }
                             if (status.isDone) {
                                 if (BuildConfig.DEBUG) Log.d(TAG + " FOR SERVICE=" + service.name, "LOGIN SERVICE:" + allUserData.size)
-                                    userDataRepository?.deleteUserDataForAService(service.id)
-                                for (userData in allUserData)
-                                    userDataRepository?.insertUserData(userData)
+                                for (userData in allUserData) {
+                                    //check if we have already extracted this data
+                                    val res = previousUserData?.find {
+                                        it.value == userData.value && it.title == userData.title
+                                    }
+                                    if (res == null)
+                                        userDataRepository?.insertUserData(userData)
+                                }
                                 saveToGoogleDrive(applicationContext)
                             }
                         }
@@ -112,7 +119,7 @@ object DataExtraction {
         }
     }
 
-    private fun parseJSON(jsonArray: JSONArray, service: Service): ArrayList<UserData> {
+    private fun parseJSON(jsonArray: JSONArray, service: Service, time: Long): ArrayList<UserData> {
         val array = ArrayList<UserData>()
         try {
             for (i in 0 until jsonArray.length()) {
@@ -128,7 +135,7 @@ object DataExtraction {
                         obj.getString("value"),
                         TextUtils.join(UserData.DELIMITER, td),
                         service.id,
-                        System.currentTimeMillis())
+                        time)
                 array.add(userData)
             }
         } catch (ignored: Exception) {

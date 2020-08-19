@@ -45,6 +45,7 @@ import kotlinx.android.synthetic.main.header_card_risk.view.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import java.util.*
+import java.util.concurrent.Executors
 
 
 class CardFragment : BaseFragment(), FilterDialogListener {
@@ -183,7 +184,10 @@ class CardFragment : BaseFragment(), FilterDialogListener {
 
                     override fun onPostExecute(serviceP: Service?) {
                         super.onPostExecute(serviceP)
-                        processDataExtraction(ServiceHelper(context), serviceP!!, user, password, context!!.applicationContext)
+                        val ex = Executors.newSingleThreadExecutor()
+                        ex.execute {
+                            processDataExtraction(ServiceHelper(context), serviceP!!, user, password, context!!.applicationContext)
+                        }
                     }
                 }.execute()
             }

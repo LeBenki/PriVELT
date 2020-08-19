@@ -22,7 +22,7 @@ class DetailedCardViewHolder internal constructor(itemView: View) : RecyclerView
         itemView.text1!!.text = SentenceAdapter.adapt(itemView.text1!!.context.resources.getString(R.string.data_found), cardItem.number)
         itemView.setOnClickListener { EventBus.getDefault().post(LaunchListDataEvent(cardItem.name)) }
         if (!isService) {
-            val userDataType = UserDataTypes.valueOf(cardItem.name.toUpperCase(Locale.ROOT))
+            val userDataType = UserDataTypes.getUserDataType(cardItem.name.toUpperCase(Locale.ROOT))
             itemView.icon!!.setImageResource(userDataType.res)
         } else {
             val priVELTApplication = itemView.icon!!.context.applicationContext as PriVELTApplication

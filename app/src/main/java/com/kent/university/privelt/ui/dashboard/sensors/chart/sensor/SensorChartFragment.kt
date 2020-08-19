@@ -95,7 +95,6 @@ class SensorChartFragment : BaseFragment() {
         sensorStatusViewModel?.init()
 
         sensorStatusViewModel?.permissionStatus?.observe(this, androidx.lifecycle.Observer { list ->
-            Log.d("LUCAS", adapter?.getSelectedSensors()!!.isNotEmpty().toString())
             if (list.isNotEmpty() && adapter?.getSelectedSensors()!!.isNotEmpty())
                 setDataPermission(list, adapter?.getSelectedSensors()!!)
             listPermissionStatus = list

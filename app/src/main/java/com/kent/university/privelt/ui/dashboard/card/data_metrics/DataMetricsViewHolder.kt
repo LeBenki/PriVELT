@@ -21,7 +21,7 @@ class DataMetricsViewHolder internal constructor(itemView: View) : RecyclerView.
     fun bind(card: Card, cardItem: CardItem) {
         itemView.value_metrics!!.text = cardItem.number.toString()
         if ((card.isService)) {
-            val userDataType = UserDataTypes.valueOf(cardItem.name.toUpperCase(Locale.ROOT))
+            val userDataType = UserDataTypes.getUserDataType(cardItem.name.toUpperCase(Locale.ROOT))
             itemView.image_type!!.setImageResource(userDataType.res)
         } else {
             val priVELTApplication = itemView.image_type!!.context.applicationContext as PriVELTApplication

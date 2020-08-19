@@ -111,6 +111,7 @@
     <string name="number_app">There are %1$d installed applications on this device</string>
     <string name="choose_service_import">Choose which service will import your data</string>
     <string name="privacy_policy">Privacy policy</string>
+    <string name="access_token">Access token</string>
 
     <!--Sensors-->
 </resources>
