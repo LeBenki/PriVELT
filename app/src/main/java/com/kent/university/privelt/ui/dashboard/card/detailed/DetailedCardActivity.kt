@@ -67,6 +67,9 @@ class DetailedCardActivity : BaseActivity() {
             startActivity(intent)
         }
         configureRecyclerView()
+
+        if (!(card?.isService!!))
+            privacy.visibility = View.GONE
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

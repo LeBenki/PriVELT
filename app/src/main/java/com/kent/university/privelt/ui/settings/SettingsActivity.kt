@@ -66,6 +66,8 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
     private val dataPlatformType: DataPlatformType? = null
     private var dataPlatformClient: DataPlatformClient? = null
     private var hatLogin = false
+    private var username = ""
+    private var token = ""
 
     //TODO Here we need a recyclerview with each service and a ServiceManager
     override fun configureDesign(savedInstanceState: Bundle?) {
@@ -179,9 +181,9 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
         alert.setTitle("Enter your user id")
         alert.setView(edittext)
         alert.setPositiveButton(R.string.yes)  { _: DialogInterface?, _: Int ->
-            val username = edittext.text.toString()
-            val credentials = Credentials(token)
-            credentials.username = username
+            username = edittext.text.toString()
+            credentials = Credentials(token)
+            credentials?.username = username
 
             val dataPlatformType = DataPlatformType.HAT
 
@@ -210,17 +212,16 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
     }
 
     private fun initNextButton() {
-        nextButton.visibility = View.INVISIBLE
-        nextButton.setOnClickListener(View.OnClickListener { view: View? ->
+        hatSwitch.visibility = View.INVISIBLE
+        hatSwitch.setOnClickListener {
             // Create credentials based on the selected Data Platform:
             createDataPlatform()
 
             // Request File Upload:
-            val file =  getDatabasePath(PriVELTDatabase.PriVELTDatabaseName)
+            val file = getDatabasePath(PriVELTDatabase.PriVELTDatabaseName)
             val hatFilesDetails: HatFileDetails = createHatFileObject(file.absolutePath, file)!!
-            UploadFileTask( AccountManager.getInstance().dataPlatformController, hatFilesDetails).execute()
-
-        })
+            UploadFileTask(AccountManager.getInstance().dataPlatformController, hatFilesDetails).execute()
+        }
     }
 
     private fun createHatFileObject(filePath: String, file: File): HatFileDetails? {
@@ -230,7 +231,11 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
     }
 
     private fun initHatLoginButton() {
-        hatLoginButton.setOnClickListener(View.OnClickListener { view: View? ->
+        hatLoginButton.setOnClickListener {
+            if (!android.util.Patterns.EMAIL_ADDRESS.matcher(hatEmail.text.toString()).matches()) {
+                Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_LONG).show()
+                return@setOnClickListener
+            }
             // Reset objects:
             hatLogin = false
             credentials = Credentials()
@@ -265,13 +270,13 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
             val keyboardHack = EditText(this)
 
             keyboardHack.visibility = View.GONE
-            wrapper.setOrientation(LinearLayout.VERTICAL);
+            wrapper.orientation = LinearLayout.VERTICAL;
             wrapper.addView(wv, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             wrapper.addView(keyboardHack, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
             alertDialog.setView(wrapper);
             alertDialog.show()
-        })
+        }
     }
 
     private fun parseHatLoginCallback(url: String): Boolean {
@@ -282,12 +287,14 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
                 if (host != null) {
                     if (host.contains("hubat.net")) {
                         val hatUsername = host.substring(0, host.indexOf('.'))
-                        credentials?.setUsername(hatUsername)
+                        username = hatUsername
+                        credentials?.username = hatUsername
                     } else if (host.equals(DEEP_LINK_DOMAIN, ignoreCase = true)) {
                         val query = aURL.query
                         if (query.startsWith("token=")) {
                             val appToken = query.replace("token=", "")
-                            credentials?.setToken(appToken)
+                            token = appToken
+                            credentials?.token = appToken
                         }
                         return true
                     }
@@ -318,8 +325,8 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
     private fun createDataPlatform() {
         credentials = null
         if (dataPlatformClient == null) {
-            credentials = Credentials("username", "password")
-            credentials?.token = accessTokenTF.text.toString()
+            credentials = Credentials(username, "password")
+            credentials?.token = token
             val hatClient = HatClient(credentials)
             dataPlatformClient = hatClient
         }
@@ -334,18 +341,16 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
                     DataPlatformFactory.getDataPlatform(dataPlatformType, credentials)
                 else
                     DataPlatformFactory.getDataPlatform(dataPlatformClient)
-        AccountManager.getInstance().setDataPlatform(dataPlatform)
+        AccountManager.getInstance().dataPlatform = dataPlatform
     }
 
     fun setHatAuthenticationResult(hatAuthenticationResponse: HatAuthenticationResponse?) {
         if (hatAuthenticationResponse == null) {
-            nextButton.visibility = View.INVISIBLE
+            hatSwitch.visibility = View.INVISIBLE
             return
         }
-        Toast.makeText(this, "Authentication done :)", Toast.LENGTH_SHORT).show()
-        //userIdTF.setText(hatAuthenticationResponse.userId)
-        accessTokenTF.setText(hatAuthenticationResponse.accessToken)
-        nextButton.visibility = View.VISIBLE
+        token = hatAuthenticationResponse.accessToken
+        hatSwitch.visibility = View.VISIBLE
     }
 
     fun showMessage(message: String?) {
@@ -356,8 +361,7 @@ class SettingsActivity : GoogleDriveActivity(), WebViewDialog.AuthenticationList
         if (!hatLogin) {
             return
         }
-        Toast.makeText(this, "Signup/Signin done :)", Toast.LENGTH_SHORT).show()
-        accessTokenTF.setText(credentials!!.token)
-        nextButton.visibility = View.VISIBLE
+        token = credentials!!.token
+        hatSwitch.visibility = View.VISIBLE
     }
 }

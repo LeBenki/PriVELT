@@ -1,187 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-
-    <androidx.cardview.widget.CardView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_vertical_margin">
+        android:layout_height="match_parent">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/googleLayout"
-                android:layout_width="wrap_content"
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:gravity="center_vertical"
                 android:layout_margin="@dimen/activity_vertical_margin">
 
-                <TextView
-                    android:id="@+id/googleId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/disconnect"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    app:srcCompat="@drawable/ic_close" />
+                    <LinearLayout
+                        android:id="@+id/googleLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:gravity="center_vertical">
 
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/googleId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView
+                            android:id="@+id/disconnect"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:srcCompat="@drawable/ic_close" />
+
+                    </LinearLayout>
 
 
-            <ImageView
-                android:id="@+id/logo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="@dimen/activity_vertical_margin"
-                android:src="@drawable/drive_logo" />
+                    <ImageView
+                        android:id="@+id/logo"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:src="@drawable/drive_logo" />
 
-            <Switch
-                android:id="@+id/drive"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_alignParentEnd="true"
-                android:layout_marginHorizontal="@dimen/activity_vertical_margin"
-                android:text="@string/save_data_on_google_drive" />
+                    <Switch
+                        android:id="@+id/drive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+                        android:text="@string/save_data_on_google_drive" />
 
-            <EditText
-                android:id="@+id/fileIdEditText"
+                    <EditText
+                        android:id="@+id/fileIdEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/logo"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:cursorVisible="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="@string/here_will_be_the_file_id" />
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/logo"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/activity_vertical_margin"
-                android:cursorVisible="false"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:hint="@string/here_will_be_the_file_id" />
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_margin="@dimen/activity_vertical_margin">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <LinearLayout
-                android:id="@+id/hatLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:gravity="center_vertical"
+                android:visibility="gone"
                 android:layout_margin="@dimen/activity_vertical_margin">
 
-                <TextView
-                    android:id="@+id/hatId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-                <ImageView
-                    android:id="@+id/hatDisconnect"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    app:srcCompat="@drawable/ic_close" />
+                    <LinearLayout
+                        android:id="@+id/hatLayout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:gravity="center_vertical">
 
-            </LinearLayout>
+                        <TextView
+                            android:id="@+id/hatId"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+
+                        <ImageView
+                            android:visibility="gone"
+                            android:id="@+id/hatDisconnect"
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            app:srcCompat="@drawable/ic_close" />
+
+                    </LinearLayout>
 
 
-            <ImageView
-                android:id="@+id/hatLogo"
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_margin="@dimen/activity_vertical_margin"
-                android:src="@drawable/hat" />
+                    <ImageView
+                        android:id="@+id/hatLogo"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:src="@drawable/hat" />
 
-            <Switch
-                android:id="@+id/hatSwitch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_alignParentEnd="true"
-                android:layout_marginHorizontal="@dimen/activity_vertical_margin"
-                android:text="@string/save_data_on_hat" />
+                    <Switch
+                        android:id="@+id/hatSwitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+                        android:text="@string/save_data_on_hat" />
+
+
+                    <EditText
+                        android:id="@+id/hatEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/hatLogo"
+                        android:layout_centerHorizontal="true"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:hint="@string/enter_email" />
+
+                    <Button
+                        android:id="@+id/hatLoginButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_below="@id/hatEmail"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:text="login"
+                        android:background="@drawable/button"/>
+
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
 
             <Button
-                android:id="@+id/nextButton"
-                android:layout_width="wrap_content"
+                android:id="@+id/change_password"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="next"
-                android:layout_centerHorizontal="true"/>
+                android:layout_gravity="center_horizontal"
+                android:layout_margin="@dimen/activity_vertical_margin"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/button"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="@dimen/activity_vertical_margin"
+                android:text="@string/change_master_password"
+                android:textAllCaps="false"
+                android:textColor="#FE5295"
+                android:textSize="17sp" />
 
             <Button
-                android:id="@+id/hatLoginButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="login"/>
-
-            <EditText
-                android:id="@+id/hatEmail"
+                android:id="@+id/logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/hatLogo"
-                android:layout_centerHorizontal="true"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="@dimen/activity_vertical_margin"
-                android:hint="@string/enter_email" />
-
-            <EditText
-                android:id="@+id/accessTokenTF"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/hatEmail"
-                android:layout_centerHorizontal="true"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="@dimen/activity_vertical_margin"
-                android:hint="@string/access_token" />
-
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/change_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/activity_vertical_margin"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:padding="@dimen/activity_vertical_margin"
-        android:text="@string/change_master_password"
-        android:textAllCaps="false"
-        android:textColor="#FE5295"
-        android:textSize="17sp" />
-
-    <Button
-        android:id="@+id/logout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_margin="@dimen/activity_vertical_margin"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/button"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:padding="@dimen/activity_vertical_margin"
-        android:text="@string/log_out"
-        android:textAllCaps="false"
-        android:textColor="#FE5295"
-        android:textSize="17sp" />
-</LinearLayout>
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/button"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:padding="@dimen/activity_vertical_margin"
+                android:text="@string/log_out"
+                android:textAllCaps="false"
+                android:textColor="#FE5295"
+                android:textSize="17sp" />
+        </LinearLayout>
+    </ScrollView>
+</FrameLayout>
