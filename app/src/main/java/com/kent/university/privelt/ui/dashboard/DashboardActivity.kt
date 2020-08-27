@@ -18,7 +18,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kent.university.privelt.R
-import com.kent.university.privelt.base.GoogleDriveActivity
+import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.service.ProcessMainClass
 import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver.Companion.scheduleJob
 import com.kent.university.privelt.ui.dashboard.card.CardFragment
@@ -29,7 +29,7 @@ import com.kent.university.privelt.utils.sensors.TemporarySaveHistoryPermission
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 
-class DashboardActivity : GoogleDriveActivity() {
+class DashboardActivity : BaseActivity() {
     private var toolbar: ActionBar? = null
 
     override fun configureViewModel() {}

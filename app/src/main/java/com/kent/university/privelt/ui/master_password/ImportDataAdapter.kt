@@ -12,7 +12,11 @@ import androidx.recyclerview.widget.RecyclerView
 import com.kent.university.privelt.R
 import com.kent.university.privelt.model.ServicePDA
 
-class ImportDataAdapter(private var services: List<ServicePDA>) : RecyclerView.Adapter<ImportDataViewHolder>() {
+class ImportDataAdapter(private var services: List<ServicePDA>, private val listener: ImportDataListener) : RecyclerView.Adapter<ImportDataViewHolder>() {
+
+    interface ImportDataListener {
+        fun onPDAClick(servicePDA: ServicePDA)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImportDataViewHolder {
         val inflater = LayoutInflater.from(parent.context)
@@ -26,5 +30,8 @@ class ImportDataAdapter(private var services: List<ServicePDA>) : RecyclerView.A
 
     override fun onBindViewHolder(holder: ImportDataViewHolder, position: Int) {
         holder.bind(services[position])
+        holder.itemView.setOnClickListener {
+            listener.onPDAClick(services[position])
+        }
     }
 }

@@ -22,19 +22,22 @@ import android.widget.Toast
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import com.kent.university.privelt.R
-import com.kent.university.privelt.base.GoogleDriveActivity
 import com.kent.university.privelt.base.GoogleDriveListener
+import com.kent.university.privelt.base.PDAActivity
 import com.kent.university.privelt.database.PriVELTDatabase
+import com.kent.university.privelt.model.ServicePDA
 import com.kent.university.privelt.ui.dashboard.DashboardActivity
 import com.kent.university.privelt.ui.settings.SettingsActivity
 import com.kent.university.privelt.utils.EyePassword
 import com.kent.university.privelt.utils.PasswordChecker
 import com.kent.university.privelt.utils.biometric.BiometricPromptTinkManager
+import com.kent.university.privelt.utils.hat.AccountManager
+import com.kent.university.privelt.utils.hat.DownloadFileTask
 import com.nulabinc.zxcvbn.Zxcvbn
 import kotlinx.android.synthetic.main.activity_main_password.*
 
 
-class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, TextWatcher {
+class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher, ImportDataAdapter.ImportDataListener {
     private var zxcvbn: Zxcvbn? = null
     private var changePassword = false
     private lateinit var biometricPromptManager: BiometricPromptTinkManager
@@ -126,7 +129,7 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
 
     private fun decryptPrompt() {
         biometricPromptManager.decryptPrompt(
-                failedAction = {  },
+                failedAction = { },
                 successAction = {
                     val password = String(it)
                     val editable: Editable = SpannableStringBuilder(password)
@@ -223,7 +226,7 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
                                 ) { _, _ ->
                                     biometricPromptManager.encryptPrompt(
                                             data = res.second.toByteArray(),
-                                            failedAction = {  },
+                                            failedAction = { },
                                             successAction = {
                                                 launchDashboard(password)
                                             }
@@ -260,18 +263,8 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
 
     private fun onDataImported() {
         reset!!.setOnClickListener {
-            /*
             val dialog = ImportDataDialog()
             dialog.show(supportFragmentManager, "ImportDataDialog")
-            */
-
-            val alert = AlertDialog.Builder(this)
-            val edittext = EditText(this)
-            edittext.setTextColor(Color.parseColor("#000000"))
-            alert.setTitle(R.string.enter_file_id)
-            alert.setView(edittext)
-            alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int -> googleDriveConnectionAndDownload(true, edittext.text.toString()) }
-            alert.show()
         }
     }
 
@@ -288,5 +281,47 @@ class MasterPasswordActivity : GoogleDriveActivity(), View.OnClickListener, Text
         password_strength!!.setText(ps.resId)
         password_strength!!.setTextColor(ps.color)
         progress_password!!.progressDrawable.colorFilter = BlendModeColorFilterCompat.createBlendModeColorFilterCompat(ps.color, BlendModeCompat.SRC_IN)
+    }
+
+    override fun onPDAClick(servicePDA: ServicePDA) {
+        when (servicePDA.title) {
+            "HAT" -> processHatClick()
+            "Google" -> processGoogleClick()
+        }
+    }
+
+    private fun processGoogleClick() {
+        val alert = AlertDialog.Builder(this)
+        val edittext = EditText(this)
+        edittext.setTextColor(Color.parseColor("#000000"))
+        alert.setTitle(R.string.enter_file_id)
+        alert.setView(edittext)
+        alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int -> googleDriveConnectionAndDownload(true, edittext.text.toString()) }
+        alert.show()
+    }
+
+    private fun processHatClick() {
+
+        val alert = AlertDialog.Builder(this)
+        val edittext = EditText(this)
+        edittext.setTextColor(Color.parseColor("#000000"))
+        alert.setTitle("Please enter your email")
+        alert.setView(edittext)
+        alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
+            loginHAT(edittext.text.toString())
+        }
+        alert.show()
+    }
+
+    override fun hatLogged() {
+        val alert = AlertDialog.Builder(this)
+        val edittext = EditText(this)
+        edittext.setTextColor(Color.parseColor("#000000"))
+        alert.setTitle("Please enter your file id")
+        alert.setView(edittext)
+        alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
+            downloadFileWithHAT(edittext.text.toString())
+        }
+        alert.show()
     }
 }
