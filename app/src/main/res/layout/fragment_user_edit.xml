@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_vertical_margin"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_height="150dp"
+        android:layout_width="150dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:text="@string/profile"
+        android:textStyle="bold" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="@string/first_name"
+            android:id="@+id/firstName"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="@string/last_name"
+            android:id="@+id/lastName"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:clickable="true"
+            android:focusable="true"
+            android:hint="@string/birthday"
+            android:id="@+id/birthDate"
+            android:imeOptions="actionNext"
+            android:inputType="date"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="@string/address"
+            android:id="@+id/address"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="@string/email"
+            android:id="@+id/email"
+            android:imeOptions="actionNext"
+            android:inputType="number"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:hint="@string/phone_number"
+            android:id="@+id/phoneNumber"
+            android:imeOptions="actionNext"
+            android:inputType="text"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+</LinearLayout>

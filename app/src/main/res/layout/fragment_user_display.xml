@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:layout_height="wrap_content"
+    android:layout_margin="@dimen/activity_vertical_margin"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:layout_gravity="center_horizontal"
+        android:layout_height="150dp"
+        android:layout_width="150dp"
+        android:src="@mipmap/ic_launcher" />
+
+    <TextView
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_width="match_parent"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/firstNameText"
+        android:hint="@string/first_name"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/lastNameText"
+        android:hint="@string/last_name"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/birthdayText"
+        android:hint="@string/birthday"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/addressText"
+        android:hint="@string/address"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/emailText"
+        android:hint="@string/email"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textSize="22sp" />
+
+    <TextView
+        android:id="@+id/phoneText"
+        android:hint="@string/phone_number"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textSize="22sp" />
+
+</LinearLayout>

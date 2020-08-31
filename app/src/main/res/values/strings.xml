@@ -112,6 +112,9 @@
     <string name="choose_service_import">Choose which service will import your data</string>
     <string name="privacy_policy">Privacy policy</string>
     <string name="access_token">Access token</string>
+    <string name="email">Email</string>
+    <string name="profile">Profile details</string>
+    <string name="save">Save</string>
 
     <!--Sensors-->
 </resources>
