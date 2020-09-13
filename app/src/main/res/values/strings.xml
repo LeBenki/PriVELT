@@ -81,7 +81,7 @@
     <string name="script_title">Select the different data you particularly care about :</string>
     <string name="no_data_extracted_yet">No data extracted yet</string>
     <string name="save_data_on_google_drive">Auto-save on Google Drive</string>
-    <string name="save_data_on_hat">Auto-save on HAT</string>
+    <string name="save_data_on_hat">Save on HAT</string>
     <string name="here_will_be_the_file_id">Here will be the file id</string>
     <string name="enter_email">Please enter your email</string>
     <string name="save_data">Saving your data on one of the following service can be useful to retrieve your database on another device.</string>
@@ -115,6 +115,8 @@
     <string name="email">Email</string>
     <string name="profile">Profile details</string>
     <string name="save">Save</string>
+    <string name="please_enter_file_id">Please enter your file id</string>
+    <string name="please_enter_email">Please enter your email</string>
 
     <!--Sensors-->
 </resources>

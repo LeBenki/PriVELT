@@ -22,7 +22,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.api.services.drive.DriveScopes
 import com.kent.university.privelt.R
 import com.kent.university.privelt.base.PDAActivity
-import com.kent.university.privelt.base.GoogleDriveListener
+import com.kent.university.privelt.base.PDAListener
 import com.kent.university.privelt.model.Settings
 import com.kent.university.privelt.ui.master_password.MasterPasswordActivity
 import kotlinx.android.synthetic.main.activity_settings.*
@@ -53,7 +53,7 @@ class SettingsActivity : PDAActivity() {
                     .setNegativeButton(R.string.no, null)
                     .show()
         }
-        listener = object : GoogleDriveListener {
+        listener = object : PDAListener {
             override fun onDownloadSuccess() {}
             override fun onDownloadFailure() {}
             override fun onConnectionSuccess() {
@@ -62,15 +62,32 @@ class SettingsActivity : PDAActivity() {
                 disconnect!!.visibility = View.VISIBLE
                 googleId!!.visibility = View.VISIBLE
             }
+
+            override fun onHatUploadSuccess(fileId: String) {
+                if (settings?.hatFileID != null && settings!!.hatFileID.isNotEmpty())
+                    deleteFileOnHAT(settings!!.hatFileID)
+                settings!!.hatFileID = fileId
+                fileIdEditTextHat.setText(fileId)
+                settingsViewModel!!.updateSettings(settings)
+            }
+
+            override fun onHatUploadFailure(error: String) {
+            }
         }
         drive!!.setOnCheckedChangeListener { _: CompoundButton?, b: Boolean ->
             settings!!.isGoogleDriveAutoSave = b
             if (b) googleDriveConnection()
             settingsViewModel!!.updateSettings(settings)
         }
-        fileIdEditText?.setOnClickListener {
+        fileIdEditTextDrive?.setOnClickListener {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("Copied text", fileIdEditText?.text.toString())
+            val clip = ClipData.newPlainText("Copied text", fileIdEditTextDrive?.text.toString())
+            clipboard.setPrimaryClip(clip)
+            Toast.makeText(this@SettingsActivity, "Text copied to clipboard", Toast.LENGTH_LONG).show()
+        }
+        fileIdEditTextHat?.setOnClickListener {
+            val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("Copied text", fileIdEditTextHat?.text.toString())
             clipboard.setPrimaryClip(clip)
             Toast.makeText(this@SettingsActivity, "Text copied to clipboard", Toast.LENGTH_LONG).show()
         }
@@ -96,9 +113,9 @@ class SettingsActivity : PDAActivity() {
     private fun updateSettings(settings: Settings?) {
         val account = GoogleSignIn.getLastSignedInAccount(this)
         this.settings = settings
-        if (settings == null) this.settings = Settings(false, "")
+        if (settings == null) this.settings = Settings(false, "", "")
         drive!!.isChecked = this.settings!!.isGoogleDriveAutoSave
-        fileIdEditText?.setText(this.settings!!.googleDriveFileID)
+        fileIdEditTextDrive?.setText(this.settings!!.googleDriveFileID)
         if (account != null) {
             googleId!!.text = resources.getString(R.string.logged_with, account.displayName)
             disconnect!!.visibility = View.VISIBLE
@@ -108,6 +125,8 @@ class SettingsActivity : PDAActivity() {
             disconnect!!.visibility = View.GONE
             googleId!!.visibility = View.GONE
         }
+        if (settings?.hatFileID != null && settings.hatFileID.isNotEmpty())
+            fileIdEditTextHat.setText(settings.hatFileID)
     }
 
     override fun configureViewModel() {
@@ -134,25 +153,16 @@ class SettingsActivity : PDAActivity() {
     }
 
     private fun configureHat() {
-
-        initNextButton()
         initHatLoginButton()
     }
 
-    private fun initNextButton() {
-        hatSwitch.visibility = View.INVISIBLE
-        hatSwitch.setOnClickListener {
-            uploadDatabaseWithHAT()
-        }
-    }
-
     private fun initHatLoginButton() {
-        hatLoginButton.setOnClickListener {
+        hatSwitch.setOnClickListener {
             loginHAT(hatEmail.text.toString())
         }
     }
 
     override fun hatLogged() {
-
+        uploadDatabaseWithHAT()
     }
 }

@@ -5,8 +5,11 @@
  */
 package com.kent.university.privelt.base
 
-interface GoogleDriveListener {
+interface PDAListener {
     fun onDownloadSuccess()
     fun onDownloadFailure()
     fun onConnectionSuccess()
+    //TODO before Automatic upload
+    fun onHatUploadSuccess(fileId: String)
+    fun onHatUploadFailure(error: String)
 }

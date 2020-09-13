@@ -16,7 +16,7 @@ import com.kent.university.privelt.PriVELTApplication.Companion.instance
 import com.kent.university.privelt.database.dao.*
 import com.kent.university.privelt.model.*
 
-@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, HistoryPermission::class], version = 11, exportSchema = false)
+@Database(entities = [UserData::class, Service::class, CurrentUser::class, Settings::class, HistoryPermission::class], version = 12, exportSchema = false)
 abstract class PriVELTDatabase : RoomDatabase() {
     abstract fun userDataDao(): UserDataDao?
     abstract fun serviceDao(): ServiceDao?
@@ -40,7 +40,7 @@ abstract class PriVELTDatabase : RoomDatabase() {
                         INSTANCE = Room.databaseBuilder(context.applicationContext,
                                 PriVELTDatabase::class.java,
                                 PriVELTDatabaseName)
-                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11)
+                                .addMigrations(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8, MIGRATION_8_9, MIGRATION_9_10, MIGRATION_10_11, MIGRATION_11_12)
                                 .openHelperFactory(factory)
                                 .build()
                     }
@@ -104,7 +104,13 @@ abstract class PriVELTDatabase : RoomDatabase() {
             }
         }
 
-            fun nullDatabase() {
+        private val MIGRATION_11_12: Migration = object : Migration(11, 12) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                database.execSQL("ALTER TABLE `settings` ADD COLUMN `hatFileID` TEXT default 0 NOT NULL")
+            }
+        }
+
+        fun nullDatabase() {
             synchronized(PriVELTDatabase::class.java) { INSTANCE = null }
         }
     }

@@ -29,6 +29,7 @@ import com.kent.university.privelt.R
 import com.kent.university.privelt.database.PriVELTDatabase
 import com.kent.university.privelt.utils.DriveServiceHelper
 import com.kent.university.privelt.utils.hat.AccountManager
+import com.kent.university.privelt.utils.hat.DeleteFileTask
 import com.kent.university.privelt.utils.hat.DownloadFileTask
 import com.kent.university.privelt.utils.hat.UploadFileTask
 import com.privelt.pda.dataplatform.DataPlatformFactory
@@ -44,7 +45,7 @@ import java.net.URL
 
 abstract class PDAActivity : BaseActivity() {
     private var mDriveServiceHelper: DriveServiceHelper? = null
-    protected var listener: GoogleDriveListener? = null
+    protected var listener: PDAListener? = null
     private var fileId = ""
 
     private val DEEP_LINK_SCHEME = "https"
@@ -77,9 +78,9 @@ abstract class PDAActivity : BaseActivity() {
                     this, listOf(DriveScopes.DRIVE_FILE))
             credential.selectedAccount = account.account
             val googleDriveService = Drive.Builder(
-                            AndroidHttp.newCompatibleTransport(),
-                            GsonFactory(),
-                            credential)
+                    AndroidHttp.newCompatibleTransport(),
+                    GsonFactory(),
+                    credential)
                     .setApplicationName(getString(R.string.app_name))
                     .build()
             mDriveServiceHelper = DriveServiceHelper(googleDriveService)
@@ -109,9 +110,9 @@ abstract class PDAActivity : BaseActivity() {
                             this, listOf(DriveScopes.DRIVE_FILE))
                     credential.selectedAccount = googleAccount.account
                     val googleDriveService = Drive.Builder(
-                                    AndroidHttp.newCompatibleTransport(),
-                                    GsonFactory(),
-                                    credential)
+                            AndroidHttp.newCompatibleTransport(),
+                            GsonFactory(),
+                            credential)
                             .setApplicationName("Drive API Migration")
                             .build()
                     mDriveServiceHelper = DriveServiceHelper(googleDriveService)
@@ -233,12 +234,16 @@ abstract class PDAActivity : BaseActivity() {
         // Request File Upload:
         val file = getDatabasePath(PriVELTDatabase.PriVELTDatabaseName)
         val hatFilesDetails: HatFileDetails = createHatFileObject(file.absolutePath, file)!!
-        UploadFileTask(AccountManager.getInstance().dataPlatformController, hatFilesDetails).execute()
+        UploadFileTask(AccountManager.getInstance().dataPlatformController, hatFilesDetails, listener).execute()
+    }
+
+    fun deleteFileOnHAT(fileID: String) {
+        DeleteFileTask(AccountManager.getInstance().dataPlatformController, fileID).execute()
     }
 
     fun downloadFileWithHAT(fileId: String) {
         createDataPlatform()
-        DownloadFileTask(AccountManager.getInstance().dataPlatformController, fileId).execute()
+        DownloadFileTask(AccountManager.getInstance().dataPlatformController, fileId, getDatabasePath(PriVELTDatabase.PriVELTDatabaseName).path, listener).execute()
     }
 
     fun loginHAT(email: String) {
@@ -268,9 +273,10 @@ abstract class PDAActivity : BaseActivity() {
                 Log.i("WebView-Tag", "onPageFinished: $url")
                 if (parseHatLoginCallback(url)) {
                     alertDialog.dismiss()
-                    hatLogin = true
                     setHatLoginResult()
-                    hatLogged()
+                    hatLogin = !hatLogin
+                    if (hatLogin)
+                        hatLogged()
                 }
                 Log.i("PriVELT-APP", credentials.toString())
             }

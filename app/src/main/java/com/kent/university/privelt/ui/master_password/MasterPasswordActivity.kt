@@ -22,7 +22,7 @@ import android.widget.Toast
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import com.kent.university.privelt.R
-import com.kent.university.privelt.base.GoogleDriveListener
+import com.kent.university.privelt.base.PDAListener
 import com.kent.university.privelt.base.PDAActivity
 import com.kent.university.privelt.database.PriVELTDatabase
 import com.kent.university.privelt.model.ServicePDA
@@ -31,11 +31,8 @@ import com.kent.university.privelt.ui.settings.SettingsActivity
 import com.kent.university.privelt.utils.EyePassword
 import com.kent.university.privelt.utils.PasswordChecker
 import com.kent.university.privelt.utils.biometric.BiometricPromptTinkManager
-import com.kent.university.privelt.utils.hat.AccountManager
-import com.kent.university.privelt.utils.hat.DownloadFileTask
 import com.nulabinc.zxcvbn.Zxcvbn
 import kotlinx.android.synthetic.main.activity_main_password.*
-
 
 class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher, ImportDataAdapter.ImportDataListener {
     private var zxcvbn: Zxcvbn? = null
@@ -43,6 +40,8 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
     private lateinit var biometricPromptManager: BiometricPromptTinkManager
 
     private var masterPasswordAlreadyGiven = false
+
+    private var pdaDialog: ImportDataDialog? = null
 
     override val activityLayout: Int
         get() = R.layout.activity_main_password
@@ -105,7 +104,7 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
         }
         EyePassword.configureEye(eye_password!!, password!!)
         EyePassword.configureEye(eye_confirm_password!!, confirm_password!!)
-        listener = object : GoogleDriveListener {
+        listener = object : PDAListener {
             override fun onDownloadSuccess() {
                 Toast.makeText(this@MasterPasswordActivity, R.string.data_imported_correctly, Toast.LENGTH_LONG).show()
                 configureLoginScreen()
@@ -117,6 +116,11 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
             }
 
             override fun onConnectionSuccess() {}
+            override fun onHatUploadSuccess(fileId: String) {
+            }
+
+            override fun onHatUploadFailure(error: String) {
+            }
         }
 
         fingerprint.setOnClickListener {
@@ -263,8 +267,8 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
 
     private fun onDataImported() {
         reset!!.setOnClickListener {
-            val dialog = ImportDataDialog()
-            dialog.show(supportFragmentManager, "ImportDataDialog")
+            pdaDialog = ImportDataDialog()
+            pdaDialog?.show(supportFragmentManager, "ImportDataDialog")
         }
     }
 
@@ -288,6 +292,7 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
             "HAT" -> processHatClick()
             "Google" -> processGoogleClick()
         }
+        pdaDialog?.dismiss()
     }
 
     private fun processGoogleClick() {
@@ -305,7 +310,7 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
         val alert = AlertDialog.Builder(this)
         val edittext = EditText(this)
         edittext.setTextColor(Color.parseColor("#000000"))
-        alert.setTitle("Please enter your email")
+        alert.setTitle(getString(R.string.please_enter_email))
         alert.setView(edittext)
         alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
             loginHAT(edittext.text.toString())
@@ -317,7 +322,7 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
         val alert = AlertDialog.Builder(this)
         val edittext = EditText(this)
         edittext.setTextColor(Color.parseColor("#000000"))
-        alert.setTitle("Please enter your file id")
+        alert.setTitle(getString(R.string.please_enter_file_id))
         alert.setView(edittext)
         alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
             downloadFileWithHAT(edittext.text.toString())
