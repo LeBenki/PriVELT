@@ -23,8 +23,8 @@
     <!--CardFragment -->
     <string name="unsubscribe">Unsubscribe</string>
     <string name="unsubscribe_confirmation">Are you sure you want to unsubscribe to this service?</string>
-    <string name="choose_service">Choose the service you want to subscribe to</string>
-    <string name="choose">Choose</string>
+    <string name="choose_service">Choose the service you want to connect to</string>
+    <string name="choose">Continue</string>
     <string name="authorize_save_password">You did not authorize us to save your password, we cannot process to data extraction.</string>
     <string name="privacy_value_risk">Privacy-Value risk</string>
     <string name="overlay_permission">Please add display over app permission, it is needed for data extraction while the application is in the background</string>
@@ -44,7 +44,7 @@
     <string name="logged">Logged</string>
     <string name="logging_in">Logging in</string>
     <string name="percent">%1$d%%</string>
-    <string name="no_service">You did not subscribed to any service</string>
+    <string name="no_service">You did not connect to any service</string>
 
     <!-- LoginActivity -->
     <string name="login_success">Login success</string>
@@ -64,12 +64,12 @@
     <string name="not_respect_policy">You did not respect the password policy</string>
     <string name="wrong_password">Wrong password, you can reset all your data to enter a new password</string>
     <string name="same_password">The password is the same as before</string>
-    <string name="title_master_password">Please enter your main password it will be used to encrypt locally all your data in this app</string>
-    <string name="reset_data">Click here to delete your local account</string>
-    <string name="password_policy">Your password must be at least 8 characters. With at least 1 number, 1 upper letter, 1 lower letter, 1 special character and should be at least strong</string>
+    <string name="title_master_password">Please choose a master password to be used to encrypt your data in our app</string>
+    <string name="reset_data">Delete all your information</string>
+    <string name="password_policy">Master password must be at least 8 characters, with at least 1 uppercase letter, 1 lowercase letter, 1 number and 1 special character. The password strength should be at least "Strong"</string>
     <string name="master_password">Master password</string>
     <string name="confirm_master_password">Confirm master password</string>
-    <string name="start_master_button">Start using the app</string>
+    <string name="start_master_button">Continue</string>
     <string name="import_your_data">Click here to import your data</string>
     <string name="enter_file_id">Enter your Google Drive file id</string>
     <string name="data_imported_correctly">Your data has been imported correctly</string>
@@ -88,14 +88,14 @@
     <string name="logged_with">Logged as %1$s</string>
 
     <!--UserFragment-->
-    <string name="mail">Mail</string>
-    <string name="phone_number">Phone number</string>
-    <string name="address">Address</string>
-    <string name="birthday">Birthday</string>
+    <string name="mail">Email</string>
+    <string name="phone_number">Mobile number</string>
+    <string name="address">Home address</string>
+    <string name="birthday">Date of birth</string>
     <string name="last_name">Last name</string>
     <string name="first_name">First name</string>
     <string name="personal_data">Personal data</string>
-    <string name="personal_data_explain">To better evaluate your risk-value score, we need to check if the data collected correspond to your real data.</string>
+    <string name="personal_data_explain">In order to get a more accurate value of your privacy risk, please provide your personal data below so we can check if the collected data through your connected services correspond to your actual real data.</string>
     <string name="edit">edit</string>
     <string name="overall_risk">Your overall risk for this service is %1$s</string>
     <string name="found">found</string>

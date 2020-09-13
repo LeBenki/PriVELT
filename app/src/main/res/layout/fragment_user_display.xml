@@ -13,6 +13,13 @@
         android:src="@mipmap/ic_launcher" />
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:text="@string/personal_data_explain"
+        android:gravity="center_horizontal"/>
+
+    <TextView
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_marginTop="@dimen/activity_vertical_margin"
