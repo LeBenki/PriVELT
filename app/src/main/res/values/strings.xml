@@ -84,7 +84,7 @@
     <string name="save_data_on_hat">Save on HAT</string>
     <string name="here_will_be_the_file_id">Here will be the file id</string>
     <string name="enter_email">Please enter your email</string>
-    <string name="save_data">Saving your data on one of the following service can be useful to retrieve your database on another device.</string>
+    <string name="save_data">Saving your data can be useful to retrieve your database on another device.</string>
     <string name="logged_with">Logged as %1$s</string>
 
     <!--UserFragment-->

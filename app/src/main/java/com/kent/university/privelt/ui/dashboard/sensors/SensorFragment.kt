@@ -49,7 +49,7 @@ class SensorFragment : BaseFragment() {
         }
         baseView.progressBar!!.progress = riskValue
 
-        baseView.progressBar.setOnClickListener {
+        baseView.global_score.setOnClickListener {
             startActivity(Intent(activity, RadarChartSensorActivity::class.java))
         }
     }

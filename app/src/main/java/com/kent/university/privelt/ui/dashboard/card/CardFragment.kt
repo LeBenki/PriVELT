@@ -145,7 +145,7 @@ class CardFragment : BaseFragment(), FilterDialogListener, AddCardDialogFragment
         setupAddButton()
         services
         getUserData()
-        baseView.progressBar?.setOnClickListener { startActivity(Intent(activity, RiskValueActivity::class.java)) }
+        baseView.global_score?.setOnClickListener { startActivity(Intent(activity, RiskValueActivity::class.java)) }
         enableSwipeToDeleteAndUndo()
     }
 
