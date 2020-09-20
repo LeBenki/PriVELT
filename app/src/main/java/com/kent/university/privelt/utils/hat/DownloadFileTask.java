@@ -37,8 +37,6 @@ public class DownloadFileTask extends AsyncTask<Double, String, Result> {
         return null;
     }
 
-    //app112devpriveltdatabase-5.db
-
     @Override
     protected void onPostExecute(Result downloadFileResponse) {
         if (downloadFileResponse.isSuccessful()) {

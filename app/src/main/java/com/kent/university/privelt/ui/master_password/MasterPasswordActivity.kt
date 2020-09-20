@@ -10,20 +10,23 @@ import android.app.AlertDialog
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Paint
 import android.os.AsyncTask
 import android.os.Bundle
 import android.text.Editable
 import android.text.SpannableStringBuilder
 import android.text.TextWatcher
 import android.view.View
+import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import com.kent.university.privelt.R
-import com.kent.university.privelt.base.PDAListener
 import com.kent.university.privelt.base.PDAActivity
+import com.kent.university.privelt.base.PDAListener
 import com.kent.university.privelt.database.PriVELTDatabase
 import com.kent.university.privelt.model.ServicePDA
 import com.kent.university.privelt.ui.dashboard.DashboardActivity
@@ -34,7 +37,9 @@ import com.kent.university.privelt.utils.biometric.BiometricPromptTinkManager
 import com.nulabinc.zxcvbn.Zxcvbn
 import kotlinx.android.synthetic.main.activity_main_password.*
 
+
 class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher, ImportDataAdapter.ImportDataListener {
+    private var editTextParam: String? = null
     private var zxcvbn: Zxcvbn? = null
     private var changePassword = false
     private lateinit var biometricPromptManager: BiometricPromptTinkManager
@@ -52,6 +57,7 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
 
     private fun configureLoginScreen() {
         reset!!.setText(R.string.reset_data)
+        reset.paintFlags = reset.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         resetMasterPassword()
         password_meter!!.visibility = View.GONE
         hint!!.visibility = View.GONE
@@ -68,6 +74,7 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
 
     private fun configureNewPasswordScreen() {
         reset!!.setText(R.string.import_your_data)
+        reset.paintFlags = reset.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         progress_circular!!.visibility = View.GONE
         reset!!.isEnabled = true
         start!!.isEnabled = true
@@ -296,36 +303,43 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
     }
 
     private fun processGoogleClick() {
-        val alert = AlertDialog.Builder(this)
-        val edittext = EditText(this)
-        edittext.setTextColor(Color.parseColor("#000000"))
-        alert.setTitle(R.string.enter_file_id)
-        alert.setView(edittext)
-        alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int -> googleDriveConnectionAndDownload(true, edittext.text.toString()) }
-        alert.show()
+        alerDialogBuilder(R.string.enter_file_id, R.string.file_id, Runnable {
+            googleDriveConnectionAndDownload(true, editTextParam!!)
+        })
     }
 
     private fun processHatClick() {
-
-        val alert = AlertDialog.Builder(this)
-        val edittext = EditText(this)
-        edittext.setTextColor(Color.parseColor("#000000"))
-        alert.setTitle(getString(R.string.please_enter_email))
-        alert.setView(edittext)
-        alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
-            loginHAT(edittext.text.toString())
-        }
-        alert.show()
+        alerDialogBuilder(R.string.please_enter_email, R.string.email, Runnable {
+            loginHAT(editTextParam!!)
+        })
     }
 
     override fun hatLogged() {
+        alerDialogBuilder(R.string.please_enter_file_id, R.string.file_id, Runnable {
+            downloadFileWithHAT(editTextParam!!)
+        })
+    }
+
+    //TODO create dialog fragment
+    private fun alerDialogBuilder(title: Int, hint: Int, runnable: Runnable) {
         val alert = AlertDialog.Builder(this)
         val edittext = EditText(this)
         edittext.setTextColor(Color.parseColor("#000000"))
-        alert.setTitle(getString(R.string.please_enter_file_id))
-        alert.setView(edittext)
-        alert.setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
-            downloadFileWithHAT(edittext.text.toString())
+        edittext.hint = getString(hint)
+        edittext.setSingleLine()
+        val container = FrameLayout(this)
+        val params: FrameLayout.LayoutParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        params.leftMargin = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+        params.topMargin = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+        params.rightMargin = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+        params.bottomMargin = resources.getDimensionPixelSize(R.dimen.activity_vertical_margin)
+        edittext.layoutParams = params
+        container.addView(edittext)
+        alert.setView(container)
+        alert.setTitle(getString(title))
+        alert.setPositiveButton(R.string.continue_string) { _: DialogInterface?, _: Int ->
+            editTextParam = edittext.text.toString()
+            runnable.run()
         }
         alert.show()
     }
