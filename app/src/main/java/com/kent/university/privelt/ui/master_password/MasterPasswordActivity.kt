@@ -61,6 +61,7 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
         resetMasterPassword()
         password_meter!!.visibility = View.GONE
         hint!!.visibility = View.GONE
+        choose_password!!.visibility = View.GONE
         confirm_password!!.visibility = View.GONE
         eye_confirm_password!!.visibility = View.GONE
         progress_circular!!.visibility = View.GONE
@@ -76,6 +77,7 @@ class MasterPasswordActivity : PDAActivity(), View.OnClickListener, TextWatcher,
         reset!!.setText(R.string.import_your_data)
         reset.paintFlags = reset.paintFlags or Paint.UNDERLINE_TEXT_FLAG
         progress_circular!!.visibility = View.GONE
+        choose_password!!.visibility = View.VISIBLE
         reset!!.isEnabled = true
         start!!.isEnabled = true
         password_meter!!.visibility = View.VISIBLE

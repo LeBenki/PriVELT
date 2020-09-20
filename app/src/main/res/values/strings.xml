@@ -27,8 +27,8 @@
     <string name="choose">Continue</string>
     <string name="authorize_save_password">You did not authorize us to save your password, we cannot process to data extraction.</string>
     <string name="privacy_value_risk">Privacy-Value risk</string>
-    <string name="overlay_permission">Please add display over app permission, it is needed for data extraction while the application is in the background</string>
-    <string name="data_extraction">Data Extraction</string>
+    <string name="overlay_permission">"Display Over App" permission is required for our app Data Extraction mechanism while it\'s in the background.</string>
+    <string name="data_extraction">Permission Required</string>
     <string name="global_privacy_value">Privacy risk : %1$s</string>
     <string name="filter">filter</string>
     <string name="choose_cards">Choose the cards you want on your dashboard</string>
@@ -119,6 +119,8 @@
     <string name="please_enter_email">Please enter your email</string>
     <string name="file_id">File ID</string>
     <string name="continue_string">Continue</string>
+    <string name="deny">Deny</string>
+    <string name="allow">Allow</string>
 
     <!--Sensors-->
 </resources>

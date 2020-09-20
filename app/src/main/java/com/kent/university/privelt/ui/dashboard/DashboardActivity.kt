@@ -54,10 +54,10 @@ class DashboardActivity : BaseActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
                 val alertDialog = AlertDialog.Builder(this)
-                alertDialog.setTitle(R.string.data_extraction).setMessage(R.string.overlay_permission).setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
+                alertDialog.setTitle(R.string.data_extraction).setMessage(R.string.overlay_permission).setPositiveButton(R.string.allow) { _: DialogInterface?, _: Int ->
                     val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
                     this.startActivity(myIntent)
-                }.setNegativeButton(R.string.no, null)
+                }.setNegativeButton(R.string.deny, null)
                 alertDialog.show()
             }
         }
