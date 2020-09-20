@@ -18,7 +18,7 @@ import androidx.appcompat.app.ActionBar
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.kent.university.privelt.R
-import com.kent.university.privelt.base.GoogleDriveActivity
+import com.kent.university.privelt.base.BaseActivity
 import com.kent.university.privelt.service.ProcessMainClass
 import com.kent.university.privelt.service.restarter.RestartServiceBroadcastReceiver.Companion.scheduleJob
 import com.kent.university.privelt.ui.dashboard.card.CardFragment
@@ -29,7 +29,7 @@ import com.kent.university.privelt.utils.sensors.TemporarySaveHistoryPermission
 import kotlinx.android.synthetic.main.activity_dashboard.*
 
 
-class DashboardActivity : GoogleDriveActivity() {
+class DashboardActivity : BaseActivity() {
     private var toolbar: ActionBar? = null
 
     override fun configureViewModel() {}
@@ -54,10 +54,10 @@ class DashboardActivity : GoogleDriveActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.canDrawOverlays(this)) {
                 val alertDialog = AlertDialog.Builder(this)
-                alertDialog.setTitle(R.string.data_extraction).setMessage(R.string.overlay_permission).setPositiveButton(R.string.yes) { _: DialogInterface?, _: Int ->
+                alertDialog.setTitle(R.string.data_extraction).setMessage(R.string.overlay_permission).setPositiveButton(R.string.allow) { _: DialogInterface?, _: Int ->
                     val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
                     this.startActivity(myIntent)
-                }.setNegativeButton(R.string.no, null)
+                }.setNegativeButton(R.string.deny, null)
                 alertDialog.show()
             }
         }

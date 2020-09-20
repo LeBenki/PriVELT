@@ -15,9 +15,6 @@ import android.os.AsyncTask
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
-import android.widget.LinearLayout
-import android.widget.Spinner
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -48,13 +45,14 @@ import java.util.*
 import java.util.concurrent.Executors
 
 
-class CardFragment : BaseFragment(), FilterDialogListener {
+class CardFragment : BaseFragment(), FilterDialogListener, AddCardDialogFragment.AddCardDialogListener {
     private var cardViewModel: CardViewModel? = null
     private var subscribedServices: ArrayList<Service>? = null
     private var userData: ArrayList<UserData>? = null
     private var watchListHelper: WatchListHelper? = null
     private var cardAdapter: CardAdapter? = null
     private lateinit var filters: BooleanArray
+    private var newFragment: AddCardDialogFragment? = null
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -107,25 +105,16 @@ class CardFragment : BaseFragment(), FilterDialogListener {
 
     private fun setupAddButton() {
         baseView.addService?.setOnClickListener {
+
             val services: List<String> = serviceHelper?.getRemainingServices(subscribedServices!!)!!
+
             if (services.isEmpty()) {
                 Toast.makeText(this@CardFragment.context, R.string.already_added_all, Toast.LENGTH_LONG).show()
                 return@setOnClickListener
             }
-            val adp = ArrayAdapter(context!!,
-                    android.R.layout.simple_spinner_item, serviceHelper!!.getRemainingServices(subscribedServices!!))
-            val sp = Spinner(context)
-            sp.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-            sp.setPadding(50, 50, 50, 50)
-            sp.adapter = adp
-            val builder = AlertDialog.Builder(context)
-            builder.setTitle(R.string.choose_service)
-            builder.setView(sp)
-            builder.setPositiveButton(R.string.choose) { _: DialogInterface?, _: Int ->
-                editCredentials(
-                        Service(sp.selectedItem.toString(), false, "", "", ""), REQUEST_LOGIN)
-            }
-            builder.create().show()
+
+            newFragment = AddCardDialogFragment(services, this)
+            newFragment!!.show(activity?.supportFragmentManager!!, "missiles")
         }
     }
 
@@ -156,7 +145,7 @@ class CardFragment : BaseFragment(), FilterDialogListener {
         setupAddButton()
         services
         getUserData()
-        baseView.progressBar?.setOnClickListener { startActivity(Intent(activity, RiskValueActivity::class.java)) }
+        baseView.global_score?.setOnClickListener { startActivity(Intent(activity, RiskValueActivity::class.java)) }
         enableSwipeToDeleteAndUndo()
     }
 
@@ -268,5 +257,10 @@ class CardFragment : BaseFragment(), FilterDialogListener {
     companion object {
         private const val REQUEST_LOGIN = 765
         private const val REQUEST_EDIT_LOGIN = 7654
+    }
+
+    override fun onAddServiceClick(service: String) {
+        newFragment?.dismiss()
+        editCredentials(Service(service, false, "", "", ""), REQUEST_LOGIN)
     }
 }

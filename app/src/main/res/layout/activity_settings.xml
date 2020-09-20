@@ -63,7 +63,7 @@
                         android:text="@string/save_data_on_google_drive" />
 
                     <EditText
-                        android:id="@+id/fileIdEditText"
+                        android:id="@+id/fileIdEditTextDrive"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/logo"
@@ -80,7 +80,6 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 android:layout_margin="@dimen/activity_vertical_margin">
 
                 <RelativeLayout
@@ -109,7 +108,6 @@
 
                     </LinearLayout>
 
-
                     <ImageView
                         android:id="@+id/hatLogo"
                         android:layout_width="100dp"
@@ -117,16 +115,15 @@
                         android:layout_margin="@dimen/activity_vertical_margin"
                         android:src="@drawable/hat" />
 
-                    <Switch
+                    <Button
                         android:id="@+id/hatSwitch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
-                        android:layout_centerVertical="true"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginHorizontal="@dimen/activity_vertical_margin"
+                        android:textAllCaps="false"
+                        android:layout_margin="@dimen/activity_vertical_margin"
                         android:text="@string/save_data_on_hat" />
-
 
                     <EditText
                         android:id="@+id/hatEmail"
@@ -138,15 +135,14 @@
                         android:layout_margin="@dimen/activity_vertical_margin"
                         android:hint="@string/enter_email" />
 
-                    <Button
-                        android:id="@+id/hatLoginButton"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/fileIdEditTextHat"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_below="@id/hatEmail"
-                        android:layout_marginBottom="@dimen/activity_vertical_margin"
-                        android:text="login"
-                        android:background="@drawable/button"/>
+                        android:layout_margin="@dimen/activity_vertical_margin"
+                        android:hint="@string/here_will_be_the_file_id"/>
 
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>

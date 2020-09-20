@@ -7,6 +7,7 @@
 package com.kent.university.privelt.ui.master_password
 
 import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
@@ -16,6 +17,21 @@ import com.kent.university.privelt.model.ServicePDA
 import kotlinx.android.synthetic.main.alert_import_data.view.*
 
 class ImportDataDialog : DialogFragment() {
+
+    var listener: ImportDataAdapter.ImportDataListener? = null
+
+    // Override the Fragment.onAttach() method to instantiate the NoticeDialogListener
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        // Verify that the host activity implements the callback interface
+        listener = try {
+            // Instantiate the NoticeDialogListener so we can send events to the host
+            context as ImportDataAdapter.ImportDataListener?
+        } catch (e: ClassCastException) {
+            // The activity doesn't implement the interface, throw exception
+            throw ClassCastException(activity.toString() + " must implement ImportDataListener")
+        }
+    }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
@@ -29,7 +45,7 @@ class ImportDataDialog : DialogFragment() {
 
             view.servicesList.setHasFixedSize(true)
             view.servicesList.layoutManager = LinearLayoutManager(context)
-            view.servicesList.adapter = ImportDataAdapter(listServices)
+            view.servicesList.adapter = ImportDataAdapter(listServices, listener!!)
 
             builder.setView(view)
 
